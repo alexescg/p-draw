@@ -83,8 +83,8 @@ roles.use(function (req, action) {
 //     }
 // })
 //
-// require('./routes.js')(app, passport, roles);
-// require('./config/passport')(passport);
+require('./routes.js')(app, passport, roles);
+require('./config/passport')(passport);
 
 app.get('/', function(req,res){
     res.render('index');
