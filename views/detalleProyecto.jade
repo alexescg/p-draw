@@ -1,18 +1,43 @@
 extends ./index.jade
 block content
-  .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
-      .mdl-card.mdl-shadow--2dp.cotoneaster
-          .mdl-card__title.mdl-card--expand
-              h2.mdl-card__title-text {{rol}}
-          .mdl-card__supporting-text
-              a(href='#', target='_blank') {{nombre}}
-  .mdl-cell.mdl-cell--6-col-desktop.mdl-cell--6-col-tablet.mdl-cell--4-col-phone
-      div(ng-view)
-  .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
-      .mdl-card.mdl-shadow--2dp.trending(ng-repeat="desarrollador in desarrolladores")
-          .mdl-card__title
-              h2.mdl-card__title-text {{desarrollador}}
-          .mdl-card__supporting-text
-              ul.mdl-list
-                  li.mdl-list__item
-                      span.mdl-list__item-primary-content.list__item-text Nombre Desarrollador
+  .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="detalleProyectoCtrl")
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
+        .mdl-card.mdl-shadow--2dp
+            .mdl-card__title
+                h2.mdl-card__title-text {{proyecto.nombre}}
+            .mdl-card__supporting-text
+                p.letras-negras
+                  {{proyecto.descripcion}}
+        br
+        .mdl-card.mdl-shadow--2dp
+            .mdl-card__title
+                h2.mdl-card__title-text {{rolScrum.nombreRol}}
+            .mdl-card__supporting-text
+                a(href='#', target='_blank') {{rolScrum.nombreEmpleado}}
+        br
+        .mdl-card.mdl-shadow--2dp
+            .mdl-card__title
+                h2.mdl-card__title-text {{rolProduct.nombreRol}}
+            .mdl-card__supporting-text
+                a(href='#', target='_blank') {{rolProduct.nombreEmpleado}}
+    .mdl-cell.mdl-cell--6-col-desktop.mdl-cell--6-col-tablet.mdl-cell--4-col-phone
+        div(ng-view)
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
+        .mdl-card.mdl-shadow--2dp.trending
+            .mdl-card__title
+                h2.mdl-card__title-text Desarrolladores
+            .mdl-card__supporting-text
+                ul.mdl-list
+                    li.mdl-list__item(ng-repeat="desarrollador in desarrolladores")
+                        span.mdl-list__item-primary-content.list__item-text.letras-negras {{desarrollador.nombre}}
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
+              tr
+                td.mdl-data-table__cell--non-numeric
+                  span.label.label--mini.background-color--mint
+                    a.a-blanco(href="#ProductBacklog") Product BackLog
+                td.mdl-data-table__cell--non-numeric
+                  span.label.label--mini.background-color--primary
+                    a.a-blanco(href="#ReleaseBacklog") Release BackLog
+                td.mdl-data-table__cell--non-numeric
+                  span.label.label--mini.background-color--cerulean
+                    a.a-blanco(href="#Sprints") Sprints
