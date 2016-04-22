@@ -50,6 +50,7 @@
   },
   "homepage": "https://github.com/CreativeIT/dashboard#readme",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.0",
     "connect-flash": "^0.1.1",
     "connect-roles": "^3.1.2",

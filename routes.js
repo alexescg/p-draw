@@ -5,7 +5,7 @@ var Rol = require('./models/roles')
 module.exports = function (app, passport, roles) {
 
     app.get("/", function (req, res) {
-        res.render("login");
+        res.render("index");
     });
 
     app.get('/login', function (req, res) {
