@@ -4263,7 +4263,7 @@ input.mdl-button[type="submit"] {
     border-top: 1px solid rgba(0, 0, 0, 0.1); }
 
 .mdl-card--expand {
-  flex-grow: 1; }
+  flex-grow: 0.5; }
 
 .mdl-card__menu {
   position: absolute;
@@ -10760,7 +10760,7 @@ main {
     display: none; } }
 
 .mdl-card__title {
-  background-color: rgba(0, 0, 0, 0.3); }
+  background-color: rgba(56, 155, 44, 0.9); }
 
 .mdl-card__supporting-text {
   width: calc(100% - 32px); }
@@ -11107,7 +11107,7 @@ a {
       color: rgb(255, 255, 255); }
 
 .cotoneaster {
-  height: 430px; }
+  height: 200px; }
   .cotoneaster .mdl-card__supporting-text {
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     font-size: 16px;
