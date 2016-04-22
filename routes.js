@@ -8,6 +8,10 @@ module.exports = function (app, passport, roles) {
         res.render("index");
     });
 
+    app.get("/detalleProyecto", function (req, res) {
+        res.render("detalleProyecto");
+    });
+
     app.get('/login', function (req, res) {
         res.render('login', {message: req.flash('loginMessage')});
     });
