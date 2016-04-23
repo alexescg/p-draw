@@ -3064,7 +3064,7 @@ ul, ol {
   color: rgb(255,255,255) !important; }
 
 .mdl-color--primary {
-  background-color: rgb(0, 188, 212) !important; }
+  background-color: rgb(255, 82, 82) !important; }
 
 .mdl-color--primary-contrast {
   background-color: rgb(255,255,255) !important; }
@@ -3079,7 +3079,7 @@ ul, ol {
   background-color: rgb(255,255,255) !important; }
 
 .mdl-color-text--primary {
-  color: rgb(0, 188, 212) !important; }
+  color: rgb(255, 82, 82) !important; }
 
 .mdl-color-text--primary-contrast {
   color: rgb(255,255,255) !important; }
@@ -3640,7 +3640,7 @@ ul, ol {
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: rgb(0, 188, 212);
+    background: rgb(255, 82, 82);
     color: rgb(255, 255, 255); }
     .mdl-button .mdl-badge[data-badge]:after {
       top: -10px;
@@ -3893,11 +3893,11 @@ input.mdl-button[type="submit"] {
     background: rgb(255, 82, 82);
     color: rgb(255,255,255); }
     .mdl-button--raised.mdl-button--colored:hover {
-      background-color: rgb(0, 188, 212); }
+      background-color: rgb(255, 82, 82); }
     .mdl-button--raised.mdl-button--colored:active {
-      background-color: rgb(0, 188, 212); }
+      background-color: rgb(255, 82, 82); }
     .mdl-button--raised.mdl-button--colored:focus:not(:active) {
-      background-color: rgb(0, 188, 212); }
+      background-color: rgb(255, 82, 82); }
     .mdl-button--raised.mdl-button--colored .mdl-ripple {
       background: rgb(255,255,255); }
 
@@ -4200,7 +4200,7 @@ input.mdl-button[type="submit"] {
   width: auto;
   z-index: 1;
   position: relative;
-  background: #4e4e4e;
+  background: #FFFFFF;
   border-radius: 2px;
   box-sizing: border-box; }
 
@@ -4215,7 +4215,7 @@ input.mdl-button[type="submit"] {
 
 .mdl-card__title {
   align-items: center;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 1);
   display: block;
   display: flex;
   justify-content: stretch;
@@ -4517,8 +4517,8 @@ input.mdl-button[type="submit"] {
     box-shadow: 0 0 0px 9px rgba(0, 0, 0, 0.1);
     background-color: rgba(0, 0, 0, 0.1); }
   .mdl-checkbox.is-focused.is-checked .mdl-checkbox__focus-helper {
-    box-shadow: 0 0 0px 9px rgba(0, 188, 212, 0.26);
-    background-color: rgba(0, 188, 212, 0.26); }
+    box-shadow: 0 0 0px 9px rgba(255, 82, 82, 0.26);
+    background-color: rgba(255, 82, 82, 0.26); }
 
 .mdl-checkbox__tick-outline {
   position: absolute;
@@ -5884,7 +5884,7 @@ input.mdl-button[type="submit"] {
     line-height: 32px;
     font-size: 24px; }
   .mdl-icon-toggle.is-checked .mdl-icon-toggle__label {
-    color: rgb(0, 188, 212); }
+    color: rgb(255, 82, 82); }
   .mdl-icon-toggle.is-disabled .mdl-icon-toggle__label {
     color: rgba(0,0,0, 0.26);
     cursor: auto;
@@ -5892,7 +5892,7 @@ input.mdl-button[type="submit"] {
   .mdl-icon-toggle.is-focused .mdl-icon-toggle__label {
     background-color: rgba(0,0,0, 0.12); }
   .mdl-icon-toggle.is-focused.is-checked .mdl-icon-toggle__label {
-    background-color: rgba(0, 188, 212, 0.26); }
+    background-color: rgba(255, 82, 82, 0.26); }
 
 .mdl-icon-toggle__ripple-container {
   position: absolute;
@@ -7065,7 +7065,7 @@ input.mdl-button[type="submit"] {
         background-color: rgba(0, 0, 0, 0.25); }
       .mdl-layout__drawer .mdl-navigation .mdl-navigation__link--current {
         background-color: rgba(0, 0, 0, 0.25);
-        color: rgb(0, 188, 212); }
+        color: rgb(255, 82, 82); }
   @media screen and (min-width: 1441px) {
     .mdl-layout--fixed-drawer > .mdl-layout__drawer {
       transform: translateX(0); } }
@@ -7086,11 +7086,11 @@ input.mdl-button[type="submit"] {
   margin: 10px 12px;
   top: 0;
   left: 0;
-  color: rgb(0, 188, 212);
+  color: rgb(255, 82, 82);
   z-index: 4; }
   .mdl-layout__header .mdl-layout__drawer-button {
     position: absolute;
-    color: rgb(0, 188, 212);
+    color: rgb(255, 255, 255);
     background-color: inherit; }
     @media screen and (max-width: 1440px) {
       .mdl-layout__header .mdl-layout__drawer-button {
@@ -7098,7 +7098,7 @@ input.mdl-button[type="submit"] {
   @media screen and (max-width: 1440px) {
     .mdl-layout__drawer-button {
       margin: 4px;
-      color: rgba(0, 0, 0, 0.5); } }
+      color: rgba(255, 255, 255, 0.5); } }
   @media screen and (min-width: 1441px) {
     .mdl-layout--fixed-drawer > .mdl-layout__drawer-button {
       display: none; }
@@ -7121,8 +7121,8 @@ input.mdl-button[type="submit"] {
   min-height: 64px;
   max-height: 1000px;
   z-index: 3;
-  background-color: #242424;
-  color: rgb(0, 188, 212);
+  background-color: #000000;
+  color: rgb(255, 255, 255);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
   transition-duration: 0.2s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -7222,7 +7222,7 @@ input.mdl-button[type="submit"] {
         height: 56px; } }
   .mdl-layout__header-row .mdl-navigation__link {
     display: block;
-    color: rgb(0, 188, 212);
+    color: rgb(255, 82, 82);
     line-height: 64px;
     padding: 0 24px; }
     @media screen and (max-width: 1440px) {
@@ -7349,7 +7349,7 @@ input.mdl-button[type="submit"] {
   .mdl-layout__tab-bar-button .material-icons {
     line-height: 48px; }
   .mdl-layout__tab-bar-button.is-active {
-    color: rgb(0, 188, 212); }
+    color: rgb(255, 82, 82); }
 
 .mdl-layout__tab-bar-left-button {
   left: 0; }
@@ -7383,7 +7383,7 @@ input.mdl-button[type="submit"] {
     flex-grow: 1;
     padding: 0; }
   .mdl-layout.is-upgraded .mdl-layout__tab.is-active {
-    color: rgb(0, 188, 212); }
+    color: rgb(255, 82, 82); }
   .mdl-layout.is-upgraded .mdl-layout__tab.is-active::after {
     height: 2px;
     width: 100%;
@@ -7405,7 +7405,7 @@ input.mdl-button[type="submit"] {
     z-index: 1;
     overflow: hidden; }
     .mdl-layout__tab .mdl-layout__tab-ripple-container .mdl-ripple {
-      background-color: rgb(0, 188, 212); }
+      background-color: rgb(255, 82, 82); }
 
 .mdl-layout__tab-panel {
   display: block; }
@@ -7638,7 +7638,7 @@ input.mdl-button[type="submit"] {
   border-radius: 50%;
   z-index: 2; }
   .mdl-radio.is-checked .mdl-radio__outer-circle {
-    border: 2px solid rgba(0, 188, 212, 0.8); }
+    border: 2px solid rgba(255, 82, 82, 0.8); }
   .mdl-radio__outer-circle fieldset[disabled] .mdl-radio,
   .mdl-radio.is-disabled .mdl-radio__outer-circle {
     border: 2px solid rgba(0,0,0, 0.26);
@@ -7659,7 +7659,7 @@ input.mdl-button[type="submit"] {
   transition-property: transform;
   transform: scale3d(0, 0, 0);
   border-radius: 50%;
-  background: rgba(0, 188, 212, 0.8); }
+  background: rgba(255, 82, 82, 0.8); }
   .mdl-radio.is-checked .mdl-radio__inner-circle {
     transform: scale3d(1, 1, 1); }
   fieldset[disabled] .mdl-radio .mdl-radio__inner-circle,
@@ -7689,7 +7689,7 @@ input.mdl-button[type="submit"] {
   overflow: hidden;
   -webkit-mask-image: -webkit-radial-gradient(circle, white, black); }
   .mdl-radio__ripple-container .mdl-ripple {
-    background: rgba(0, 188, 212, 0.8); }
+    background: rgba(255, 82, 82, 0.8); }
   fieldset[disabled] .mdl-radio .mdl-radio__ripple-container,
   .mdl-radio.is-disabled .mdl-radio__ripple-container {
     cursor: auto; }
@@ -7881,7 +7881,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
     user-select: none;
     outline: 0;
     padding: 0;
-    color: rgb(0, 188, 212);
+    color: rgb(255, 82, 82);
     align-self: center;
     z-index: 1;
     cursor: pointer;
@@ -7906,7 +7906,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
       border: none; }
     .mdl-slider.is-upgraded::-ms-fill-lower {
       padding: 0;
-      background: linear-gradient(to right, transparent, transparent 16px, rgb(0, 188, 212) 16px, rgb(0, 188, 212) 0); }
+      background: linear-gradient(to right, transparent, transparent 16px, rgb(255, 82, 82) 16px, rgb(255, 82, 82) 0); }
     .mdl-slider.is-upgraded::-ms-fill-upper {
       padding: 0;
       background: linear-gradient(to left, transparent, transparent 16px, rgba(0,0,0, 0.26) 16px, rgba(0,0,0, 0.26) 0); }
@@ -7916,7 +7916,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
       height: 12px;
       box-sizing: border-box;
       border-radius: 50%;
-      background: rgb(0, 188, 212);
+      background: rgb(255, 82, 82);
       border: none;
       transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1), border 0.18s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.18s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
     .mdl-slider.is-upgraded::-moz-range-thumb {
@@ -7926,33 +7926,33 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
       box-sizing: border-box;
       border-radius: 50%;
       background-image: none;
-      background: rgb(0, 188, 212);
+      background: rgb(255, 82, 82);
       border: none; }
     .mdl-slider.is-upgraded:focus:not(:active)::-webkit-slider-thumb {
-      box-shadow: 0 0 0 10px rgba(0, 188, 212, 0.26); }
+      box-shadow: 0 0 0 10px rgba(255, 82, 82, 0.26); }
     .mdl-slider.is-upgraded:focus:not(:active)::-moz-range-thumb {
-      box-shadow: 0 0 0 10px rgba(0, 188, 212, 0.26); }
+      box-shadow: 0 0 0 10px rgba(255, 82, 82, 0.26); }
     .mdl-slider.is-upgraded:active::-webkit-slider-thumb {
       background-image: none;
-      background: rgb(0, 188, 212);
+      background: rgb(255, 82, 82);
       transform: scale(1.5); }
     .mdl-slider.is-upgraded:active::-moz-range-thumb {
       background-image: none;
-      background: rgb(0, 188, 212);
+      background: rgb(255, 82, 82);
       transform: scale(1.5); }
     .mdl-slider.is-upgraded::-ms-thumb {
       width: 32px;
       height: 32px;
       border: none;
       border-radius: 50%;
-      background: rgb(0, 188, 212);
+      background: rgb(255, 82, 82);
       transform: scale(0.375);
       transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
     .mdl-slider.is-upgraded:focus:not(:active)::-ms-thumb {
-      background: radial-gradient(circle closest-side, rgb(0, 188, 212) 0%, rgb(0, 188, 212) 37.5%, rgba(0, 188, 212, 0.26) 37.5%, rgba(0, 188, 212, 0.26) 100%);
+      background: radial-gradient(circle closest-side, rgb(255, 82, 82) 0%, rgb(255, 82, 82) 37.5%, rgba(255, 82, 82, 0.26) 37.5%, rgba(255, 82, 82, 0.26) 100%);
       transform: scale(1); }
     .mdl-slider.is-upgraded:active::-ms-thumb {
-      background: rgb(0, 188, 212);
+      background: rgb(255, 82, 82);
       transform: scale(0.5625); }
     .mdl-slider.is-upgraded.is-lowest-value::-webkit-slider-thumb {
       border: 2px solid rgba(0,0,0, 0.26);
@@ -8059,7 +8059,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
   transform: translate(0, -1px); }
 
 .mdl-slider__background-lower {
-  background: rgb(0, 188, 212);
+  background: rgb(255, 82, 82);
   flex: 0;
   position: relative;
   border: 0;
@@ -8504,28 +8504,28 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
 .mdl-spinner__layer-1 {
   border-color: rgb(66,165,245); }
   .mdl-spinner--single-color .mdl-spinner__layer-1 {
-    border-color: rgb(0, 188, 212); }
+    border-color: rgb(255, 82, 82); }
   .mdl-spinner.is-active .mdl-spinner__layer-1 {
     animation: mdl-spinner__fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, mdl-spinner__layer-1-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both; }
 
 .mdl-spinner__layer-2 {
   border-color: rgb(244,67,54); }
   .mdl-spinner--single-color .mdl-spinner__layer-2 {
-    border-color: rgb(0, 188, 212); }
+    border-color: rgb(255, 82, 82); }
   .mdl-spinner.is-active .mdl-spinner__layer-2 {
     animation: mdl-spinner__fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, mdl-spinner__layer-2-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both; }
 
 .mdl-spinner__layer-3 {
   border-color: rgb(253,216,53); }
   .mdl-spinner--single-color .mdl-spinner__layer-3 {
-    border-color: rgb(0, 188, 212); }
+    border-color: rgb(255, 82, 82); }
   .mdl-spinner.is-active .mdl-spinner__layer-3 {
     animation: mdl-spinner__fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, mdl-spinner__layer-3-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both; }
 
 .mdl-spinner__layer-4 {
   border-color: rgb(76,175,80); }
   .mdl-spinner--single-color .mdl-spinner__layer-4 {
-    border-color: rgb(0, 188, 212); }
+    border-color: rgb(255, 82, 82); }
   .mdl-spinner.is-active .mdl-spinner__layer-4 {
     animation: mdl-spinner__fill-unfill-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both, mdl-spinner__layer-4-fade-in-out 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both; }
 
@@ -8907,7 +8907,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
   border-radius: 14px;
   cursor: pointer; }
   .mdl-switch.is-checked .mdl-switch__track {
-    background: rgba(0, 188, 212, 0.5); }
+    background: rgba(255, 82, 82, 0.5); }
   .mdl-switch__track fieldset[disabled] .mdl-switch,
   .mdl-switch.is-disabled .mdl-switch__track {
     background: rgba(0,0,0, 0.12);
@@ -8927,7 +8927,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-property: left; }
   .mdl-switch.is-checked .mdl-switch__thumb {
-    background: rgb(0, 188, 212);
+    background: rgb(255, 82, 82);
     left: 16px;
     box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 1px 8px 0 rgba(0, 0, 0, 0.12); }
   .mdl-switch__thumb fieldset[disabled] .mdl-switch,
@@ -8950,8 +8950,8 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
     box-shadow: 0 0 0px 20px rgba(0, 0, 0, 0.1);
     background-color: rgba(0, 0, 0, 0.1); }
   .mdl-switch.is-focused.is-checked .mdl-switch__focus-helper {
-    box-shadow: 0 0 0px 20px rgba(0, 188, 212, 0.26);
-    background-color: rgba(0, 188, 212, 0.26); }
+    box-shadow: 0 0 0px 20px rgba(255, 82, 82, 0.26);
+    background-color: rgba(255, 82, 82, 0.26); }
 
 .mdl-switch__label {
   position: relative;
@@ -8981,7 +8981,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
   transition-timing-function: step-end;
   transition-property: left; }
   .mdl-switch__ripple-container .mdl-ripple {
-    background: rgb(0, 188, 212); }
+    background: rgb(255, 82, 82); }
   .mdl-switch__ripple-container fieldset[disabled] .mdl-switch,
   .mdl-switch.is-disabled .mdl-switch__ripple-container {
     cursor: auto; }
@@ -9197,7 +9197,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
     bottom: 0px;
     left: 0px;
     position: absolute;
-    background: rgb(0, 188, 212);
+    background: rgb(255, 82, 82);
     animation: border-expand 0.2s cubic-bezier(0.4, 0, 0.4, 1) 0.01s alternate forwards;
     transition: all 1s cubic-bezier(0.4, 0, 1, 1); }
   .mdl-tabs__tab .mdl-tabs__ripple-container {
@@ -9210,7 +9210,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
     z-index: 1;
     overflow: hidden; }
     .mdl-tabs__tab .mdl-tabs__ripple-container .mdl-ripple {
-      background: rgb(0, 188, 212); }
+      background: rgb(255, 82, 82); }
 
 .mdl-tabs__panel {
   display: block; }
@@ -9490,7 +9490,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
     color: rgba(255, 255, 255, 0.6); }
   .mdl-textfield--floating-label.is-focused .mdl-textfield__label,
   .mdl-textfield--floating-label.is-dirty .mdl-textfield__label {
-    color: rgb(0, 188, 212);
+    color: rgb(255, 82, 82);
     font-size: 12px;
     top: 4px;
     visibility: visible; }
@@ -9501,7 +9501,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
     color: rgb(213,0,0);
     font-size: 12px; }
   .mdl-textfield__label:after {
-    background-color: rgb(0, 188, 212);
+    background-color: rgb(255, 82, 82);
     bottom: 20px;
     content: '';
     height: 2px;
@@ -10656,7 +10656,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
   background: #202020; }
 
 main {
-  background: url("../images/Dark_background_1920x1080.png") center top no-repeat;
+  background: url("../images/background.jpg") center top no-repeat;
   background-size: cover;
   margin-right: -18px; }
 
@@ -10696,13 +10696,13 @@ main {
         margin: -3px 25px 0 23px;
         color: rgba(255, 255, 255, 0.56); }
       .mdl-layout__drawer .mdl-navigation .mdl-navigation__link--current {
-        border-left: 2px solid rgb(0, 188, 212); }
+        border-left: 2px solid rgb(255, 82, 82); }
         .mdl-layout__drawer .mdl-navigation .mdl-navigation__link--current .material-icons {
-          color: rgb(0, 188, 212); }
+          color: rgb(255, 82, 82); }
       .mdl-layout__drawer .mdl-navigation .mdl-navigation__link:hover {
-        color: rgb(0, 188, 212); }
+        color: rgb(255, 82, 82); }
         .mdl-layout__drawer .mdl-navigation .mdl-navigation__link:hover .material-icons {
-          color: rgb(0, 188, 212); }
+          color: rgb(255, 82, 82); }
 
 .mdl-layout__header-row {
   color: rgba(255, 255, 255, 0.8); }
@@ -10712,7 +10712,7 @@ main {
     padding: 0 20px;
     line-height: 64px; }
     .mdl-layout__header-row .avatar-dropdown:hover {
-      background: rgba(0, 0, 0, 0.3); }
+      background: rgb(103, 100, 255); }
     .mdl-layout__header-row .avatar-dropdown > img {
       width: 32px;
       height: 32px; }
@@ -10760,7 +10760,7 @@ main {
     display: none; } }
 
 .mdl-card__title {
-  background-color: rgba(0, 0, 0, 0.3); }
+  background-color: rgb(0, 0, 0); }
 
 .mdl-card__supporting-text {
   width: calc(100% - 32px); }
@@ -10799,7 +10799,7 @@ a {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 16px;
   font-weight: 300;
-  color: rgb(0, 188, 212);
+  color: rgb(255, 82, 82);
   text-decoration: none; }
 
 .mdl-textfield {
@@ -10819,8 +10819,8 @@ a {
 .mdl-data-table {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-weight: 300;
-  background-color: #4e4e4e;
-  color: rgb(255, 255, 255);
+  background-color: #FFFFFF;
+  color: rgb(0, 0, 0);
   border: none; }
   .mdl-data-table tr:last-child td {
     border: none; }
@@ -10915,7 +10915,7 @@ a {
   font-size: 48px; }
 
 .trending__arrow-up {
-  color: rgb(0, 188, 212); }
+  color: rgb(255, 82, 82); }
 
 .trending__arrow-down {
   color: rgb(255, 82, 82); }
@@ -11079,7 +11079,7 @@ a {
       .account-dropdown .mdl-list__item:first-child .mdl-list__item-primary-content .mdl-list__item-sub-title {
         font-weight: 300; }
   .account-dropdown .mdl-list__item:hover .mdl-list__item-icon {
-    color: rgb(0, 188, 212); }
+    color: rgb(255, 82, 82); }
 
 .account-dropdown .list__item--border-top {
   margin-top: 8px;
@@ -11206,7 +11206,7 @@ a {
     line-height: 13px;
     font-weight: 400;
     color: white;
-    background-color: rgb(0, 188, 212); }
+    background-color: rgb(255, 82, 82); }
     .employer-form button.mdl-button.mdl-button--colored:disabled {
       background-color: gray;
       color: rgba(255, 255, 255, 0.6); }
@@ -11214,11 +11214,11 @@ a {
     font-size: 15px;
     color: rgba(255, 255, 255, 0.6); }
   .employer-form .form__action .mdl-checkbox .mdl-ripple {
-    background: rgb(0, 188, 212); }
+    background: rgb(255, 82, 82); }
   .employer-form .form__action .mdl-checkbox.is-checked .mdl-checkbox__box-outline {
-    border-color: rgb(0, 188, 212); }
+    border-color: rgb(255, 82, 82); }
     .employer-form .form__action .mdl-checkbox.is-checked .mdl-checkbox__box-outline .mdl-checkbox__tick-outline {
-      background-color: rgb(0, 188, 212);
+      background-color: rgb(255, 82, 82);
       background-image: url("../images/tick_dark.svg?embed"); }
 
 .employer-form__general_skills {
@@ -11231,7 +11231,7 @@ a {
   .employer-form__general_skills .mdl-textfield label {
     color: rgba(255, 255, 255, 0.6); }
   .employer-form__general_skills .mdl-textfield--floating-label.is-focused .mdl-textfield__label {
-    color: rgb(0, 188, 212); }
+    color: rgb(255, 82, 82); }
   .employer-form__general_skills textarea {
     height: 90px; }
 
@@ -11350,7 +11350,7 @@ a {
   float: left; }
 
 .background-color--primary {
-  background-color: rgba(0, 188, 212, 0.9); }
+  background-color: rgba(255, 82, 82, 0.9); }
 
 .background-color--secondary {
   background-color: rgba(255, 82, 82, 0.9); }
@@ -11365,7 +11365,7 @@ a {
   background-color: rgba(96, 196, 150, 0.9); }
 
 .text-color--primary {
-  color: rgba(0, 188, 212, 0.8) !important; }
+  color: rgba(255, 82, 82, 0.8) !important; }
 
 .text-color--secondary {
   color: rgba(255, 82, 82, 0.8) !important; }
@@ -11383,7 +11383,7 @@ a {
   color: white; }
 
 .getmdl-select.is-focused i.material-icons {
-  color: rgb(0, 188, 212); }
+  color: rgb(255, 82, 82); }
 
 .getmdl-select .mdl-menu__container {
   margin-top: -45px !important; }
