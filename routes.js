@@ -13,7 +13,7 @@ module.exports = function (app, passport, roles) {
     });
 
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect: 'index',
+        successRedirect: '/',
         failureRedirect: '/landing',
         failureFlash: true
     }));
