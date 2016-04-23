@@ -82,7 +82,7 @@ roles.use(function (req, action) {
 //     }
 // })
 //
-require('./routes.js')(app, passport, roles);
+require('./routes.js')(app, passport, roles, mongoose);
 require('./config/passport')(passport);
 
 app.get('/', function(req,res){

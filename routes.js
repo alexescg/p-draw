@@ -1,8 +1,9 @@
 var Usuario = require('./models/usuarios');
 var Proyecto = require('./models/proyectos');
 var Rol = require('./models/roles')
+//var mongoose = require('mongoose');
 
-module.exports = function (app, passport, roles) {
+module.exports = function (app, passport, roles, mongoose) {
 
     app.get("/", function (req, res) {
         res.render("index");
@@ -106,26 +107,54 @@ module.exports = function (app, passport, roles) {
     app.get("/main", isLoggedIn, function (req, response) {
         response.render("templates/main");
     });
-
+/*--------------------------------Routes para el dashboard -----------------------------------*/
     app.get("/home", function (req, response) {
         var protectos = [];
-        console.log("Aqui entro")
-        Proyecto.find({})//{"participantes.usuario": req.user._id})
-            .exec(function (err, proyectos) {
-                if (proyectos != "") {
-                    Proyecto.populate(proyectos, {
-                        path: 'participantes.usuario',
-                        model: 'Usuario'
-                    }, function (err, proyectos) {
-                      console.log("Algo");
-                      console.log(proyectos);
-                        response.render("dashboard", {proyectosScrum: proyectos});
-                    });
-                } else {
-                    response.render("proyectos/proyectosBlank", {usuario: req.user});
-                }
-            })
+        response.render("dashboard", {usuario:"57048f0cee0cea7161f4a469"});
     });
+
+    app.get("/getProyectos/dashboard/:idUsuario/:rol", function(req, response){
+      Proyecto.find({"participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario), "participantes.rol": req.params.rol})
+          .exec(function (err, proyectos) {
+              if (proyectos != "") {
+                  Proyecto.populate(proyectos, {
+                      path: 'participantes.usuario',
+                      model: 'Usuario'
+                  }, function (err, proyectos) {
+                      response.json(proyectos);
+                  });
+              } else {
+                  response.render("proyectos/proyectosBlank", {usuario:"57048f0cee0cea7161f4a469"});
+              }
+          })
+    });
+
+    app.get("/count/proyectos/usuario/:idUsuario",function(req,response){
+      console.log(req.params.idUsuario);
+      var json={};
+      json.scrum = 0;
+      json.owner = 0;
+      json.developer = 0;
+      Proyecto.count({"participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario), "participantes.rol": "scrum-master"},
+              function(err, c){
+                if(err) response.redirect("/");
+                json.scrum = c;
+              });
+      Proyecto.count({"participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario), "participantes.rol": "product-owner"},
+              function(err, c){
+                if(err) response.redirect("/");
+                json.owner = c;
+              });
+      Proyecto.count({"participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario), "participantes.rol": "developer"},
+              function(err, c){
+                if(err) response.redirect("/");
+                json.developer = c;
+                console.log("Json.developer: "+json.developer);
+                response.json(json);
+              });
+    });
+
+/*======================= Fin de rutas del dashboard============================================*/
 
     app.get("/detalleproyecto", isLoggedIn, function (req, response) {
         if (req.query.proyectoElegido === undefined) {
