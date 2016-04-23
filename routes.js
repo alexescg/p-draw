@@ -13,7 +13,7 @@ module.exports = function (app, passport, roles) {
     });
 
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect: '/home',
+        successRedirect: 'index',
         failureRedirect: '/landing',
         failureFlash: true
     }));
@@ -22,24 +22,24 @@ module.exports = function (app, passport, roles) {
 
     app.get('/auth/facebook/callback',
         passport.authenticate('facebook', {
-            successRedirect: '/home',
-            failureRedirect: '/login'
+            successRedirect: '/',
+            failureRedirect: '/landing'
         }));
 
     app.get('/auth/twitter', passport.authenticate('twitter'));
 
     app.get('/auth/twitter/callback',
         passport.authenticate('twitter', {
-            successRedirect: '/home',
-            failureRedirect: '/login'
+            successRedirect: '/',
+            failureRedirect: '/landing'
         }));
 
     app.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'email']}));
 
     app.get('/auth/google/callback',
         passport.authenticate('google', {
-            successRedirect: '/home',
-            failureRedirect: '/login'
+            successRedirect: '/',
+            failureRedirect: '/landing'
         }));
 
 
