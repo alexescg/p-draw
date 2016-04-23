@@ -25,7 +25,6 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
         link(href='static/css/lib/nv.d3.css' rel='stylesheet' type="text/css")
         link(type="text/css" src="static/bower_components/ngToast/dist/ngToast.min.css")
         link(href='static/css/landing.css' rel='stylesheet' type="text/css")
-
     body
         .mdl-layout.mdl-js-layout.mdl-layout--fixed-header
             div
@@ -48,8 +47,17 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                     button#show-dialog(class="mdl-button") Iniciar Sesión
                     dialog.mdl-dialog
                         h4.mdl-dialog__title Iniciar Sesión
-                        .mdl-dialog__content
-                            p dwadwa
+                        br
+                        form(method="POST" action="/login")
+                            .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                                input.mdl-textfield__input(type="text" id="username" name="username" style="color: black" required="required")
+                                label(for="username" class="mdl-textfield__label") Usuario
+                            .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                                input.mdl-textfield__input(type="password" id="password" style="color: black")
+                                label(for="password" class="mdl-textfield__label" name="password" required="required") Password
+                            button(type="submit" class="mdl-button") Iniciar Sesión
+
+
 
                     a(href='#screens')
                         button.android-fab.mdl-button.mdl-button--colored.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect

@@ -9,12 +9,12 @@ module.exports = function (app, passport, roles) {
     });
 
     app.get('/login', function (req, res) {
-        res.render('login', {message: req.flash('loginMessage')});
+        res.render('landing');
     });
 
     app.post('/login', passport.authenticate('local-login', {
         successRedirect: '/home',
-        failureRedirect: '/login',
+        failureRedirect: '/landing',
         failureFlash: true
     }));
 
