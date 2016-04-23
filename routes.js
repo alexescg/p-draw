@@ -4,17 +4,17 @@ var Rol = require('./models/roles')
 
 module.exports = function (app, passport, roles) {
 
-    app.get("/", function (req, res) {
+    app.get("/", isLoggedIn, function (req, res) {
         res.render("index");
     });
 
     app.get('/login', function (req, res) {
-        res.render('login', {message: req.flash('loginMessage')});
+        res.render('landing');
     });
 
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect: '/home',
-        failureRedirect: '/login',
+        successRedirect: '/',
+        failureRedirect: '/landing',
         failureFlash: true
     }));
 
@@ -22,24 +22,24 @@ module.exports = function (app, passport, roles) {
 
     app.get('/auth/facebook/callback',
         passport.authenticate('facebook', {
-            successRedirect: '/home',
-            failureRedirect: '/login'
+            successRedirect: '/',
+            failureRedirect: '/landing'
         }));
 
     app.get('/auth/twitter', passport.authenticate('twitter'));
 
     app.get('/auth/twitter/callback',
         passport.authenticate('twitter', {
-            successRedirect: '/home',
-            failureRedirect: '/login'
+            successRedirect: '/',
+            failureRedirect: '/landing'
         }));
 
     app.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'email']}));
 
     app.get('/auth/google/callback',
         passport.authenticate('google', {
-            successRedirect: '/home',
-            failureRedirect: '/login'
+            successRedirect: '/',
+            failureRedirect: '/landing'
         }));
 
 
@@ -93,14 +93,14 @@ module.exports = function (app, passport, roles) {
 
     app.get('/logout', function (req, res) {
         req.logout();
-        res.redirect('/');
+        res.redirect('/landing');
     });
 
     function isLoggedIn(req, res, next) {
         if (req.isAuthenticated()) {
             return next();
         }
-        res.redirect('/login');
+        res.redirect('/landing');
     }
 
     app.get("/main", isLoggedIn, function (req, response) {

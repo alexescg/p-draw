@@ -23,10 +23,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require("express-session");
 //
-// var configDB = require('./config/database.js');
-// mongoose.connect(configDB.url);
+var configDB = require('./config/database.js');
+mongoose.connect(configDB.url);
 //
-// // var Usuario = require('./models/usuarios').Usuario;
+// var Usuario = require('./models/usuarios').Usuario;
 //
 // //Configurations
 // //TODO: descomentar logger
@@ -88,7 +88,11 @@ require('./config/passport')(passport);
 
 app.get('/', function(req,res){
     res.render('index');
-})
+});
+
+app.get('/landing', function(req,res){
+    res.render('landing');
+});
 
 app.listen(port, function () {
     console.log("Escuchando desde el puerto " + port);
