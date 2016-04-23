@@ -1,5 +1,5 @@
 doctype html
-html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app)
+html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
     head
         link(rel='icon', type='image/png', href='../src/images/DB_16х16.png')
         meta(charset='utf-8')
@@ -42,7 +42,7 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app)
                         | notifications_none
                     ul.mdl-menu.mdl-list.mdl-js-menu.mdl-js-ripple-effect.mdl-menu--bottom-right.mdl-shadow--2dp.notifications-dropdown(for='notification')
                         li.mdl-list__item
-                            | You have 23 new notifications!
+                            | You have {{70+90}} new notifications!
                         li.mdl-menu__item.mdl-list__item.list__item--border-top
                             span.mdl-list__item-primary-content
                                 span.mdl-list__item-avatar.background-color--primary
@@ -177,7 +177,9 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app)
         script(type="text/javascript" src="static/bower_components/getmdl-select/getmdl-select.min.js")
         script(type="text/javascript" src="static/bower_components/material-design-lite/material.min.js")
         script(type="text/javascript" src="static/bower_components/nvd3/build/nv.d3.min.js")
+        //angular
         script(type="text/javascript" src="static/bower_components/angular/angular.min.js")
+        script(type="text/javascript" src="static/js/angularApp.js")
         //ngToast
         script(type="text/javascript" src="static/bower_components/angular-sanitize/angular-sanitize.min.js")
         script(type="text/javascript" src="static/bower_components/angular-animate/angular-animate.min.js")
