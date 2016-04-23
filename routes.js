@@ -107,16 +107,19 @@ module.exports = function (app, passport, roles) {
         response.render("templates/main");
     });
 
-    app.get("/home", isLoggedIn, function (req, response) {
+    app.get("/home", function (req, response) {
         var protectos = [];
-        Proyecto.find({"participantes.usuario": req.user._id})
+        console.log("Aqui entro")
+        Proyecto.find({})//{"participantes.usuario": req.user._id})
             .exec(function (err, proyectos) {
                 if (proyectos != "") {
                     Proyecto.populate(proyectos, {
                         path: 'participantes.usuario',
                         model: 'Usuario'
                     }, function (err, proyectos) {
-                        response.render("dashboard", {usuario: req.user, proyectosTotal: proyectos});
+                      console.log("Algo");
+                      console.log(proyectos);
+                        response.render("dashboard", {proyectosScrum: proyectos});
                     });
                 } else {
                     response.render("proyectos/proyectosBlank", {usuario: req.user});

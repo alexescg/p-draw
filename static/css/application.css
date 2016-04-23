@@ -11410,3 +11410,13 @@ a {
 
 .mdl-textfield.is-disabled input {
   border-bottom-width: 2px !important; }
+
+.demo-card-square.mdl-card {
+  width: 400px;
+  height: 300px;
+}
+.demo-card-square > .mdl-card__title {
+  color: #fff;
+  background:
+    url('../assets/demos/dog.png') bottom right 15% no-repeat #46B6AC;
+}
