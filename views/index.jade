@@ -114,7 +114,7 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                         li.mdl-list__item.list__item--border-top
                             button.mdl-button.mdl-js-button.mdl-js-ripple-effect(href='#') SHOW ALL MESSAGES
                     #icon.avatar-dropdown
-                        span Luke
+                        span #{usuario.nombreCompleto}
                         img(src='static/images/Icon_header.png')
                     ul.mdl-menu.mdl-list.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect.mdl-shadow--2dp.account-dropdown(for='icon')
                         li.mdl-list__item.mdl-list__item--two-line
@@ -161,17 +161,16 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                     a.mdl-navigation__link.mdl-navigation__link--current(href='index.html')
                         i.material-icons(role='presentation') dashboard
                         |                 Dashboard
-                    a.mdl-navigation__link(href='../src/forms.html')
+                    a.mdl-navigation__link(href='/crearProyecto')
                         i.material-icons(role='presentation') person
-                        |                 Account
+                        |                 Crear Proyecto
                     .mdl-layout-spacer
                     a.mdl-navigation__link(href='https://github.com/CreativeIT/getmdl-dashboard')
                         i.material-icons(role='presentation') link
                         |                 GitHub
-            main.mdl-layout__content
-                .mdl-grid.mdl-grid--no-spacing
-                    .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top
-                      block content
+            main.mdl-layout__content(class="mdl-color--grey-100")
+              .mdl-grid.mdl-grid--no-spacing
+                block content
         // inject:js
         // endinject
         script(type="text/javascript" src="static/bower_components/d3/d3.min.js")

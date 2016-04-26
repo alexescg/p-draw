@@ -1,8 +1,9 @@
 var Usuario = require('./models/usuarios');
 var Proyecto = require('./models/proyectos');
 var Rol = require('./models/roles')
+//var mongoose = require('mongoose');
 
-module.exports = function (app, passport, roles) {
+module.exports = function (app, passport, roles, mongoose) {
 
     app.get("/", isLoggedIn, function (req, res) {
         res.render("index");
@@ -13,7 +14,7 @@ module.exports = function (app, passport, roles) {
     });
 
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect: '/',
+        successRedirect: '/home',
         failureRedirect: '/landing',
         failureFlash: true
     }));
@@ -22,7 +23,7 @@ module.exports = function (app, passport, roles) {
 
     app.get('/auth/facebook/callback',
         passport.authenticate('facebook', {
-            successRedirect: '/',
+            successRedirect: '/home',
             failureRedirect: '/landing'
         }));
 
@@ -30,7 +31,7 @@ module.exports = function (app, passport, roles) {
 
     app.get('/auth/twitter/callback',
         passport.authenticate('twitter', {
-            successRedirect: '/',
+            successRedirect: '/home',
             failureRedirect: '/landing'
         }));
 
@@ -38,7 +39,7 @@ module.exports = function (app, passport, roles) {
 
     app.get('/auth/google/callback',
         passport.authenticate('google', {
-            successRedirect: '/',
+            successRedirect: '/home',
             failureRedirect: '/landing'
         }));
 
@@ -106,24 +107,58 @@ module.exports = function (app, passport, roles) {
     app.get("/main", isLoggedIn, function (req, response) {
         response.render("templates/main");
     });
-
+/*--------------------------------Routes para el dashboard -----------------------------------*/
     app.get("/home", isLoggedIn, function (req, response) {
+        console.log("REQ-USER: "+req.user);
         var protectos = [];
-        Proyecto.find({"participantes.usuario": req.user._id})
-            .exec(function (err, proyectos) {
-                if (proyectos != "") {
-                    Proyecto.populate(proyectos, {
-                        path: 'participantes.usuario',
-                        model: 'Usuario'
-                    }, function (err, proyectos) {
-                        response.render("dashboard", {usuario: req.user, proyectosTotal: proyectos});
-                    });
-                } else {
-                    response.render("proyectos/proyectosBlank", {usuario: req.user});
-                }
-            })
+        response.render("dashboard", {usuario: req.user});
     });
 
+    app.get("/getProyectos/dashboard/:idUsuario/:rol", function(req, response){
+      console.log(req.params.idUsuario);
+      Proyecto.find({"participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario), "participantes.rol": req.params.rol})
+          .exec(function (err, proyectos) {
+              if (proyectos != "") {
+                  Proyecto.populate(proyectos, {
+                      path: 'participantes.usuario',
+                      model: 'Usuario'
+                  }, function (err, proyectos) {
+                      response.json(proyectos);
+                  });
+              } else {
+                  response.render("proyectos/proyectosBlank", {usuario:"57048f0cee0cea7161f4a469"});
+              }
+          })
+    });
+
+    app.get("/count/proyectos/usuario/:idUsuario",function(req,response){
+      console.log(req.params.idUsuario);
+      var json={};
+      json.scrum = 0;
+      json.owner = 0;
+      json.developer = 0;
+      Proyecto.count({"participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario), "participantes.rol": "scrum-master"},
+              function(err, c){
+                if(err) response.redirect("/");
+                json.scrum = c;
+              });
+      Proyecto.count({"participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario), "participantes.rol": "product-owner"},
+              function(err, c){
+                if(err) response.redirect("/");
+                json.owner = c;
+              });
+      Proyecto.count({"participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario), "participantes.rol": "developer"},
+              function(err, c){
+                if(err) response.redirect("/");
+                json.developer = c;
+                console.log("Json.developer: "+json.developer);
+                response.json(json);
+              });
+    });
+
+/*======================= Fin de rutas del dashboard============================================*/
+
+/*------------------------ Rutas para Proyectos -------------------------------*/
     app.get("/detalleproyecto", isLoggedIn, function (req, response) {
         if (req.query.proyectoElegido === undefined) {
             req.query.proyectoElegido = req.session.proyecto;
@@ -170,6 +205,35 @@ module.exports = function (app, passport, roles) {
                     });
             });
     });
+
+    app.get("/crearProyecto", function(req, response){
+      response.render("./proyectos/blankProyecto");
+    });
+
+    app.post("/crearProyecto", function (req, res) {
+      console.log(req.user);
+        var rol = new Rol({
+            rol: "scrum-master",
+            usuario: req.user._id
+        });
+        var proyecto = new Proyecto({
+            nombreProyecto: req.body.nombreProyecto,
+            fechaSolicitud: Date(),
+            fechaArranque: req.body.fechaArranque,
+            descripcionProy: req.body.descripcionProy,
+        });
+        proyecto.participantes.push(rol);
+        //err tiene los errores que pueden pasar y obj el objeto a guardar.
+        proyecto.save(function (err, obj) {
+            if (err) res.redirect("/crear/proyecto", {obj: obj});
+            else {
+              message: req.flash('ProyectoGuardado')
+              res.redirect("/home");
+            }
+        });
+
+    });
+
     var sass;
     app.get("/agregarScrum", isLoggedIn, function (req, response) {
         sass = req.session;
@@ -266,26 +330,6 @@ module.exports = function (app, passport, roles) {
 
     app.get("/empleados", isLoggedIn, function (req, res) {
         res.render("empleados");
-    });
-
-    app.post("/crearProyecto", function (req, res) {
-        var rol = new Rol({
-            rol: "product-owner",
-            usuario: req.user._id
-        });
-        var proyecto = new Proyecto({
-            nombreProyecto: req.body.nombreProyecto,
-            fechaSolicitud: Date(),
-            fechaArranque: req.body.fechaDeArranque,
-            descripcionProy: req.body.descripcion,
-        });
-        proyecto.participantes.push(rol);
-        //err tiene los errores que pueden pasar y obj el objeto a guardar.
-        proyecto.save(function (err, obj) {
-            if (err) res.redirect("/crear/proyecto", {obj: obj});
-            else res.redirect("/home");
-        });
-
     });
 
     app.get("/crear", isLoggedIn, function (req, res) {
