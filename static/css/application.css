@@ -9468,7 +9468,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
 
 .mdl-textfield__label {
   bottom: 0;
-  color: rgba(0,0,0, 0.26);
+  color: rgba(0,0,0, 0.25);
   font-size: 16px;
   left: 0;
   right: 0;
@@ -10805,7 +10805,10 @@ a {
 .mdl-textfield {
   width: auto; }
   .mdl-textfield .mdl-textfield__input {
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif; }
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    color:black;
+    border: 20px;
+    }
 
 .mdl-progress {
   min-width: 100px;

@@ -160,16 +160,16 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                     a.mdl-navigation__link.mdl-navigation__link--current(href='index.html')
                         i.material-icons(role='presentation') dashboard
                         |                 Dashboard
-                    a.mdl-navigation__link(href='../src/forms.html')
+                    a.mdl-navigation__link(href='/crearProyecto')
                         i.material-icons(role='presentation') person
-                        |                 Account
+                        |                 Crear Proyecto
                     .mdl-layout-spacer
                     a.mdl-navigation__link(href='https://github.com/CreativeIT/getmdl-dashboard')
                         i.material-icons(role='presentation') link
                         |                 GitHub
-            main.mdl-layout__content
-                .mdl-grid.mdl-grid--no-spacing
-                  block content
+            main.mdl-layout__content(class="mdl-color--grey-100")
+              .mdl-grid.mdl-grid--no-spacing
+                block content
         // inject:js
         // endinject
         script(type="text/javascript" src="static/bower_components/d3/d3.min.js")

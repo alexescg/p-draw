@@ -156,6 +156,7 @@ module.exports = function (app, passport, roles, mongoose) {
 
 /*======================= Fin de rutas del dashboard============================================*/
 
+/*------------------------ Rutas para Proyectos -------------------------------*/
     app.get("/detalleproyecto", isLoggedIn, function (req, response) {
         if (req.query.proyectoElegido === undefined) {
             req.query.proyectoElegido = req.session.proyecto;
@@ -202,6 +203,34 @@ module.exports = function (app, passport, roles, mongoose) {
                     });
             });
     });
+
+    app.get("/crearProyecto", function(req, response){
+      response.render("./proyectos/blankProyecto");
+    });
+
+    app.post("/crearProyecto", function (req, res) {
+        var rol = new Rol({
+            rol: "scrum-master",
+            usuario: mongoose.Types.ObjectId("57048f0cee0cea7161f4a469")//req.user._id
+        });
+        var proyecto = new Proyecto({
+            nombreProyecto: req.body.nombreProyecto,
+            fechaSolicitud: Date(),
+            fechaArranque: req.body.fechaArranque,
+            descripcionProy: req.body.descripcionProy,
+        });
+        proyecto.participantes.push(rol);
+        //err tiene los errores que pueden pasar y obj el objeto a guardar.
+        proyecto.save(function (err, obj) {
+            if (err) res.redirect("/crear/proyecto", {obj: obj});
+            else {
+              message: req.flash('ProyectoGuardado')
+              res.redirect("/home");
+            }
+        });
+
+    });
+
     var sass;
     app.get("/agregarScrum", isLoggedIn, function (req, response) {
         sass = req.session;
@@ -298,26 +327,6 @@ module.exports = function (app, passport, roles, mongoose) {
 
     app.get("/empleados", isLoggedIn, function (req, res) {
         res.render("empleados");
-    });
-
-    app.post("/crearProyecto", function (req, res) {
-        var rol = new Rol({
-            rol: "product-owner",
-            usuario: req.user._id
-        });
-        var proyecto = new Proyecto({
-            nombreProyecto: req.body.nombreProyecto,
-            fechaSolicitud: Date(),
-            fechaArranque: req.body.fechaDeArranque,
-            descripcionProy: req.body.descripcion,
-        });
-        proyecto.participantes.push(rol);
-        //err tiene los errores que pueden pasar y obj el objeto a guardar.
-        proyecto.save(function (err, obj) {
-            if (err) res.redirect("/crear/proyecto", {obj: obj});
-            else res.redirect("/home");
-        });
-
     });
 
     app.get("/crear", isLoggedIn, function (req, res) {
