@@ -14,7 +14,7 @@ module.exports = function (app, passport, roles, mongoose) {
     });
 
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect: '/',
+        successRedirect: '/home',
         failureRedirect: '/landing',
         failureFlash: true
     }));
@@ -23,7 +23,7 @@ module.exports = function (app, passport, roles, mongoose) {
 
     app.get('/auth/facebook/callback',
         passport.authenticate('facebook', {
-            successRedirect: '/',
+            successRedirect: '/home',
             failureRedirect: '/landing'
         }));
 
@@ -31,7 +31,7 @@ module.exports = function (app, passport, roles, mongoose) {
 
     app.get('/auth/twitter/callback',
         passport.authenticate('twitter', {
-            successRedirect: '/',
+            successRedirect: '/home',
             failureRedirect: '/landing'
         }));
 
@@ -39,7 +39,7 @@ module.exports = function (app, passport, roles, mongoose) {
 
     app.get('/auth/google/callback',
         passport.authenticate('google', {
-            successRedirect: '/',
+            successRedirect: '/home',
             failureRedirect: '/landing'
         }));
 
@@ -108,12 +108,14 @@ module.exports = function (app, passport, roles, mongoose) {
         response.render("templates/main");
     });
 /*--------------------------------Routes para el dashboard -----------------------------------*/
-    app.get("/home", function (req, response) {
+    app.get("/home", isLoggedIn, function (req, response) {
+        console.log("REQ-USER: "+req.user);
         var protectos = [];
-        response.render("dashboard", {usuario:"57048f0cee0cea7161f4a469"});
+        response.render("dashboard", {usuario: req.user});
     });
 
     app.get("/getProyectos/dashboard/:idUsuario/:rol", function(req, response){
+      console.log(req.params.idUsuario);
       Proyecto.find({"participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario), "participantes.rol": req.params.rol})
           .exec(function (err, proyectos) {
               if (proyectos != "") {
@@ -209,9 +211,10 @@ module.exports = function (app, passport, roles, mongoose) {
     });
 
     app.post("/crearProyecto", function (req, res) {
+      console.log(req.user);
         var rol = new Rol({
             rol: "scrum-master",
-            usuario: mongoose.Types.ObjectId("57048f0cee0cea7161f4a469")//req.user._id
+            usuario: req.user._id
         });
         var proyecto = new Proyecto({
             nombreProyecto: req.body.nombreProyecto,

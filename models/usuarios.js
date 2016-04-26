@@ -51,6 +51,13 @@ usuarioSchema.virtual("confirmarPassword").get(function () {
 });
 
 usuarioSchema.virtual("nombreCompleto").get(function () {
+    if(this.google){
+      return this.google.name;
+    } else if (this.twitter){
+      return this.twitter.displayName;
+    } else if (this.facebook){
+      return this.facebook.name;
+    }
     return this.nombre + " " + this.apellidos;
 });
 
