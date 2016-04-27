@@ -1,0 +1,197 @@
+html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
+    head
+        link(rel='icon', type='image/png', href='../src/static/images/DB_16х16.png')
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(name='description', content='A front-end template that helps you build fast, modern mobile web apps.')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        title Material Dashboard Lite
+        // Add to homescreen for Chrome on Android
+        meta(name='mobile-web-app-capable', content='yes')
+        // Add to homescreen for Safari on iOS
+        meta(name='apple-mobile-web-app-capable', content='yes')
+        meta(name='apple-mobile-web-app-status-bar-style', content='black')
+        meta(name='apple-mobile-web-app-title', content='Material Design Lite')
+        // Tile icon for Win8 (144x144 + tile color)
+        meta(name='msapplication-TileImage', content='static/images/touch/ms-touch-icon-144x144-precomposed.png')
+        meta(name='msapplication-TileColor', content='#3372DF')
+        // SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones
+        //
+          <link rel="canonical" href="http://www.example.com/">
+        link(href='https://fonts.googleapis.com/css?family=Roboto:400,500,300,100,700,900', rel='stylesheet', type='text/css')
+        link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
+        link(href='static/css/application.css' rel='stylesheet' type="text/css")
+        link(href='static/css/lib/getmdl-select.min.css' rel='stylesheet' type="text/css")
+        link(href='static/css/lib/nv.d3.css' rel='stylesheet' type="text/css")
+        link(type="text/css" src="static/bower_components/ngToast/dist/ngToast.min.css")
+        link(href='static/css/landing.css' rel='stylesheet' type="text/css")
+        link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
+    body
+        .mdl-layout.mdl-js-layout.mdl-layout--fixed-header
+            div
+                .mdl-layout__header-row
+                    span.android-title.mdl-layout-title
+                        img.android-logo-image(src='static/images/android-logo.png')
+                    // Add spacer, to align navigation to the right in desktop
+                    .android-header-spacer.mdl-layout-spacer
+                    .android-search-box.mdl-textfield.mdl-js-textfield.mdl-textfield--expandable.mdl-textfield--floating-label.mdl-textfield--align-right.mdl-textfield--full-width
+                        .mdl-textfield__expandable-holder
+                            input#search-field.mdl-textfield__input(type='text')
+                    // Navigation
+                    .android-navigation-container
+            .android-content.mdl-layout__content
+                a(name='top')
+                .android-be-together-section.mdl-typography--text-center
+                    .logo-font.android-slogan Nombre de Proyecto
+                    .logo-font.android-sub-slogan La herramienta que te ayuda a manejar a tu equipo y tus proyectos
+                    br
+                    button#show-dialog(class="mdl-button") Iniciar Sesión
+                    dialog.mdl-dialog
+                        h4.mdl-dialog__title Iniciar Sesión
+                        br
+                        form(method="POST" action="/login")
+                            div
+                                .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                                    input.mdl-textfield__input(type="text" id="email" name="email" style="color: black" required="required")
+                                    label(for="email" class="mdl-textfield__label") Correo
+                                i(class="material-icons") face
+                            div
+                                .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                                    input.mdl-textfield__input(type="password" id="password" style="color: black")
+                                    label(for="password" class="mdl-textfield__label" name="password" required="required") Contraseña
+                                i(class="material-icons") lock
+                            div
+                                a(href="/auth/facebook" style="margin-right:3em")
+                                    img(src="static/images/facebook.png")
+                                a(href="/auth/twitter" style="margin-right:2em")
+                                    img(src="static/images/twitter.png")
+                                a(href="/auth/google" style="margin-left:1em")
+                                    img(src="static/images/gplus.png" )
+
+                                br
+                                br
+                            button(type="submit" class="mdl-button") Iniciar Sesión
+
+
+
+                    a(href='#screens')
+                        button.android-fab.mdl-button.mdl-button--colored.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect
+                            i.material-icons expand_more
+                .android-screen-section.mdl-typography--text-center
+                    a(name='screens')
+                    .mdl-typography--display-1-color-contrast Powering screens of all sizes
+                    .android-screens
+                        .android-wear.android-screen
+                            a.android-image-link(href='')
+                                img.android-screen-image(src='static/images/wear-silver-on.png')
+                                img.android-screen-image(src='static/images/wear-black-on.png')
+                            a.android-link.mdl-typography--font-regular.mdl-typography--text-uppercase(href='') Android Wear
+                        .android-phone.android-screen
+                            a.android-image-link(href='')
+                                img.android-screen-image(src='static/images/nexus6-on.jpg')
+                            a.android-link.mdl-typography--font-regular.mdl-typography--text-uppercase(href='') Phones
+                        .android-tablet.android-screen
+                            a.android-image-link(href='')
+                                img.android-screen-image(src='static/images/nexus9-on.jpg')
+                            a.android-link.mdl-typography--font-regular.mdl-typography--text-uppercase(href='') Tablets
+                        .android-tv.android-screen
+                            a.android-image-link(href='')
+                                img.android-screen-image(src='static/images/tv-on.jpg')
+                            a.android-link.mdl-typography--font-regular.mdl-typography--text-uppercase(href='') Android TV
+                        .android-auto.android-screen
+                            a.android-image-link(href='')
+                                img.android-screen-image(src='static/images/auto-on.jpg')
+                            a.android-link.mdl-typography--font-regular.mdl-typography--text-uppercase.mdl-typography--text-left(href='') Coming Soon: Android Auto
+                .android-wear-section
+                    .android-wear-band
+                        .android-wear-band-text
+                            .mdl-typography--display-2.mdl-typography--font-thin The best of Google built in
+                            p.mdl-typography--headline.mdl-typography--font-thin
+                                | Android works perfectly with your favourite apps like Google Maps,
+                                | Calendar and YouTube.
+                            p
+                                a.mdl-typography--font-regular.mdl-typography--text-uppercase.android-alt-link(href='')
+                                    | See what&apos;s new in the Play Store&nbsp;
+                                    i.material-icons chevron_right
+                .android-customized-section
+                    .android-customized-section-text
+                        .mdl-typography--font-light.mdl-typography--display-1-color-contrast Customised by you, for you
+                        p.mdl-typography--font-light
+                            | Put the stuff that you care about right on your home screen: the latest news, the weather or a stream of your recent photos.
+                            br
+                            a.android-link.mdl-typography--font-light(href='') Customise your phone
+                    .android-customized-section-image
+                .android-more-section
+                    .android-section-title.mdl-typography--display-1-color-contrast More from Android
+                    .android-card-container.mdl-grid
+                        .mdl-cell.mdl-cell--3-col.mdl-cell--4-col-tablet.mdl-cell--4-col-phone.mdl-card.mdl-shadow--3dp
+                            .mdl-card__media
+                                img(src='static/images/more-from-1.png')
+                            .mdl-card__title
+                                h4.mdl-card__title-text Get going on Android
+                            .mdl-card__supporting-text
+                                span.mdl-typography--font-light.mdl-typography--subhead Four tips to make your switch to Android quick and easy
+                            .mdl-card__actions
+                                a.android-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(href='')
+                                    | Make the switch
+                                    i.material-icons chevron_right
+                        .mdl-cell.mdl-cell--3-col.mdl-cell--4-col-tablet.mdl-cell--4-col-phone.mdl-card.mdl-shadow--3dp
+                            .mdl-card__media
+                                img(src='static/images/more-from-4.png')
+                            .mdl-card__title
+                                h4.mdl-card__title-text Iniciar Sesión
+                            .mdl-card__supporting-text
+                                span.mdl-typography--font-light.mdl-typography--subhead Turn the little green Android mascot into you, your friends, anyone!
+                            .mdl-card__actions
+                                a.android-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(href='')
+                                    | androidify.com
+                                    i.material-icons chevron_right
+                        .mdl-cell.mdl-cell--3-col.mdl-cell--4-col-tablet.mdl-cell--4-col-phone.mdl-card.mdl-shadow--3dp
+                            .mdl-card__media
+                                img(src='static/images/more-from-2.png')
+                            .mdl-card__title
+                                h4.mdl-card__title-text Get a clean customisable home screen
+                            .mdl-card__supporting-text
+                                span.mdl-typography--font-light.mdl-typography--subhead
+                                    | A clean, simple, customisable home screen that comes with the power of Google Now: Traffic alerts, weather and much more, just a swipe away.
+                            .mdl-card__actions
+                                a.android-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(href='')
+                                    | Download now
+                                    i.material-icons chevron_right
+                        .mdl-cell.mdl-cell--3-col.mdl-cell--4-col-tablet.mdl-cell--4-col-phone.mdl-card.mdl-shadow--3dp
+                            .mdl-card__media
+                                img(src='static/images/more-from-3.png')
+                            .mdl-card__title
+                                h4.mdl-card__title-text Millions to choose from
+                            .mdl-card__supporting-text
+                                span.mdl-typography--font-light.mdl-typography--subhead
+                                    | Hail a taxi, find a recipe, run through a temple &ndash; Google Play has all the apps and games that let you make your Android device uniquely yours.
+                            .mdl-card__actions
+                                a.android-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(href='')
+                                    | Find apps
+                                    i.material-icons chevron_right
+                footer.android-footer.mdl-mega-footer
+
+        script.
+            var dialog = document.querySelector('dialog');
+            var showDialogButton = document.querySelector('#show-dialog');
+            if (!dialog.showModal) {
+                dialogPolyfill.registerDialog(dialog);
+            }
+                showDialogButton.addEventListener('click', function() {
+                    dialog.showModal();
+            });
+            dialog.querySelector('.close').addEventListener('click', function() {
+                dialog.close();
+            });
+        script(type="text/javascript" src="static/bower_components/d3/d3.min.js")
+        script(type="text/javascript" src="static/bower_components/getmdl-select/getmdl-select.min.js")
+        script(type="text/javascript" src="static/bower_components/material-design-lite/material.min.js")
+        script(type="text/javascript" src="static/bower_components/nvd3/build/nv.d3.min.js")
+        //angular
+        script(type="text/javascript" src="static/bower_components/angular/angular.min.js")
+        script(type="text/javascript" src="static/js/angularApp.js")
+        //ngToast
+        script(type="text/javascript" src="static/bower_components/angular-sanitize/angular-sanitize.min.js")
+        script(type="text/javascript" src="static/bower_components/angular-animate/angular-animate.min.js")
+        script(type="text/javascript" src="static/bower_components/ngToast/dist/ngToast.min.js")

@@ -23,10 +23,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require("express-session");
 //
-// var configDB = require('./config/database.js');
-// mongoose.connect(configDB.url);
-//
-// // var Usuario = require('./models/usuarios').Usuario;
+var configDB = require('./config/database.js');
+mongoose.connect(configDB.url);
+var Usuario = require('./models/usuarios').Usuario;
 //
 // //Configurations
 // //TODO: descomentar logger
@@ -83,7 +82,7 @@ roles.use(function (req, action) {
 //     }
 // })
 //
-require('./routes.js')(app, passport, roles);
+require('./routes.js')(app, passport, roles, mongoose);
 require('./config/passport')(passport);
 
 app.get('/partials/:name', function (req, res) {
@@ -93,7 +92,11 @@ app.get('/partials/:name', function (req, res) {
 
 app.get('/', function(req,res){
     res.render('index');
-})
+});
+
+app.get('/landing', function(req,res){
+    res.render('landing');
+});
 
 app.listen(port, function () {
     console.log("Escuchando desde el puerto " + port);

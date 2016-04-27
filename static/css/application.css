@@ -9489,7 +9489,7 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
 
 .mdl-textfield__label {
   bottom: 0;
-  color: rgba(0,0,0, 0.26);
+  color: rgba(0,0,0, 0.25);
   font-size: 16px;
   left: 0;
   right: 0;
@@ -10830,7 +10830,10 @@ a {
 .mdl-textfield {
   width: auto; }
   .mdl-textfield .mdl-textfield__input {
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif; }
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    color:black;
+    border: 20px;
+    }
 
 .mdl-progress {
   min-width: 100px;
@@ -11447,4 +11450,15 @@ a {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-weight: 300;
   line-height: 1em;
+}
+
+.demo-card-square.mdl-card {
+  width: 400px;
+  height: 300px;
+}
+.demo-card-square > .mdl-card__title {
+  color: #fff;
+}
+.demo-card-square > .mdl-card__supporting-text {
+  color: black;
 }
