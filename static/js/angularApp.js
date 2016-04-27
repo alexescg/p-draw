@@ -4,15 +4,15 @@ app.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/Sprints', {
-        templateUrl: 'add_order.html',
+        templateUrl: 'partials/sprints',
         controller: 'sprintsCtrl'
     }).
       when('/ProductBacklog', {
-        templateUrl: 'show_orders.html',
+        templateUrl: 'partials/productBacklog',
         controller: 'productBacklogCtrl'
       }).
       when('/ReleaseBacklog', {
-        templateUrl: 'show_orders.html',
+        templateUrl: 'partials/releaseBacklog',
         controller: 'releaseBacklogCtrl'
       }).
       otherwise({
@@ -51,4 +51,19 @@ app.controller('detalleProyectoCtrl', ['$scope', function($scope){
         nombre: "Daniela Santillanes"
       }
     ];
+}]);
+
+app.controller('productBacklogCtrl',['$scope', function($scope){
+  $scope.mensaje = "aszdxfhgndfxcbsxzcvx";
+  $scope.titulo = "Titulo 1";
+}]);
+
+app.controller('releaseBacklogCtrl',['$scope', function($scope){
+  $scope.mensaje = "hola";
+  $scope.titulo = "Titulo 2";
+}]);
+
+app.controller('sprintsCtrl',['$scope', function($scope){
+  $scope.mensaje = "no se";
+  $scope.titulo = "Titulo 3";
 }]);
