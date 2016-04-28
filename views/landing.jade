@@ -46,7 +46,9 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                     .logo-font.android-sub-slogan La herramienta que te ayuda a manejar a tu equipo y tus proyectos
                     br
                     button#show-dialog(class="mdl-button") Iniciar Sesión
-                    dialog.mdl-dialog
+                    button#show-dialog-register(class="mdl-button") Registrarme
+
+                    dialog#login.mdl-dialog
                         h4.mdl-dialog__title Iniciar Sesión
                         br
                         form(method="POST" action="/login")
@@ -67,12 +69,34 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                                     img(src="static/images/twitter.png")
                                 a(href="/auth/google" style="margin-left:1em")
                                     img(src="static/images/gplus.png" )
-
                                 br
                                 br
                             button(type="submit" class="mdl-button") Iniciar Sesión
 
-
+                    dialog#dialog-register.mdl-dialog
+                        h4.mdl-dialog__title Registrarme
+                        br
+                        form(method="POST" action="/register")
+                            div
+                                .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                                    input.mdl-textfield__input(type="text" id="correo" name="email" style="color: black" required="required")
+                                    label(for="correo" class="mdl-textfield__label") Correo
+                                i(class="material-icons") face
+                            div
+                                .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                                    input.mdl-textfield__input(type="password" id="contraseña" style="color: black")
+                                    label(for="contraseña" class="mdl-textfield__label" name="password" required="required") Contraseña
+                                i(class="material-icons") lock
+                            div
+                                a(href="/auth/facebook" style="margin-right:3em")
+                                    img(src="static/images/facebook.png")
+                                a(href="/auth/twitter" style="margin-right:2em")
+                                    img(src="static/images/twitter.png")
+                                a(href="/auth/google" style="margin-left:1em")
+                                    img(src="static/images/gplus.png" )
+                                br
+                                br
+                            button(type="submit" class="mdl-button") Iniciar Sesión
 
                     a(href='#screens')
                         button.android-fab.mdl-button.mdl-button--colored.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect
@@ -175,15 +199,25 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
         script.
             var dialog = document.querySelector('dialog');
             var showDialogButton = document.querySelector('#show-dialog');
+            showDialogButton.addEventListener('click', function () {
+                dialog.showModal();
+            });
             if (!dialog.showModal) {
                 dialogPolyfill.registerDialog(dialog);
             }
-                showDialogButton.addEventListener('click', function() {
-                    dialog.showModal();
-            });
             dialog.querySelector('.close').addEventListener('click', function() {
                 dialog.close();
             });
+        script.
+            var dialog = document.querySelector('dialog');
+            var showDialogRegisterButton = document.querySelector('#show-dialog-register');
+            showDialogRegisterButton.addEventListener('click', function () {
+                dialog.showModal();
+            });
+            dialog.querySelector('.close').addEventListener('click', function () {
+                dialog.close();
+            });
+
         script(type="text/javascript" src="static/bower_components/d3/d3.min.js")
         script(type="text/javascript" src="static/bower_components/getmdl-select/getmdl-select.min.js")
         script(type="text/javascript" src="static/bower_components/material-design-lite/material.min.js")

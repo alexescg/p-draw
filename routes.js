@@ -1,9 +1,10 @@
 var Usuario = require('./models/usuarios');
 var Proyecto = require('./models/proyectos');
-var Rol = require('./models/roles')
+var Rol = require('./models/roles');
+var HistoriaUsuario = require('./models/historiaUsuarios');
 //var mongoose = require('mongoose');
 
-module.exports = function (app, passport, roles, mongoose) {
+module.exports = function (app, passport, roles, mongoose, io) {
 
     app.get("/", isLoggedIn, function (req, res) {
         res.render("index");
@@ -300,7 +301,7 @@ module.exports = function (app, passport, roles, mongoose) {
           }
       });
     });
-
+/*---------------------------- Users -----------------------------------------*/
     app.post("/crearUsuario", isLoggedIn, function (req, res) {
         var usuario = new Usuario({
             userName: req.body.userName,
@@ -340,6 +341,31 @@ module.exports = function (app, passport, roles, mongoose) {
     app.get("/detallesprint", isLoggedIn, function (req, res) {
         res.render("detalleSprint");
     });
+    /*---------------------------- Historias -----------------------------------------*/
 
-}
-;
+
+    var getHistorias = HistoriaUsuario.find({}).then(function successCallback(success) {
+        return success;
+    }, function errorCallback(error) {
+        throw error;
+    });
+
+    io.on('connect', function (socket) {
+
+        // console.log(getMessages());
+        socket.emit('sendHistorias', getHistorias);
+
+        socket.on('newHistoria', function (data) {
+            var historiaNueva = new HistoriaUsuario(data);
+            historiaNueva.save(function (err, obj) {
+                console.log(obj);
+                if (obj) {
+                    getHistorias.push(data);
+                    io.sockets.emit('sendHistorias', getHistorias)
+                }
+            });
+        });
+    });
+
+
+};
