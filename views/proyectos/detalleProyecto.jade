@@ -1,0 +1,106 @@
+extends ./../index.jade
+block content
+  .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="detalleProyectoCtrl", ng-init="init('#{scrumMaster.nombreCompleto}', '#{owner.nombreCompleto}', '#{proyecto._id}')")
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
+        .mdl-card.mdl-shadow--2dp
+            .mdl-card__title
+                h2.mdl-card__title-text #{proyecto.nombreProyecto}
+            .mdl-card__supporting-text
+                p.letras-negras.
+                  #{proyecto.descripcionProy}
+        br
+        .mdl-card.mdl-shadow--2dp
+            .mdl-card__title
+                h2.mdl-card__title-text Scrum Master
+            .mdl-card__supporting-text
+
+              if(scrumMaster)
+                a(href='#', target='_blank') {{scrumMaster}}
+              else
+                a.mdl-button(type="submit") Agregar
+        br
+        .mdl-card.mdl-shadow--2dp
+            .mdl-card__title
+                h2.mdl-card__title-text Product Owner
+            .mdl-card__supporting-text
+              if(owner)
+                a(href='#', target='_blank') #{owner.nombreCompleto}
+              else
+                button.mdl-button(id="show-owner" type="button" ng-click="getUsuarios()") Agregar
+                dialog#show-owner(class="mdl-dialog-big")
+                  h2.mdl-dialog__title Usuarios
+                    .mdl-dialog__content
+                      table.mdl-data-table.mdl-js-data-table.mdl-data-table.projects-table
+                        thead
+                          tr
+                            th.mdl-data-table__cell--non-numeric Usuario
+                            th.mdl-data-table__cell--non-numeric
+                        tbody
+                          tr(ng-repeat="usuario in usuarios")
+                            td.mdl-data-table__cell--non-numeric {{usuario.nombre}}
+                            td.mdl-data-table__cell--non-numeric
+                              button.mdl-button(type="button" ng-click="asignarOwner(usuario._id)") Asignar
+
+    .mdl-cell.mdl-cell--6-col-desktop.mdl-cell--6-col-tablet.mdl-cell--4-col-phone
+        .mdl-card-2.mdl-shadow--2dp-2
+            div(ng-view)
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
+        .mdl-card.mdl-shadow--2dp.trending
+            .mdl-card__title
+                h2.mdl-card__title-text Desarrolladores
+            .mdl-card__supporting-text
+                ul.mdl-list
+                    li.mdl-list__item(ng-repeat="desarrollador in desarrolladores")
+                        span.mdl-list__item-primary-content.list__item-text.letras-negras {{desarrollador.nombre}}
+                    li.mdl-list__item
+                      button.mdl-button(id="show-developer" type="button" ng-click="getUsuarios()") Agregar Desarrolladores
+                      dialog#show-developer(class="mdl-dialog-big")
+                        h2.mdl-dialog__title Usuarios
+                          .mdl-dialog__content
+                            table.mdl-data-table.mdl-js-data-table.mdl-data-table.projects-table
+                              thead
+                                tr
+                                  th.mdl-data-table__cell--non-numeric Usuario
+                                  th.mdl-data-table__cell--non-numeric
+                              tbody
+                                tr(ng-repeat="usuario in usuarios")
+                                  td.mdl-data-table__cell--non-numeric {{usuario.nombre}}
+                                  td.mdl-data-table__cell--non-numeric
+                                    button.mdl-button(type="button" ng-click="asignarDesarrollador(usuario._id)") Asignar
+
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
+              tr
+                td.mdl-data-table__cell--non-numeric
+                  span.label.label--mini.background-color--mint
+                    a.a-blanco(href="#ProductBacklog") Product BackLog
+                td.mdl-data-table__cell--non-numeric
+                  span.label.label--mini.background-color--primary
+                    a.a-blanco(href="#ReleaseBacklog") Release BackLog
+                td.mdl-data-table__cell--non-numeric
+                  span.label.label--mini.background-color--cerulean
+                    a.a-blanco(href="#Sprints") Sprints
+
+  script.
+    var dialog = document.querySelector('dialog');
+    var showDialogButton = document.querySelector('#show-owner');
+    if (! dialog.showModal) {
+      dialogPolyfill.registerDialog(dialog);
+    }
+    showDialogButton.addEventListener('click', function() {
+      dialog.showModal();
+    });
+    dialog.querySelector('.close').addEventListener('click', function() {
+      dialog.close();
+    });
+  script.
+    var dialog = document.querySelector('dialog');
+    var showDialogButton = document.querySelector('#show-developer');
+    if (! dialog.showModal) {
+      dialogPolyfill.registerDialog(dialog);
+    }
+    showDialogButton.addEventListener('click', function() {
+      dialog.showModal();
+    });
+    dialog.querySelector('.close').addEventListener('click', function() {
+      dialog.close();
+    });

@@ -20,37 +20,78 @@ app.config(['$routeProvider',
       });
 }]);
 
+app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http){
+    $scope.scrumMaster ={};
+    $scope.productOwner={};
+    $scope.idProyecto={};
+    $scope.desarrolladores = [];
 
-app.controller('testController', ['$scope', function($scope){
-console.log("Existo!");
-}]);
+    $scope.init = function(scrumMaster, owner, idProyecto){
+      console.log("Algocaca")
+      $scope.scrumMaster =scrumMaster;
+      $scope.productOwner=owner;
+      $scope.idProyecto = idProyecto;
+      $scope.getDesarrolladores();
+    }
 
-app.controller('detalleProyectoCtrl', ['$scope', function($scope){
-    $scope.proyecto = {
-      nombre: "Proyecto 1",
-      descripcion: "Aqui va la descripcion del proyecto"
-    };
-    $scope.rolScrum =
-      {
-        nombreRol: "Scrum Master",
-        nombreEmpleado: "Luis Ramirez"
-      };
-    $scope.rolProduct =
-      {
-        nombreRol: "Product Owner",
-        nombreEmpleado: "Pancho Pantera"
-      };
-    $scope.desarrolladores = [
-      {
-        nombre: "Erik Zubia"
-      },
-      {
-        nombre: "Alejandro Escobedo"
-      },
-      {
-        nombre: "Daniela Santillanes"
+    $scope.getNombreCompleto = function(obj){
+      if(obj.google.name){
+        console.log("Entre al google")
+        return obj.google.name;
+      } else if (obj.twitter.displayName){
+        return obj.twitter.displayName;
+      } else if (obj.facebook.name){
+        return obj.facebook.name;
       }
-    ];
+      console.log("no entre a nada")
+      return obj.nombre;
+    };
+    $scope.usuarios =[];
+
+    $scope.getUsuarios = function(){
+      $http.get('findUsuarios').success(function(data) {
+            $scope.usuarios = data;
+            console.log(data);
+        }).error(function(data){
+                console.log("Algo paso");
+          });
+    };
+
+    $scope.getDesarrolladores = function(){
+      $http.get('/detalleProyecto/findDevelopers/'+$scope.idProyecto).success(function(data) {
+            $scope.desarrolladores = data;
+            console.log(data);
+        }).error(function(data){
+                console.log("Algo paso");
+          });
+    };
+
+
+    $scope.asignarOwner = function(id){
+      console.log(id);
+      $http({
+        url:'/agregarOwner',
+        method:'POST',
+        data: {usuarioOwner:id}
+      }).then(function(data){
+        console.log(data);
+      }, function(data){
+        console.log(data);
+      });
+    };
+
+    $scope.asignarDesarrollador = function(id){
+    $http({
+      url:'/agregarDesarrollador',
+      method:'POST',
+      data: {usuarioOwner:id,
+      idProyecto:$scope.idProyecto}
+    }).then(function(data){
+      $scope.getDesarrolladores();
+    }, function(data){
+      console.log(data);
+    });
+  };
 }]);
 
 app.controller('productBacklogCtrl',['$scope', function($scope){

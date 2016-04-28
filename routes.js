@@ -9,10 +9,6 @@ module.exports = function (app, passport, roles, mongoose) {
         res.render("index");
     });
 
-    app.get("/detalleProyecto", function (req, res) {
-        res.render("detalleProyecto");
-    });
-
     app.get('/login', function (req, res) {
         res.render('landing');
     });
@@ -136,7 +132,6 @@ module.exports = function (app, passport, roles, mongoose) {
     });
 
     app.get("/count/proyectos/usuario/:idUsuario",function(req,response){
-      console.log(req.params.idUsuario);
       var json={};
       json.scrum = 0;
       json.owner = 0;
@@ -184,9 +179,6 @@ module.exports = function (app, passport, roles, mongoose) {
                         case "product-owner":
                             productOwner = participante.usuario;
                             break;
-                        case "product-manager":
-                            proyectManager = participante.usuario;
-                            break;
                         case "scrum-master":
                             scrumMaster = participante.usuario;
                             break;
@@ -197,22 +189,37 @@ module.exports = function (app, passport, roles, mongoose) {
 
                     }
                 });
-                console.log(desarrolladores);
                 response.render("./proyectos/detalleproyecto",
                     {
                         usuario: req.user,
                         proyecto: obj,
-                        manager: proyectManager,
                         scrumMaster: scrumMaster,
                         owner: productOwner,
-                        desarrolladores: desarrolladores
                     });
             });
     });
 
-    app.get("/crearProyecto", function(req, response){
-      response.render("./proyectos/blankProyecto");
-    });
+    app.get("/detalleProyecto/findDevelopers/:idProyecto", function(req, response){
+      console.log(req.params.idProyecto);
+      Proyecto.findById({"_id": req.params.idProyecto}).populate({
+              path: 'participantes.usuario',
+              model: 'Usuario'
+          })
+          .exec(function (err, obj) {
+              req.session.proyecto = req.query.proyectoElegido
+              if (err) response.redirect("/home");
+              else {
+                var desarrolladores = [];
+                obj.participantes.forEach(function (participante) {
+                    if (participante.rol === "developer") {
+                            desarrolladores.push(participante.usuario);
+                    }
+                });
+                console.log(desarrolladores);
+                response.json(desarrolladores);
+              }
+          });
+      });
 
     app.post("/crearProyecto", function (req, res) {
       console.log(req.user);
@@ -239,30 +246,12 @@ module.exports = function (app, passport, roles, mongoose) {
     });
 
     var sass;
-    app.get("/agregarScrum", isLoggedIn, function (req, response) {
+    app.get("/findUsuarios", function (req, response) {
         sass = req.session;
         Usuario.find({}).exec(function (err, usuarios) {
             if (err) response.redirect("/")
             else
-                response.render("./usuarios/agregarScrum", {usuarios: usuarios});
-        });
-    });
-
-    app.get("/agregarManager", isLoggedIn, function (req, response) {
-        sass = req.session;
-        Usuario.find({}).exec(function (err, usuarios) {
-            if (err) response.redirect("/")
-            else
-                response.render("./usuarios/agregarManager", {usuarios: usuarios});
-        });
-    });
-
-    app.get("/agregarDesarrollador", isLoggedIn, function (req, response) {
-        sass = req.session;
-        Usuario.find({}).exec(function (err, usuarios) {
-            if (err) response.redirect("/")
-            else
-                response.render("./usuarios/agregarDesarrolladores", {usuarios: usuarios});
+                response.json(usuarios);
         });
     });
 
@@ -282,34 +271,34 @@ module.exports = function (app, passport, roles, mongoose) {
 
     });
 
-    app.post("/agregarManager", isLoggedIn, function (req, response) {
+    app.post("/agregarOwner", isLoggedIn, function (req, response) {
         req.session = sass;
         var rol = new Rol({
-            rol: "product-manager",
-            usuario: req.body.usuarioAsignado
+            rol: "product-owner",
+            usuario: mongoose.Types.ObjectId(req.body.usuarioOwner)
         });
         Proyecto.update({_id: req.session.proyecto}, {$push: {participantes: {$each: [rol]}}}, {upsert: true}, function (err) {
             if (err) {
-                response.redirect("/agregarManager");
+                console.log("Aaaaa")
             } else {
-                response.redirect("/detalleProyecto");
+              console.log("AAAA")
             }
         });
     });
 
     app.post("/agregarDesarrollador", isLoggedIn, function (req, response) {
-        req.session = sass;
-        var rol = new Rol({
-            rol: "developer",
-            usuario: req.body.usuarioAsignado
-        });
-        Proyecto.update({_id: req.session.proyecto}, {$push: {participantes: {$each: [rol]}}}, {upsert: true}, function (err) {
-            if (err) {
-                response.redirect("/agregarDesarrollador");
-            } else {
-                response.redirect("/detalleProyecto");
-            }
-        });
+
+      console.log("IDPROYECTO: "+req.body.idProyecto);
+      console.log(req.body.usuarioOwner);
+      var rol = new Rol({
+          rol: "developer",
+          usuario: mongoose.Types.ObjectId(req.body.usuarioOwner)
+      });
+      Proyecto.update({"_id": req.body.idProyecto}, {$push: {participantes: {$each: [rol]}}}, {upsert: true}, function (err) {
+          if (err) {
+              err();
+          }
+      });
     });
 
     app.post("/crearUsuario", isLoggedIn, function (req, res) {

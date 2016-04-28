@@ -42,7 +42,9 @@ block content
               td.mdl-data-table__cell--non-numeric {{proyecto.fechaArranque | date:'yyyy-MM-dd'}}
               td.mdl-data-table__cell--non-numeric {{proyecto.fechaSolicitud | date:'yyyy-MM-dd'}}
               td.mdl-data-table__cell--non-numeric
-                a.mdl-button(href="detalleproyecto") Ver Detalle del proyecto
+                form(action="/detalleproyecto" method="GET" class="form")
+                  input(value="{{proyecto._id}}" type="hidden" id="proyectoElegido" name="proyectoElegido")
+                  button.mdl-button(type="submit") Ver Detalle del proyecto
       button.mdl-button(id="show-newProyect" type="button") Nuevo Proyecto
 
       dialog(class="mdl-dialog")
@@ -54,7 +56,7 @@ block content
                 label(for="nombreProyecto" class="mdl-textfield__label") Nombre del Proyecto
           div
             .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-                input.mdl-textfield__input(type="date" id="fechaArranque" name="fechaArranque" style="color: black" required="required" placeholder="")
+                input.mdl-textfield__input(type="date" id="fechaArranque" name="fechaArranque" style="color: black" required="required")
                 label(for="fechaArranque" class="mdl-textfield__label") Fecha de Arranque
           div
             .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
