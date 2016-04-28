@@ -975,6 +975,10 @@ ul, ol {
 /**
  * Class Name Styles
  */
+.letras-negras{
+  color: black;
+}
+
 .mdl-typography--display-4 {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 112px;
@@ -3842,7 +3846,7 @@ ul, ol {
   background: transparent;
   border: none;
   border-radius: 2px;
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 255);
   position: relative;
   height: 36px;
   margin: 0;
@@ -4204,6 +4208,21 @@ input.mdl-button[type="submit"] {
   border-radius: 2px;
   box-sizing: border-box; }
 
+.mdl-card-2 {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  font-weight: 400;
+  min-height: auto;
+  overflow: hidden;
+  width: auto;
+  z-index: 1;
+  position: relative;
+  background: #5F5F5F;
+  border-radius: 2px;
+  box-sizing: border-box; }
+
+
 .mdl-card__media {
   background-color: rgb(255,64,129);
   background-repeat: repeat;
@@ -4224,6 +4243,8 @@ input.mdl-button[type="submit"] {
   perspective-origin: 165px 56px;
   transform-origin: 165px 56px;
   box-sizing: border-box; }
+
+
   .mdl-card__title.mdl-card--border {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 
@@ -4263,7 +4284,7 @@ input.mdl-button[type="submit"] {
     border-top: 1px solid rgba(0, 0, 0, 0.1); }
 
 .mdl-card--expand {
-  flex-grow: 1; }
+  flex-grow: 0.5; }
 
 .mdl-card__menu {
   position: absolute;
@@ -5044,7 +5065,17 @@ input.mdl-button[type="submit"] {
   .mdl-dialog__content {
     padding: 20px 24px 24px 24px;
     color: rgba(255, 255, 255, 0.8); }
-
+  .mdl-dialog__content.big {
+    padding: 0px 0px 0px 0px;
+  }
+.mdl-dialog-big {
+  border: none;
+  box-shadow: 0 9px 46px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.12), 0 24px 38px 3px rgba(0, 0, 0, 0.2);
+  width: 800px; }
+  .mdl-dialog__title {
+    padding: 24px 24px 0;
+    margin: 0;
+    font-size: 2.5rem; }
 /**
  * Copyright 2015 Google Inc. All Rights Reserved.
  *
@@ -9929,7 +9960,10 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
 /* Animations */
 /* Dialog */
 .mdl-shadow--2dp {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12); }
+  box-shadow: 0 .5px .5px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12); }
+
+.mdl-shadow--2dp-2 {
+  box-shadow: 0 .5px .5px 0 rgba(0, 0, 0, 0), 0 3px 1px -2px rgba(0, 0, 0, .7), 0 1px 5px 0 rgba(0, 0, 0, 0.55); }
 
 .mdl-shadow--3dp {
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 1px 8px 0 rgba(0, 0, 0, 0.12); }
@@ -10760,6 +10794,7 @@ main {
     display: none; } }
 
 .mdl-card__title {
+
   background-color: rgb(0, 0, 0); }
 
 .mdl-card__supporting-text {
@@ -10991,10 +11026,10 @@ a {
   .todo .mdl-card__supporting-text .mdl-textfield__input {
     padding: 2px 0; }
   .todo .mdl-card__supporting-text .mdl-textfield__label {
-    color: rgba(255, 255, 255, 0.2);
+    color: rgba(0, 0, 0, 1);
     top: 0; }
     .todo .mdl-card__supporting-text .mdl-textfield__label:after {
-      background-color: rgba(255, 255, 255, 0.7);
+      background-color: rgba(0, 0, 0, 0.7);
       bottom: 0; }
 
 .todo .mdl-card__actions {
@@ -11110,7 +11145,7 @@ a {
       color: rgb(255, 255, 255); }
 
 .cotoneaster {
-  height: 430px; }
+  height: 200px; }
   .cotoneaster .mdl-card__supporting-text {
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     font-size: 16px;
@@ -11413,6 +11448,19 @@ a {
 
 .mdl-textfield.is-disabled input {
   border-bottom-width: 2px !important; }
+
+.a-blanco{
+  color: white;
+  border-radius: 2px;
+  height: 12px;
+  padding: 2px 4px 2px 4px;
+  margin: 0;
+  margin-left: auto;
+  font-size: 11px;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 300;
+  line-height: 1em;
+}
 
 .demo-card-square.mdl-card {
   width: 400px;

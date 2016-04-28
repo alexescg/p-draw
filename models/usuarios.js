@@ -51,11 +51,11 @@ usuarioSchema.virtual("confirmarPassword").get(function () {
 });
 
 usuarioSchema.virtual("nombreCompleto").get(function () {
-    if(this.google){
+    if(this.google.name){
       return this.google.name;
-    } else if (this.twitter){
+    } else if (this.twitter.displayName){
       return this.twitter.displayName;
-    } else if (this.facebook){
+    } else if (this.facebook.name){
       return this.facebook.name;
     }
     return this.nombre + " " + this.apellidos;
