@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
-mongoose.connect('mongodb://localhost/byb_system');
 var Schema = mongoose.Schema;
-var LiberacionBacklog = mongoose.model('LiberacionBacklog');
+// var LiberacionBacklog = mongoose.model('LiberacionBacklog');
+var Proyecto = mongoose.model('Proyecto');
 
 var historiaUsuarioSchema = new Schema({
     nombre:{type:String, required:true},
@@ -13,8 +13,9 @@ var historiaUsuarioSchema = new Schema({
     deTalManeraQue:{type:String, required:true},
     prioridad:{type:Number, required:true},
     tamanio:{type:Number, required:true},
-    liberacionBacklog:{type: Schema.ObjectId, ref: "LiberacionBacklog"}
+    // liberacionBacklog:{type: Schema.ObjectId, ref: "LiberacionBacklog"},
+    proyecto:{type: Schema.ObjectId, ref: "Proyecto", required: true}
 });
 
 var HistoriaUsuario = mongoose.model("HistoriaUsuario", historiaUsuarioSchema);
-module.exports.HistoriaUsuario = HistoriaUsuario;
+module.exports = HistoriaUsuario;

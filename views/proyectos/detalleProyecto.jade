@@ -28,21 +28,25 @@ block content
               else
                 button.mdl-button(id="show-owner" type="button" ng-click="getUsuarios()") Agregar
                 dialog#show-owner(class="mdl-dialog-big")
-                  h2.mdl-dialog__title Usuarios
-                    .mdl-dialog__content
-                      table.mdl-data-table.mdl-js-data-table.mdl-data-table.projects-table
-                        thead
-                          tr
-                            th.mdl-data-table__cell--non-numeric Usuario
-                            th.mdl-data-table__cell--non-numeric
-                        tbody
-                          tr(ng-repeat="usuario in usuarios")
-                            td.mdl-data-table__cell--non-numeric {{usuario.nombre}}
-                            td.mdl-data-table__cell--non-numeric
-                              button.mdl-button(type="button" ng-click="asignarOwner(usuario._id)") Asignar
+
 
     .mdl-cell.mdl-cell--6-col-desktop.mdl-cell--6-col-tablet.mdl-cell--4-col-phone
         .mdl-card-2.mdl-shadow--2dp-2
+            button.mdl-button(id="show-owner" type="button") Agregar historia de usuario
+            dialog#blank-historia(class="mdl-dialog-big")
+                h2.mdl-dialog__title Nuevo Proyecto
+                    form(action="#" method="POST" class="form")
+                        div
+                            +textFieldMixin('nombre', 'nombre', 'Nombre Historia', 'historia', 'nombre', true)
+                            +textFieldMixin('descripcion', 'descripcion', 'Descripción', 'historia', 'descripcion', true)
+                            +textFieldMixin('cuando', 'cuando', 'Cuando', 'historia', 'cuando', true)
+                            +textFieldMixin('entonces', 'entonces', 'Entonces', 'historia', 'entonces', true)
+                            +textFieldMixin('como', 'como', 'Como', 'historia', 'como', true)
+                            +textFieldMixin('quiero', 'quiero', 'Quiero', 'historia', 'quiero', true)
+                            +textFieldMixin('deTalManeraQue', 'deTalManeraQue', 'De Tal Manera Que', 'historia', 'deTalManeraQue', true)
+                            +numberFieldMixin('prioridad', 'prioridad', 'Prioridad', 'historia', 'prioridad', true)
+                            +numberFieldMixin('tamanio', 'tamanio', 'Tamaño', 'historia', 'tamanio', true)
+                        button.mdl-button(type="button" ng-click="crearHistoria()") Crear Historia
             div(ng-view)
     .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
         .mdl-card.mdl-shadow--2dp.trending
@@ -104,3 +108,16 @@ block content
     dialog.querySelector('.close').addEventListener('click', function() {
       dialog.close();
     });
+
+    var dialogHistoria = document.querySelector('dialog');
+    var showDialogButtonHistoria = document.querySelector('#blank-historia');
+    if (!dialogHistoria.showModal) {
+        dialogPolyfill.registerDialog(dialogHistoria);
+    }
+    showDialogButton.addEventListener('click', function () {
+        dialogHistoria.showModal();
+    });
+    dialog.querySelector('.close').addEventListener('click', function () {
+        dialog.close();
+    });
+

@@ -34,6 +34,21 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
       $scope.getDesarrolladores();
     }
 
+    $scope.historia = new Object();
+    $scope.crearHistoria = function () {
+        $scope.historia.proyecto = $scope.idProyecto;
+        socket.emit('newHistoria', $scope.historia);
+    };
+
+    var socket = io.connect({'forceNew': true});
+    $scope.historias = $scope.historias || [];
+
+    socket.on('sendHistorias', function (data) {
+        console.log(data);
+        $scope.historias = data.emitted.fulfill[0];
+        $scope.$apply();
+    });
+
     $scope.getNombreCompleto = function(obj){
       if(obj.google.name){
         console.log("Entre al google")
