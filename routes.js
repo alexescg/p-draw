@@ -273,12 +273,13 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.post("/agregarOwner", isLoggedIn, function (req, response) {
+        console.log("IDPROYECTO: "+req.body.idProyecto);
         req.session = sass;
         var rol = new Rol({
             rol: "product-owner",
             usuario: mongoose.Types.ObjectId(req.body.usuarioOwner)
         });
-        Proyecto.update({_id: req.session.proyecto}, {$push: {participantes: {$each: [rol]}}}, {upsert: true}, function (err) {
+        Proyecto.update({_id: req.body.idProyecto}, {$push: {participantes: {$each: [rol]}}}, {upsert: true}, function (err) {
             if (err) {
                 console.log("Aaaaa")
             } else {
@@ -345,13 +346,12 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
 
     var getHistorias = HistoriaUsuario.find({}).then(function successCallback(success) {
-        return success;
-    }, function errorCallback(error) {
-        throw error;
-    });
+          return success;
+      }, function errorCallback(error) {
+          throw error;
+      });
 
     io.on('connect', function (socket) {
-
         // console.log(getMessages());
         socket.emit('sendHistorias', getHistorias);
 
