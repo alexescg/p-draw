@@ -27,7 +27,6 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     $scope.desarrolladores = [];
 
     $scope.init = function(scrumMaster, owner, idProyecto){
-      console.log("Algocaca")
       $scope.scrumMaster =scrumMaster;
       $scope.productOwner=owner;
       $scope.idProyecto = idProyecto;
@@ -44,21 +43,19 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     $scope.historias = $scope.historias || [];
 
     socket.on('sendHistorias', function (data) {
-        console.log(data);
         $scope.historias = data.emitted.fulfill[0];
         $scope.$apply();
     });
 
     $scope.getNombreCompleto = function(obj){
-      if(obj.google.name){
+      if(obj.google){
         console.log("Entre al google")
         return obj.google.name;
-      } else if (obj.twitter.displayName){
+      } else if (obj.twitter){
         return obj.twitter.displayName;
-      } else if (obj.facebook.name){
+      } else if (obj.facebook){
         return obj.facebook.name;
       }
-      console.log("no entre a nada")
       return obj.nombre;
     };
     $scope.usuarios =[];
@@ -66,18 +63,16 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     $scope.getUsuarios = function(){
       $http.get('findUsuarios').success(function(data) {
             $scope.usuarios = data;
-            console.log(data);
         }).error(function(data){
-                console.log("Algo paso");
+          //TODO:Error
           });
     };
 
     $scope.getDesarrolladores = function(){
       $http.get('/detalleProyecto/findDevelopers/'+$scope.idProyecto).success(function(data) {
             $scope.desarrolladores = data;
-            console.log(data);
         }).error(function(data){
-                console.log("Algo paso");
+          //TODO:Error
           });
     };
 
@@ -87,11 +82,12 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
       $http({
         url:'/agregarOwner',
         method:'POST',
-        data: {usuarioOwner:id}
+        data: {usuarioOwner:id,
+        idProyecto:$scope.idProyecto}
       }).then(function(data){
-        console.log(data);
+        //TODO:GetOwner
       }, function(data){
-        console.log(data);
+        //TODO:Error
       });
     };
 
@@ -104,7 +100,7 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     }).then(function(data){
       $scope.getDesarrolladores();
     }, function(data){
-      console.log(data);
+      //TODO:Error
     });
   };
 }]);
