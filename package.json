@@ -39,7 +39,7 @@
   },
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install",
-    "start": "node app.js"
+    "start": "node app.js --prod"
   },
   "repository": {
     "type": "git",
