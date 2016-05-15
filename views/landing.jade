@@ -45,10 +45,10 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                     .logo-font.android-slogan Scrum Team
                     .logo-font.android-sub-slogan La herramienta que te ayuda a manejar a tu equipo y tus proyectos
                     br
-                    button#show-dialog(class="mdl-button") Iniciar Sesión
-                    button#show-dialog-register(class="mdl-button") Registrarme
+                    button(class="mdl-button login-modal-button") Iniciar Sesión
+                    button(class="mdl-button dialog-register-button") Registrarme
 
-                    dialog#login.mdl-dialog
+                    dialog(class="mdl-dialog login-modal")
                         h4.mdl-dialog__title Iniciar Sesión
                         br
                         form(method="POST" action="/login")
@@ -73,7 +73,7 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                                 br
                             button(type="submit" class="mdl-button") Iniciar Sesión
 
-                    dialog#dialog-register.mdl-dialog
+                    dialog(class="mdl-dialog dialog-register-modal")
                         h4.mdl-dialog__title Registrarme
                         br
                         form(method="POST" action="/register")
@@ -101,26 +101,23 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
 
 
         script.
-            var dialog = document.querySelector('dialog');
-            var showDialogButton = document.querySelector('#show-dialog');
-            showDialogButton.addEventListener('click', function () {
-                dialog.showModal();
+            var modalLogin = document.querySelector('.login-modal');
+            var showDialogLogin = document.querySelector('.login-modal-button');
+            showDialogLogin.addEventListener('click', function () {
+                modalLogin.showModal();
             });
-            if (!dialog.showModal) {
-                dialogPolyfill.registerDialog(dialog);
+            if (!modalLogin.showModal) {
+                dialogPolyfill.registerDialog(modalLogin);
             }
-            dialog.querySelector('.close').addEventListener('click', function() {
-                dialog.close();
-            });
-        script.
-            var dialog = document.querySelector('dialog');
-            var showDialogRegisterButton = document.querySelector('#show-dialog-register');
+
+            var registrarModal = document.querySelector('.dialog-register-modal');
+            var showDialogRegisterButton = document.querySelector('.dialog-register-button');
             showDialogRegisterButton.addEventListener('click', function () {
-                dialog.showModal();
+                registrarModal.showModal();
             });
-            dialog.querySelector('.close').addEventListener('click', function () {
-                dialog.close();
-            });
+            if (!registrarModal.showModal) {
+                dialogPolyfill.registerDialog(registrarModal);
+            }
 
         script(type="text/javascript" src="static/bower_components/d3/d3.min.js")
         script(type="text/javascript" src="static/bower_components/getmdl-select/getmdl-select.min.js")
