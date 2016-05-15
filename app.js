@@ -42,7 +42,7 @@ app.use("/static", express.static(__dirname + "/static"));
 //
 //
 app.use(session({
-    secret: "455e96f6c76b60d39f549f2f7a1830f1", //Es un hash que identifica  nuestra aplicacion de otras aplicaciones express
+    secret: process.env.Session_Secret || "455e96f6c76b60d39f549f2f7a1830f1", //Es un hash que identifica  nuestra aplicacion de otras aplicaciones express
     resave: false,//Cada vez que se aga un request se tiene que guardar o rehacer la sesión
     saveUninitialized: false // Sirve para reinicializar la sesión cada vez que se hace un request
 }));
