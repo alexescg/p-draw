@@ -1,7 +1,7 @@
 {
-  "name": "getmdl-dashboard",
+  "name": "proyecto-draw",
   "version": "1.0.0",
-  "description": "Free dashboard template with Material Design Lite",
+  "description": "Proyecto para manejar tu equipo scrum",
   "keywords": [
     "dashboard",
     "admin template",
@@ -43,13 +43,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CreativeIT/getmdl-dashboard.git"
+    "url": "git+https://github.com/alexescg/p-draw"
   },
   "author": "CreativeIT",
   "bugs": {
-    "url": "https://github.com/CreativeIT/dashboard/issues"
+    "url": "https://github.com/alexescg/p-draw/issues"
   },
-  "homepage": "https://github.com/CreativeIT/dashboard#readme",
+  "homepage": "https://github.com/alexescg/p-draw/readme",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.0",
