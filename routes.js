@@ -126,8 +126,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
                   }, function (err, proyectos) {
                       response.json(proyectos);
                   });
-              } else {
-                  response.render("proyectos/proyectosBlank", {usuario:"57048f0cee0cea7161f4a469"});
               }
           })
     });
@@ -190,7 +188,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
                     }
                 });
-                response.render("./proyectos/detalleproyecto",
+                response.render("detalleProyecto",
                     {
                         usuario: req.user,
                         proyecto: obj,
@@ -360,8 +358,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
             historiaNueva.save(function (err, obj) {
                 console.log(obj);
                 if (obj) {
-                    getHistorias.push(data);
-                    io.sockets.emit('sendHistorias', getHistorias)
+                    io.emit('sendHistoria', obj)
                 }
             });
         });
