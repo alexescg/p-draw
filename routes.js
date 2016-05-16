@@ -366,6 +366,4 @@ module.exports = function (app, passport, roles, mongoose, io) {
             });
         });
     });
-
-
 };

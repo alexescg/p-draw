@@ -6,13 +6,13 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
         meta(http-equiv='X-UA-Compatible', content='IE=edge')
         meta(name='description', content='A front-end template that helps you build fast, modern mobile web apps.')
         meta(name='viewport', content='width=device-width, initial-scale=1')
-        title Material Dashboard Lite
+        title Scrum Team
         // Add to homescreen for Chrome on Android
         meta(name='mobile-web-app-capable', content='yes')
         // Add to homescreen for Safari on iOS
         meta(name='apple-mobile-web-app-capable', content='yes')
         meta(name='apple-mobile-web-app-status-bar-style', content='black')
-        meta(name='apple-mobile-web-app-title', content='Material Design Lite')
+        meta(name='apple-mobile-web-app-title', content='Scrum Team')
         // Tile icon for Win8 (144x144 + tile color)
         meta(name='msapplication-TileImage', content='images/touch/ms-touch-icon-144x144-precomposed.png')
         meta(name='msapplication-TileColor', content='#3372DF')
@@ -35,12 +35,6 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
             header.mdl-layout__header
                 .mdl-layout__header-row
                     .mdl-layout-spacer
-                    .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable
-                        label.mdl-button.mdl-js-button.mdl-button--icon(for='search')
-                            i.material-icons search
-                        .mdl-textfield__expandable-holder
-                            input#search.mdl-textfield__input(type='text')
-                            label.mdl-textfield__label(for='search') Enter your query...
                     #notification.material-icons.mdl-badge.mdl-badge--overlap.mdl-button--icon.notification(data-badge='23')
                         | notifications_none
                     ul.mdl-menu.mdl-list.mdl-js-menu.mdl-js-ripple-effect.mdl-menu--bottom-right.mdl-shadow--2dp.notifications-dropdown(for='notification')
@@ -76,45 +70,6 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                                 span.label 5 days
                         li.mdl-list__item.list__item--border-top
                             button.mdl-button.mdl-js-button.mdl-js-ripple-effect(href='#') ALL NOTIFICATIONS
-                    #inbox.material-icons.mdl-badge.mdl-badge--overlap.mdl-button--icon.message(data-badge='{{2+5}}')
-                        | mail_outline
-                    ul.mdl-menu.mdl-list.mdl-js-menu.mdl-js-ripple-effect.mdl-menu--bottom-right.mdl-shadow--2dp.messages-dropdown(for='inbox')
-                        li.mdl-list__item
-                            | You have 4 new messages!
-                        li.mdl-menu__item.mdl-list__item.mdl-list__item--two-line.list__item--border-top
-                            span.mdl-list__item-primary-content
-                                span.mdl-list__item-avatar.background-color--primary
-                                    text A
-                                span Alice
-                                span.mdl-list__item-sub-title Birthday Party
-                            span.mdl-list__item-secondary-content
-                                span.label.label--transparent just now
-                        li.mdl-menu__item.mdl-list__item.mdl-list__item--two-line.list__item--border-top
-                            span.mdl-list__item-primary-content
-                                span.mdl-list__item-avatar.background-color--baby-blue
-                                    text M
-                                span Mike
-                                span.mdl-list__item-sub-title No theme
-                            span.mdl-list__item-secondary-content
-                                span.label.label--transparent 5 min
-                        li.mdl-menu__item.mdl-list__item.mdl-list__item--two-line.list__item--border-top
-                            span.mdl-list__item-primary-content
-                                span.mdl-list__item-avatar.background-color--cerulean
-                                    text D
-                                span Darth
-                                span.mdl-list__item-sub-title Suggestion
-                            span.mdl-list__item-secondary-content
-                                span.label.label--transparent 23 hours
-                        li.mdl-menu__item.mdl-list__item.mdl-list__item--two-line.list__item--border-top
-                            span.mdl-list__item-primary-content
-                                span.mdl-list__item-avatar.background-color--mint
-                                    text D
-                                span Don McDuket
-                                span.mdl-list__item-sub-title NEWS
-                            span.mdl-list__item-secondary-content
-                                span.label.label--transparent 30 Nov
-                        li.mdl-list__item.list__item--border-top
-                            button.mdl-button.mdl-js-button.mdl-js-ripple-effect(href='#') SHOW ALL MESSAGES
                     #icon.avatar-dropdown
                         span #{usuario.nombreCompleto}
                         img(src='static/images/Icon_header.png')
@@ -148,17 +103,8 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                             span.mdl-list__item-primary-content
                                 i.material-icons.mdl-list__item-icon.text-color--secondary exit_to_app
                                 |                         Log out
-                    button#more.mdl-button.mdl-js-button.mdl-button--icon
-                        i.material-icons more_vert
-                    ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect.mdl-shadow--2dp.settings-dropdown(for='more')
-                        li.mdl-menu__item
-                            | Settings
-                        a.mdl-menu__item(href='https://github.com/CreativeIT/getmdl-dashboard/issues')
-                            | Support
-                        li.mdl-menu__item
-                            | F.A.Q.
             .mdl-layout__drawer
-                header darkboard
+                header scrum team
                 nav.mdl-navigation
                     a.mdl-navigation__link.mdl-navigation__link--current(href='index.html')
                         i.material-icons(role='presentation') dashboard
@@ -167,7 +113,7 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                         i.material-icons(role='presentation') person
                         |                 Crear Proyecto
                     .mdl-layout-spacer
-                    a.mdl-navigation__link(href='https://github.com/CreativeIT/getmdl-dashboard')
+                    a.mdl-navigation__link(href='https://github.com/alexescg/p-draw')
                         i.material-icons(role='presentation') link
                         |                 GitHub
             main.mdl-layout__content(class="mdl-color--grey-100")
