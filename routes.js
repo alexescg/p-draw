@@ -190,7 +190,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
                     }
                 });
-                response.render("proyectos/detalleproyecto",
+                response.render("/proyectos/detalleproyecto",
                     {
                         usuario: req.user,
                         proyecto: obj,
