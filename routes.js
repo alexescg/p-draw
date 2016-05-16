@@ -360,8 +360,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
             historiaNueva.save(function (err, obj) {
                 console.log(obj);
                 if (obj) {
-                    getHistorias.push(data);
-                    io.sockets.emit('sendHistorias', getHistorias)
+                    io.emit('sendHistoria', obj)
                 }
             });
         });

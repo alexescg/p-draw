@@ -47,6 +47,11 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
         $scope.$apply();
     });
 
+    socket.on('sendHistoria', function (data) {
+        $scope.historias.push(data);
+        $scope.$apply();
+    });
+
     $scope.getNombreCompleto = function(obj){
       if(obj.google){
         console.log("Entre al google")
