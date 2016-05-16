@@ -1,4 +1,4 @@
-extends ./../index.jade
+extends ./index.jade
 block content
   .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="detalleProyectoCtrl", ng-init="init('#{scrumMaster.nombreCompleto}', '#{owner ? owner.nombreCompleto : ''}', '#{proyecto._id}')")
     .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
