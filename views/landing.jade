@@ -54,13 +54,13 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                         form(method="POST" action="/login")
                             div
                                 .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-                                    input.mdl-textfield__input(type="text" id="email" name="email" style="color: black" required="required")
+                                    input.mdl-textfield__input(type="text" id="email" name="local.email" style="color: black" required="required")
                                     label(for="email" class="mdl-textfield__label") Correo
                                 i(class="material-icons") face
                             div
                                 .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-                                    input.mdl-textfield__input(type="password" id="password" style="color: black")
-                                    label(for="password" class="mdl-textfield__label" name="password" required="required") Contraseña
+                                    input.mdl-textfield__input(type="password" id="password" style="color: black" name="password")
+                                    label(for="password" class="mdl-textfield__label" required="required") Contraseña
                                 i(class="material-icons") lock
                             div
                                 a(href="/auth/facebook" style="margin-right:3em")
@@ -79,13 +79,13 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                         form(method="POST" action="/register")
                             div
                                 .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-                                    input.mdl-textfield__input(type="text" id="correo" name="email" style="color: black" required="required")
+                                    input.mdl-textfield__input(type="text" id="correo" name="local.email" style="color: black" required="required")
                                     label(for="correo" class="mdl-textfield__label") Correo
                                 i(class="material-icons") face
                             div
                                 .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-                                    input.mdl-textfield__input(type="password" id="contraseña" style="color: black")
-                                    label(for="contraseña" class="mdl-textfield__label" name="password" required="required") Contraseña
+                                    input.mdl-textfield__input(type="password" id="contraseña" style="color: black" name="password")
+                                    label(for="contraseña" class="mdl-textfield__label" required="required") Contraseña
                                 i(class="material-icons") lock
                             div
                                 a(href="/auth/facebook" style="margin-right:3em")
@@ -96,7 +96,7 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                                     img(src="static/images/gplus.png" )
                                 br
                                 br
-                            button(type="submit" class="mdl-button") Iniciar Sesión
+                            button(type="submit" class="mdl-button") Registrarse
 
 
 

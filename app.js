@@ -18,7 +18,7 @@ var roles = new ConnectRoles({
         }
     }
 });
-var morgan = require('morgan');
+// var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require("express-session");
@@ -28,8 +28,8 @@ mongoose.connect(configDB.url);
 var Usuario = require('./models/usuarios').Usuario;
 //
 // //Configurations
-// //TODO: descomentar logger
-app.use(morgan('dev'));
+//TODO: descomentar logger
+// app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.json()); //Application JSON
 app.use(bodyParser.urlencoded({extended: true}));// Multipart con array
@@ -43,7 +43,7 @@ app.use("/static", express.static(__dirname + "/static"));
 //
 app.use(session({
     secret: process.env.Session_Secret || "455e96f6c76b60d39f549f2f7a1830f1", //Es un hash que identifica  nuestra aplicacion de otras aplicaciones express
-    resave: false,//Cada vez que se aga un request se tiene que guardar o rehacer la sesión
+    resave: false,//Cada vez que se haga un request se tiene que guardar o rehacer la sesión
     saveUninitialized: false // Sirve para reinicializar la sesión cada vez que se hace un request
 }));
 app.use(passport.initialize());

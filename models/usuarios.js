@@ -15,7 +15,7 @@ var usuarioSchema = mongoose.Schema({
     domicilio: {type: String},
     rolActual: {type: String},
     local: {
-        email: {type: String},
+        email: String,
         password: {
             type: String
             // , validate: {
@@ -44,11 +44,11 @@ var usuarioSchema = mongoose.Schema({
     }
 });
 
-usuarioSchema.virtual("confirmarPassword").get(function () {
-    return this.otroPassword;
-}).set(function (password) {
-    this.otroPassword = password;
-});
+// usuarioSchema.virtual("confirmarPassword").get(function () {
+//     return this.otroPassword;
+// }).set(function (password) {
+//     this.otroPassword = password;
+// });
 
 usuarioSchema.virtual("nombreCompleto").get(function () {
     if(this.google.name){
@@ -57,8 +57,9 @@ usuarioSchema.virtual("nombreCompleto").get(function () {
       return this.twitter.displayName;
     } else if (this.facebook.name){
       return this.facebook.name;
-    }
-    return this.nombre + " " + this.apellidos;
+    } else if(this.nombre && this.apellidos){
+        return this.nombre + " " + this.apellidos;
+    } else return this.local.email;
 });
 
 usuarioSchema.methods.generateHash = function (password) {
