@@ -1,5 +1,4 @@
 var mongoose = require("mongoose");
-mongoose.connect('mongodb://localhost/byb_system');
 var Schema = mongoose.Schema;
 var Proyecto = mongoose.model('Proyecto');
 

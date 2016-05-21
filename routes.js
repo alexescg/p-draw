@@ -1,5 +1,7 @@
 var Usuario = require('./models/usuarios');
 var Proyecto = require('./models/proyectos');
+var ProductBacklog = require('./models/productsBacklog');
+var LiberacionBacklog = require('./models/liberacionesBacklog');
 var Rol = require('./models/roles');
 var HistoriaUsuario = require('./models/historiaUsuarios');
 //var mongoose = require('mongoose');
@@ -47,6 +49,25 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
     app.get('/register', function (req, res) {
         res.render('register', {message: req.flash('signupMessage')});
+    });
+
+    app.get('/addReleaseBacklog',isLoggedIn, function (req, res) {
+      req.session = sass;
+      Proyecto.findOne({"_id": mongoose.Types.ObjectId(req.session.proyecto)})
+      .exec(function (err, proyecto){
+        HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.session.proyecto), "liberacionBacklog": {
+          "$exists": false
+        }}).select("-__v").exec(function(err, obj){
+          console.log("AQUI");
+          console.log(obj);
+            var jsonHistorias = JSON.stringify(obj);
+            res.render('releaseBackLog', {usuario: req.user, proyecto: proyecto, historias: jsonHistorias});
+        });
+      });
+      console.log("------------------------------------>");
+      console.log(req.session);
+      console.log(sass);
+
     });
 
     app.post('/register', passport.authenticate('local-signup', {
@@ -166,7 +187,9 @@ module.exports = function (app, passport, roles, mongoose, io) {
                 model: 'Usuario'
             })
             .exec(function (err, obj) {
-                req.session.proyecto = req.query.proyectoElegido
+                req.session.proyecto = req.query.proyectoElegido;
+                console.log(req.session);
+                sass = req.session;
                 if (err) response.redirect("/home");
                 else
                     var proyectManager;

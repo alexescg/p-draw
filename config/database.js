@@ -3,5 +3,5 @@
  */
 
 module.exports = {
-    'url' : 'mongodb://root:12345@ds023052.mlab.com:23052/byb_system'
+    'url' : 'mongodb://localhost/byb_system'
 }

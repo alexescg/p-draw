@@ -116,8 +116,11 @@ app.controller('productBacklogCtrl',['$scope', function($scope){
 }]);
 
 app.controller('releaseBacklogCtrl',['$scope', function($scope){
-  $scope.mensaje = "hola";
-  $scope.titulo = "Titulo 2";
+  $scope.init = function(idProy, historias){
+    $scope.idProy = idProy;
+    $scope.historias = historias;
+    console.log($scope.historias);
+  };
 }]);
 
 app.controller('sprintsCtrl',['$scope', function($scope){
