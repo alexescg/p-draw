@@ -78,12 +78,16 @@ module.exports = function (app, passport, roles, mongoose, io) {
                     console.log(err);
                     res.render("profile", {
                         message: req.flash('Error al guardar datos.'),
-                        user: req.user
+                        user: req.user,
+                        habilidades : req.user.habilidades || []
+
                     });
                 } else {
                     res.render("profile", {
                         message: req.flash('Exito!'),
-                        user: user
+                        user: user,
+                        habilidades : req.user.habilidades || []
+
                     });
                 }
             }
