@@ -115,17 +115,48 @@ app.controller('productBacklogCtrl',['$scope', function($scope){
   $scope.titulo = "Titulo 1";
 }]);
 
-app.controller('releaseBacklogCtrl',['$scope', function($scope){
+app.controller('releaseBacklogCtrl',['$scope','$document', '$timeout', '$window', function($scope, $document, $timeout, $window){
+  $scope.verDetalles = false;
   $scope.init = function(idProy, historias){
     $scope.idProy = idProy;
     $scope.historias = historias;
     console.log($scope.historias);
+    $timeout(function(){
+      alert("popo");
+      var buttons = $document.find('button');
+      console.log(buttons);
+    }, 0);
+  };
+  $scope.accionarBoton = function(){
+    $scope.verDetalles = true;
+    var botones = angular.element($document.querySelectAll('.blank-sprint-button'));
   };
 }]);
 
 app.controller('sprintsCtrl',['$scope', function($scope){
   $scope.mensaje = "no se";
   $scope.titulo = "Titulo 3";
+}]);
+
+app.controller('profileCtrl', ['$scope', '$http', function($scope, $http){
+
+    $scope.skills = $scope.skills || [];
+    $scope.init= function(skillz){
+        $scope.skills = skillz;
+    }
+    $scope.removeSkill = function(index){
+        $scope.skills.splice(index, 1);
+    }
+    $scope.agregarHabilidad = function(){
+        var skill = {
+            habilidad: $scope.user.habilidad,
+            nivel: $scope.user.nivel
+        };
+        $scope.skills.push(skill);
+        $scope.user.habilidad = '';
+        $scope.user.nivel = '';
+    }
+
 }]);
 
 app.controller("dashBoardController", ['$scope', '$http', function($scope, $http){

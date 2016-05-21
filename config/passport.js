@@ -18,18 +18,17 @@ module.exports = function (passport) {
 
     //Local
     passport.use('local-signup', new LocalStrategy({
-            usernameField: 'email',
+            usernameField: 'local.email',
             passwordField: 'password',
             passReqToCallback: true
         },
         function (req, email, password, done) {
-            //async
-            //findOne no se lanzara a menos de que se devuelvan datos
             process.nextTick(function () {
                 //Buscar un usuario cuyo nombre sea igual que el del formulario
                 //Checando si el usuario tratando de accesar ya existe
                 Usuario.findOne({'local.email': email}, function (err, user) {
                     if (err) {
+                        console.log(err);
                         return done(err);
                     }
                     if (user) {
@@ -53,7 +52,7 @@ module.exports = function (passport) {
         }));
 
     passport.use("local-login", new LocalStrategy({
-            usernameField: 'email',
+            usernameField: 'local.email',
             passwordField: 'password',
             passReqToCallback: true
         },
@@ -145,16 +144,16 @@ module.exports = function (passport) {
     //Google
     passport.use(new GoogleStrategy({
 
-            clientID        : configAuth.googleAuth.clientID,
-            clientSecret    : configAuth.googleAuth.clientSecret,
-            callbackURL     : configAuth.googleAuth.callbackURL,
+            clientID: configAuth.googleAuth.clientID,
+            clientSecret: configAuth.googleAuth.clientSecret,
+            callbackURL: configAuth.googleAuth.callbackURL,
 
         },
-        function(token, refreshToken, profile, done) {
-            process.nextTick(function() {
+        function (token, refreshToken, profile, done) {
+            process.nextTick(function () {
 
-                Usuario.findOne({ 'google.id' : profile.id }, function(err, user) {
-                    if (err){
+                Usuario.findOne({'google.id': profile.id}, function (err, user) {
+                    if (err) {
                         return done(err);
                     }
                     if (user) {
@@ -163,13 +162,13 @@ module.exports = function (passport) {
                         var nuevoUsuarioGoogle = new Usuario();
 
                         // set all of the relevant information
-                        nuevoUsuarioGoogle.google.id    = profile.id;
+                        nuevoUsuarioGoogle.google.id = profile.id;
                         nuevoUsuarioGoogle.google.token = token;
-                        nuevoUsuarioGoogle.google.name  = profile.displayName;
+                        nuevoUsuarioGoogle.google.name = profile.displayName;
                         nuevoUsuarioGoogle.google.email = profile.emails[0].value; // pull the first email
 
                         // save the user
-                        nuevoUsuarioGoogle.save(function(err) {
+                        nuevoUsuarioGoogle.save(function (err) {
                             if (err)
                                 throw err;
                             return done(null, nuevoUsuarioGoogle);
