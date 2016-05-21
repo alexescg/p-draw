@@ -43,15 +43,22 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     $scope.historias = $scope.historias || [];
 
     socket.on('sendHistorias', function (data) {
-        $scope.historias = data.emitted.fulfill[0];
+        $scope.findHistoriasByProyecto();
         $scope.$apply();
     });
 
-    socket.on('sendHistoria', function (data) {
-        $scope.historias.push(data);
+    socket.on('sendHistoria', function () {
+        $scope.findHistoriasByProyecto();
         $scope.$apply();
     });
 
+    $scope.findHistoriasByProyecto = function(){
+      $http.get('/find/historias/proyecto/'+$scope.idProyecto).success(function(data) {
+            $scope.historias = data;
+        }).error(function(data){
+          //TODO:Error
+          });
+    };
     $scope.getNombreCompleto = function(obj){
       if(obj.google){
         console.log("Entre al google")
@@ -134,12 +141,15 @@ app.controller("dashBoardController", ['$scope', '$http', function($scope, $http
   $scope.totalDeveloper = 0;
   $scope.init = function(usuario){
     $scope.idUsuario = usuario;
-    $scope.getCountProyectos();
   }
 
   $scope.getProyectosScrum = function(){
     $http.get('/getProyectos/dashboard/'+$scope.idUsuario+"/"+"scrum-master").success(function(data) {
-          $scope.proyectos = data;
+          if(data != "{}"){
+            $scope.proyectos = data;
+          } else {
+            $scope.proyectos = [];
+          }
       }).error(function(data){
               console.log("Algo paso");
         });
@@ -147,7 +157,11 @@ app.controller("dashBoardController", ['$scope', '$http', function($scope, $http
 
   $scope.getProyectosOwner = function(){
     $http.get('/getProyectos/dashboard/'+$scope.idUsuario+"/"+"product-owner").success(function(data) {
-          $scope.proyectos = data;
+          if(data != "{}"){
+            $scope.proyectos = data;
+          } else {
+            $scope.proyectos = [];
+          }
       }).error(function(data){
               console.log("Algo paso");
         });
@@ -155,15 +169,11 @@ app.controller("dashBoardController", ['$scope', '$http', function($scope, $http
 
   $scope.getProyectosDeveloper = function(){
     $http.get('/getProyectos/dashboard/'+$scope.idUsuario+"/"+"developer").success(function(data) {
-          $scope.proyectos = data;
-      }).error(function(data){
-              console.log("Algo paso");
-        });
-  }
-  $scope.getCountProyectos = function(){
-    $http.get('/count/proyectos/usuario/'+$scope.idUsuario).success(function(data) {
-          $scope.counts = data;
-          console.log(data);
+          if(data != "{}"){
+            $scope.proyectos = data;
+          } else {
+            $scope.proyectos = [];
+          }
       }).error(function(data){
               console.log("Algo paso");
         });
