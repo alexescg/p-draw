@@ -6,14 +6,13 @@ var curpMatch = /^[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9
 
 
 var usuarioSchema = mongoose.Schema({
-    username: {type: String},
     nombre: {type: String},
     apellidos: {type: String},
     fechaNacimiento: {type: Date},
-    curp: {type: String, match: curpMatch},
-    rfc: {type: String, match: rfcMatch},
+    rfc: {type: String, match: rfcMatch, message: 'rfc no valido'},
+    curp: {type: String, match: curpMatch, message: 'curp no valido'},
     domicilio: {type: String},
-    rolActual: {type: String},
+    habilidades: {type: Array, "default":[]},
     local: {
         email: String,
         password: {

@@ -32,7 +32,7 @@ var Usuario = require('./models/usuarios').Usuario;
 // app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.json()); //Application JSON
-app.use(bodyParser.urlencoded({extended: true}));// Multipart con array
+app.use(bodyParser.urlencoded({extended: false}));// Multipart con array
 //
 // //View engine
 app.set("view engine", "jade");

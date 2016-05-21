@@ -1,7 +1,7 @@
 doctype html
 html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
     head
-        link(rel='icon', type='image/png', href='../src/images/DB_16х16.png')
+        link(rel='icon', type='image/png', href='../src/images/group.png')
         meta(charset='utf-8')
         meta(http-equiv='X-UA-Compatible', content='IE=edge')
         meta(name='description', content='A front-end template that helps you build fast, modern mobile web apps.')
@@ -18,13 +18,13 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
         meta(name='msapplication-TileColor', content='#3372DF')
         // SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones
         //
-          <link rel="canonical" href="http://www.example.com/">
         link(href='https://fonts.googleapis.com/css?family=Roboto:400,500,300,100,700,900', rel='stylesheet', type='text/css')
         link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
         link(href='static/css/application.css' rel='stylesheet' type="text/css")
         link(href='static/css/lib/getmdl-select.min.css' rel='stylesheet' type="text/css")
         link(href='static/css/lib/nv.d3.css' rel='stylesheet' type="text/css")
         link(type="text/css" src="static/bower_components/ngToast/dist/ngToast.min.css")
+        //link(rel="stylesheet" href="static/bower_components/mdl-selectfield/dist/mdl-selectfield.min.css" )
         link(href='static/css/styles.css' rel='stylesheet' type="text/css")
         link(href='static/css/landing.css' rel='stylesheet' type="text/css")
 
@@ -83,7 +83,7 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                         li.mdl-menu__item.mdl-list__item
                             span.mdl-list__item-primary-content
                                 i.material-icons.mdl-list__item-icon account_circle
-                                |                         My account
+                                a(href="/profile") Mi perfil
                         li.mdl-menu__item.mdl-list__item
                             span.mdl-list__item-primary-content
                                 i.material-icons.mdl-list__item-icon check_box
@@ -117,8 +117,7 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                         i.material-icons(role='presentation') link
                         |                 GitHub
             main.mdl-layout__content(class="mdl-color--grey-100")
-                .mdl-grid.mdl-grid--no-spacing
-                    block content
+                block content
         // inject:js
         // endinject
         script(type="text/javascript" src="static/bower_components/angular/angular.min.js")
@@ -133,3 +132,4 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
         script(type="text/javascript" src="static/bower_components/ngToast/dist/ngToast.min.js")
         script(type="text/javascript" src="static/bower_components/socket.io-client/socket.io.js")
         script(type="text/javascript" src="static/bower_components/angular-route/angular-route.js")
+        script(type="text/javascript" src="static/bower_components/mdl-selectfield/dist/mdl-selectfield.min.js")

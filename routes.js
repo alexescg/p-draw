@@ -52,26 +52,28 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
 
     app.get('/profile', isLoggedIn, function (req, res) {
+        // console.log(req);
         res.render('profile',
             {
                 message: req.flash('signupMessage'),
-                user: req.user
+                user: req.user,
+                habilidades : req.user.habilidades || []
             });
     });
 
 
     app.post('/profile', isLoggedIn, function (req, res) {
-        var usuario = new Usuario(req.user);
-        usuario.username = req.body.username;
+        console.log(req.body);
+        var usuario = req.user;
         usuario.nombre = req.body.nombre;
         usuario.apellidos = req.body.apellidos;
         usuario.fechaNacimiento = req.body.fechaNacimiento;
         usuario.rfc = req.body.rfc;
         usuario.curp = req.body.curp;
         usuario.domicilio = req.body.domicilio;
-        usuario.rolActual = req.body.rolActual;
+        usuario.habilidades = JSON.parse(req.body.habilidades);
 
-        usuario.save(function (err, user) {
+        new Usuario(usuario).save(function (err, user) {
                 if (err) {
                     console.log(err);
                     res.render("profile", {
@@ -105,8 +107,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
     /*--------------------------------Routes para el dashboard -----------------------------------*/
     app.get("/home", isLoggedIn, function (req, response) {
-        console.log("REQ-USER: " + req.user);
-        var protectos = [];
+        // console.log("REQ-USER: " + req.user);
         response.render("dashboard", {usuario: req.user});
     });
 
