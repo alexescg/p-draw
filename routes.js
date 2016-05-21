@@ -376,7 +376,28 @@ module.exports = function (app, passport, roles, mongoose, io) {
         res.render("detalleSprint");
     });
     /*---------------------------- Historias -----------------------------------------*/
+    app.post("/crearSprint", function (req, res) {
+        console.log(req.body.historias);
+        console.log(req.body.idProyecto);
+        var release = new LiberacionBacklog({
+          proyecto: mongoose.Types.ObjectId(req.body.idProyecto),
+          finalizo:false,
+          fechaFinalizacion: Date()
+        });
+        release.save(function(err, obj){
+          console.log("-----------------------------");
+          console.log(obj);
+          LiberacionBacklog.update({"_id": mongoose.Types.ObjectId(obj._id)}, {$push: {participantes: {$each: [rol]}}}, {upsert: true}, function (err) {
+            if (err) {
+              err();
+            }
+          });
+        });
+        req.body.historias.forEach(function(historia){
 
+        });
+
+    });
 
     var getHistorias = HistoriaUsuario.find({}).then(function successCallback(success) {
         return success;

@@ -1,12 +1,12 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-var ProductBacklog = mongoose.model('ProductBacklog');
+var Proyecto = mongoose.model('Proyecto');
 
 var liberacionBacklogSchema = new Schema({
-  proyecto:{type: Schema.ObjectId, ref: "Proyecto", required: true},
+    proyecto:{type: Schema.ObjectId, ref: "Proyecto", required: true},
     finalizo:{type:Boolean, required:true},
     fechaFinalizacion:[{type: Date, required:true}]
 });
 
 var LiberacionBacklog = mongoose.model("LiberacionBacklog", liberacionBacklogSchema);
-module.exports.LiberacionBacklog = LiberacionBacklog;
+module.exports = LiberacionBacklog;

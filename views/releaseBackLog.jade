@@ -4,10 +4,10 @@ block content
     .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
-          h2.mdl-card__title-text Aqui va nombre de proyecto
+          h2.mdl-card__title-text #{proyecto.nombreProyecto}
         .mdl-card__supporting-text
           p.letras-negras.
-            Aqui va la descripcion del proyecto
+            #{proyecto.descripcionProy}
       br
       br
       .mdl-card.mdl-shadow--2dp
@@ -15,9 +15,9 @@ block content
           h2.mdl-card__title-text Release Backlog
         .mdl-card__supporting-text
           ul.mdl-list
-            li.mdl-list__item
-              span.mdl-list__item-primary-content.list__item-text.letras-negras Nombre de la historia
-          button.mdl-button(type="submit" ng-click="accionarBoton()") Agregar
+            li.mdl-list__item(ng-repeat="historia in historiasSprint")
+              span.mdl-list__item-primary-content.list__item-text.letras-negras {{historia.nombre}}
+          button.mdl-button(type="submit" ng-click="crearSprint()") Agregar
     .mdl-cell.mdl-cell--9-col-desktop.mdl-cell--9-col-tablet.mdl-cell--5-col-phone
       .mdl-card-2.mdl-shadow--2dp-2
         .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top
@@ -26,18 +26,7 @@ block content
                   .mdl-card__title
                       h2.mdl-card__title-text {{historia.descripcion}}
                   .mdl-card__supporting-text
-                      button(class="mdl-button blank-sprint-button" type="button") Agregar historia de usuario
+                      button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarHistoriaSprint(historia._id)") Agregar historia de usuario
   dialog(class="mdl-dialog-big blank-sprint-dialog")
     h2.mdl-dialog__title Detalle Historia
-
-  script.
-    var dialogSprint = document.querySelector('.blank-sprint-dialog');
-    var showDialogButtonSprints = document.querySelectorAll('.blank-sprint-button');
-    if (! dialogSprint.showModal) {
-      dialogPolyfill.registerDialog(dialogSprint);
-    }
-    [].forEach.call(showDialogButtonSprints, function(button){
-        button.addEventListener('click', function() {
-          dialogSprint.showModal();
-          });
-    });
+  ng-include(src="script.jade")

@@ -115,21 +115,37 @@ app.controller('productBacklogCtrl',['$scope', function($scope){
   $scope.titulo = "Titulo 1";
 }]);
 
-app.controller('releaseBacklogCtrl',['$scope','$document', '$timeout', '$window', function($scope, $document, $timeout, $window){
+app.controller('releaseBacklogCtrl',['$scope','$http', function($scope, $http){
   $scope.verDetalles = false;
+  $scope.historiasSprint = [];
+  
   $scope.init = function(idProy, historias){
-    $scope.idProy = idProy;
+    $scope.idProyecto = idProy;
     $scope.historias = historias;
-    console.log($scope.historias);
-    $timeout(function(){
-      alert("popo");
-      var buttons = $document.find('button');
-      console.log(buttons);
-    }, 0);
   };
-  $scope.accionarBoton = function(){
-    $scope.verDetalles = true;
-    var botones = angular.element($document.querySelectAll('.blank-sprint-button'));
+
+  $scope.agregarHistoriaSprint = function(idHistoria){
+    var i =0;
+    for(i = 0; i<$scope.historias.length;i++){
+      if($scope.historias[i]._id === idHistoria){
+          $scope.historiasSprint.push($scope.historias[i]);
+          break;
+      }
+    };
+    $scope.historias.splice(i,1);
+  };
+
+  $scope.crearSprint = function(){
+    $http({
+      url:'/crearSprint',
+      method:'POST',
+      data: {historias : $scope.historiasSprint,
+      idProyecto:$scope.idProyecto}
+    }).then(function(data){
+      console.log(aaa);
+    }, function(data){
+      //TODO:Error
+    });
   };
 }]);
 
