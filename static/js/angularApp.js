@@ -132,6 +132,27 @@ app.controller('sprintsCtrl',['$scope', function($scope){
   $scope.titulo = "Titulo 3";
 }]);
 
+app.controller('profileCtrl', ['$scope', '$http', function($scope, $http){
+
+    $scope.skills = $scope.skills || [];
+    $scope.init= function(skillz){
+        $scope.skills = skillz;
+    }
+    $scope.removeSkill = function(index){
+        $scope.skills.splice(index, 1);
+    }
+    $scope.agregarHabilidad = function(){
+        var skill = {
+            habilidad: $scope.user.habilidad,
+            nivel: $scope.user.nivel
+        };
+        $scope.skills.push(skill);
+        $scope.user.habilidad = '';
+        $scope.user.nivel = '';
+    }
+
+}]);
+
 app.controller("dashBoardController", ['$scope', '$http', function($scope, $http){
 
   $scope.idUsuario = "";
