@@ -25,6 +25,7 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     $scope.productOwner={};
     $scope.idProyecto={};
     $scope.desarrolladores = [];
+    $scope.liberaciones = [];
 
     $scope.init = function(scrumMaster, owner, idProyecto){
       $scope.scrumMaster =scrumMaster;
@@ -47,6 +48,12 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
         $scope.$apply();
     });
 
+    socket.on('sendLiberaciones', function (data) {
+        $scope.findReleaseByProyecto();
+        console.log($scope.liberaciones);
+        $scope.$apply();
+    });
+
     socket.on('sendHistoria', function () {
         $scope.findHistoriasByProyecto();
         $scope.$apply();
@@ -59,6 +66,17 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
           //TODO:Error
           });
     };
+
+    $scope.findReleaseByProyecto = function(){
+      $http.get('/find/release/proyecto/'+$scope.idProyecto).success(function(data) {
+            $scope.liberaciones = data;
+            console.log("--------")
+            console.log(data);
+        }).error(function(data){
+          //TODO:Error
+          });
+    };
+
     $scope.getNombreCompleto = function(obj){
       if(obj.google){
         console.log("Entre al google")
@@ -126,6 +144,8 @@ app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scop
   $scope.verDetalles = false;
   $scope.historiasSprint = [];
 
+  var socket = io.connect({'forceNew': true});
+
   $scope.init = function(idProy, historias){
     $scope.idProyecto = idProy;
     $scope.historias = historias;
@@ -142,18 +162,12 @@ app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scop
     $scope.historias.splice(i,1);
   };
 
-  $scope.crearSprint = function(){
-    $http({
-      url:'/crearSprint',
-      method:'POST',
-      data: {historias : $scope.historiasSprint,
-      idProyecto:$scope.idProyecto}
-    }).then(function(data){
-      $window.location.href = "/detalleProyecto";
-    }, function(data){
-      //TODO:Error
-    });
+  $scope.crearRelease = function(){
+    socket.emit('newRelease', $scope.historias, $scope.idProyecto);
+    $window.location.href = "/detalleProyecto";
   };
+
+
 }]);
 
 app.controller('sprintsCtrl',['$scope', function($scope){
