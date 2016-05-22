@@ -8,10 +8,6 @@ var HistoriaUsuario = require('./models/historiaUsuarios');
 
 module.exports = function (app, passport, roles, mongoose, io) {
 
-    app.get("/", isLoggedIn, function (req, res) {
-        res.render("index");
-    });
-
     app.get('/login', function (req, res) {
         res.render('landing');
     });
@@ -133,59 +129,61 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
     /*--------------------------------Routes para el dashboard -----------------------------------*/
     app.get("/home", isLoggedIn, function (req, response) {
-        // console.log("REQ-USER: " + req.user);
-        response.render("dashboard", {usuario: req.user});
-    });
+        console.log("REQ-USER: "+req.user);
+        var proyectos = {};
 
-    app.get("/getProyectos/dashboard/:idUsuario/:rol", function (req, response) {
-        console.log(req.params.idUsuario);
-        Proyecto.find({
-            "participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario),
-            "participantes.rol": req.params.rol
-        })
-            .exec(function (err, proyectos) {
-                if (proyectos != "") {
-                    Proyecto.populate(proyectos, {
-                        path: 'participantes.usuario',
-                        model: 'Usuario'
-                    }, function (err, proyectos) {
-                        response.json(proyectos);
-                    });
+        Proyecto.aggregate([
+          {$unwind:"$participantes"},
+          {$match:{"participantes.usuario": mongoose.Types.ObjectId(req.user._id), "participantes.rol": "scrum-master"}},
+          {$group:{_id:null, count:{$sum:1}}}
+        ], function(err,result){
+            if(result.length !=0){
+              proyectos.scrum = result[0].count;
+            } else {
+              proyectos.scrum = 0;
+            }
+            Proyecto.aggregate([
+              {$unwind:"$participantes"},
+              {$match:{"participantes.usuario": mongoose.Types.ObjectId(req.user._id), "participantes.rol": "product-owner"}},
+              {$group:{_id:null, count:{$sum:1}}}
+            ], function(err,result){
+                if(result.length !=0){
+                  proyectos.owner = result[0].count;
+                } else {
+                  proyectos.owner = 0;
                 }
-            })
+                Proyecto.aggregate([
+                  {$unwind:"$participantes"},
+                  {$match:{"participantes.usuario": mongoose.Types.ObjectId(req.user._id), "participantes.rol": "developer"}},
+                  {$group:{_id:null, count:{$sum:1}}}
+                ], function(err,result){
+                    if(result.length !=0){
+                      proyectos.developer = result[0].count;
+                    } else {
+                      proyectos.developer = 0;
+                    }
+                    response.render("dashboard", {usuario: req.user, proyectos:proyectos});
+                });
+            });
+        });
     });
 
-    app.get("/count/proyectos/usuario/:idUsuario", function (req, response) {
-        var json = {};
-        json.scrum = 0;
-        json.owner = 0;
-        json.developer = 0;
-        Proyecto.count({
-                "participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario),
-                "participantes.rol": "scrum-master"
-            },
-            function (err, c) {
-                if (err) response.redirect("/");
-                json.scrum = c;
-            });
-        Proyecto.count({
-                "participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario),
-                "participantes.rol": "product-owner"
-            },
-            function (err, c) {
-                if (err) response.redirect("/");
-                json.owner = c;
-            });
-        Proyecto.count({
-                "participantes.usuario": mongoose.Types.ObjectId(req.params.idUsuario),
-                "participantes.rol": "developer"
-            },
-            function (err, c) {
-                if (err) response.redirect("/");
-                json.developer = c;
-                console.log("Json.developer: " + json.developer);
-                response.json(json);
-            });
+    app.get("/getProyectos/dashboard/:idUsuario/:rol", function(req, response){
+      console.log(req.params.idUsuario);
+      Proyecto.find().elemMatch("participantes",{ "usuario": mongoose.Types.ObjectId(req.params.idUsuario), "rol": req.params.rol })
+          .exec(function (err, proyectos) {
+            console.log(proyectos);
+              if (proyectos.length !=0) {
+                  Proyecto.populate(proyectos, {
+                      path: 'participantes.usuario',
+                      model: 'Usuario'
+                  }, function (err, proyectos) {
+                      response.json(proyectos);
+                  });
+              } else {
+                response.json("{}");
+              }
+          })
     });
 
     /*======================= Fin de rutas del dashboard============================================*/
@@ -247,16 +245,14 @@ module.exports = function (app, passport, roles, mongoose, io) {
                     obj.participantes.forEach(function (participante) {
                         if (participante.rol === "developer") {
                             desarrolladores.push(participante.usuario);
-                        }
-                    });
-                    console.log(desarrolladores);
-                    response.json(desarrolladores);
-                }
-            });
-    });
+                    }
+                });
+                response.json(desarrolladores);
+              }
+          });
+      });
 
     app.post("/crearProyecto", function (req, res) {
-        console.log(req.user);
         var rol = new Rol({
             rol: "scrum-master",
             usuario: req.user._id
@@ -335,7 +331,17 @@ module.exports = function (app, passport, roles, mongoose, io) {
             }
         });
     });
-    /*---------------------------- Users -----------------------------------------*/
+
+    app.get("/find/historias/proyecto/:idProyecto", function(req, response){
+      console.log("--> " + req.params.idProyecto)
+      HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto)})
+          .exec(function (err, obj) {
+                console.log("->"+obj);
+                response.json(obj);
+
+          });
+      });
+/*---------------------------- Users -----------------------------------------*/
     app.post("/crearUsuario", isLoggedIn, function (req, res) {
         var usuario = new Usuario({
             userName: req.body.userName,
@@ -410,14 +416,14 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
     io.on('connect', function (socket) {
         // console.log(getMessages());
-        socket.emit('sendHistorias', getHistorias);
+        socket.emit('sendHistorias');
 
         socket.on('newHistoria', function (data) {
             var historiaNueva = new HistoriaUsuario(data);
             historiaNueva.save(function (err, obj) {
                 console.log(obj);
                 if (obj) {
-                    io.emit('sendHistoria', obj)
+                    io.emit('sendHistoria')
                 }
             });
         });
