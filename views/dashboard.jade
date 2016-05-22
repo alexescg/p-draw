@@ -6,21 +6,21 @@ block content
         div(class="mdl-card__title mdl-card--expand")
           h1(class="mdl-card__title-text") Scrum Master
         div(class="mdl-card__supporting-text")
-          h3 Total de proyectos en este rol: {{counts.scrum}}
+          h3 Total de proyectos en este rol: #{proyectos.scrum}
           a(class="mdl-button" ng-click="getProyectosScrum()") Ver Proyectos
     .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--4-col-tablet.mdl-cell--2-col-phone
       div(class="demo-card-square mdl-card mdl-shadow--2dp")
         div(class="mdl-card__title mdl-card--expand")
           h1(class="mdl-card__title-text") Proyect Owner
         div(class="mdl-card__supporting-text")
-          h3 Total de proyectos en este rol: {{counts.owner}}
+          h3 Total de proyectos en este rol: #{proyectos.owner}
           a(class="mdl-button" ng-click="getProyectosOwner()") Ver Proyectos
     .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--4-col-tablet.mdl-cell--2-col-phone
       div(class="demo-card-square mdl-card mdl-shadow--2dp")
         div(class="mdl-card__title mdl-card--expand")
           h1(class="mdl-card__title-text") Developer
         div(class="mdl-card__supporting-text")
-          h3 Total de proyectos en este rol: {{counts.developer}}
+          h3 Total de proyectos en este rol: #{proyectos.developer}
           a(class="mdl-button" ng-click="getProyectosDeveloper()") Ver Proyectos
     .mdl-cell.mdl-cell--12-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone
       table.mdl-data-table.mdl-js-data-table.mdl-data-table.projects-table
