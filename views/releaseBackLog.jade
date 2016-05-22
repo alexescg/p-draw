@@ -18,7 +18,7 @@ block content
             li.mdl-list__item
               span.mdl-list__item-primary-content.list__item-text.letras-negras Nombre de la historia
           button.mdl-button(type="submit" ng-click="accionarBoton()") Agregar
-    .mdl-cell.mdl-cell--9-col-desktop.mdl-cell--9-col-tablet.mdl-cell--5-col-phone
+    .mdl-cell.mdl-cell--6-col-desktop.mdl-cell--6-col-tablet.mdl-cell--3-col-phone
       .mdl-card-2.mdl-shadow--2dp-2
         .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top
           .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(ng-repeat="historia in historias")
@@ -27,17 +27,35 @@ block content
                       h2.mdl-card__title-text {{historia.descripcion}}
                   .mdl-card__supporting-text
                       button(class="mdl-button blank-sprint-button" type="button") Agregar historia de usuario
-  dialog(class="mdl-dialog-big blank-sprint-dialog")
-    h2.mdl-dialog__title Detalle Historia
-
-  script.
-    var dialogSprint = document.querySelector('.blank-sprint-dialog');
-    var showDialogButtonSprints = document.querySelectorAll('.blank-sprint-button');
-    if (! dialogSprint.showModal) {
-      dialogPolyfill.registerDialog(dialogSprint);
-    }
-    [].forEach.call(showDialogButtonSprints, function(button){
-        button.addEventListener('click', function() {
-          dialogSprint.showModal();
-          });
-    });
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
+      .mdl-card.mdl-shadow--2dp.trending
+        .mdl-card__title
+          h2.mdl-card__title-text Detalles De Historia
+        .mdl-card__supporting-text
+          .mdl-grid
+            label(for="nombre" class="mdl-textfield__label") Nombre
+            label(name="nombre" class="mdl-textfield__label")
+            br
+            label(for="descripcion" class="mdl-textfield__label") Descripcion
+            label(name="descripcion" class="mdl-textfield__label")
+            br
+            label(for="descripcion" class="mdl-textfield__label") Descripcion
+            label(name="descripcion" class="mdl-textfield__label")
+            br
+            label(for="cuando" class="mdl-textfield__label") Cuando
+            label(name="cuando" class="mdl-textfield__label")
+            br
+            label(for="entonces" class="mdl-textfield__label") Entonces
+            label(name="entonces" class="mdl-textfield__label")
+            br
+            label(for="como" class="mdl-textfield__label") Como
+            label(name="como" class="mdl-textfield__label")
+            br
+            label(for="quiero" class="mdl-textfield__label") Quiero
+            label(name="quiero" class="mdl-textfield__label")
+            br
+            label(for="deTalManeraQue" class="mdl-textfield__label") De Tal Manera Que
+            label(name="deTalManeraQue" class="mdl-textfield__label")
+            br
+            label(for="prioridad" class="mdl-textfield__label") Prioridad
+            label(name="prioridad" class="mdl-textfield__label")

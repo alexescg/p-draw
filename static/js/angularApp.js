@@ -123,12 +123,13 @@ app.controller('releaseBacklogCtrl',['$scope','$document', '$timeout', '$window'
     console.log($scope.historias);
     $timeout(function(){
       alert("popo");
-      var buttons = $document.find('button');
+      var buttons = angular.element(document).find('blank-sprint-button');
       console.log(buttons);
     }, 0);
   };
   $scope.accionarBoton = function(){
     $scope.verDetalles = true;
+    $scope.algo;
     var botones = angular.element($document.querySelectAll('.blank-sprint-button'));
   };
 }]);
