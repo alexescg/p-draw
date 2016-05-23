@@ -67,6 +67,7 @@ block content
           ul.mdl-list
             li.mdl-list__item(ng-repeat="desarrollador in desarrolladores")
               span.mdl-list__item-primary-content.list__item-text.letras-negras {{getNombreCompleto(desarrollador)}}
+            br
             li.mdl-list__item
               button(class="mdl-button show-developer-button" id="show-developer" type="button" ng-click="getUsuarios()") Agregar Desarrolladores
               dialog(class="mdl-dialog-big show-developer-dialog")

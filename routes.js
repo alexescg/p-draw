@@ -1,6 +1,9 @@
 var Usuario = require('./models/usuarios');
 var Proyecto = require('./models/proyectos');
+var ProductBacklog = require('./models/productsBacklog');
+var LiberacionBacklog = require('./models/liberacionesBacklog');
 var Rol = require('./models/roles');
+var Sprint = require('./models/sprints');
 var HistoriaUsuario = require('./models/historiaUsuarios');
 //var mongoose = require('mongoose');
 
@@ -48,7 +51,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
 
     app.get('/profile', isLoggedIn, function (req, res) {
-        // console.log(req);
         res.render('profile',
             {
                 message: req.flash('signupMessage'),
@@ -59,7 +61,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
 
     app.post('/profile', isLoggedIn, function (req, res) {
-        console.log(req.body);
         var usuario = req.user;
         usuario.nombre = req.body.nombre;
         usuario.apellidos = req.body.apellidos;
@@ -71,7 +72,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
         new Usuario(usuario).save(function (err, user) {
                 if (err) {
-                    console.log(err);
                     res.render("profile", {
                         message: req.flash('Error al guardar datos.'),
                         user: req.user,
@@ -107,7 +107,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
     /*--------------------------------Routes para el dashboard -----------------------------------*/
     app.get("/home", isLoggedIn, function (req, response) {
-        console.log("REQ-USER: "+req.user);
         var proyectos = {};
 
         Proyecto.aggregate([
@@ -147,10 +146,8 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.get("/getProyectos/dashboard/:idUsuario/:rol", function(req, response){
-      console.log(req.params.idUsuario);
       Proyecto.find().elemMatch("participantes",{ "usuario": mongoose.Types.ObjectId(req.params.idUsuario), "rol": req.params.rol })
           .exec(function (err, proyectos) {
-            console.log(proyectos);
               if (proyectos.length !=0) {
                   Proyecto.populate(proyectos, {
                       path: 'participantes.usuario',
@@ -176,7 +173,8 @@ module.exports = function (app, passport, roles, mongoose, io) {
             model: 'Usuario'
         })
             .exec(function (err, obj) {
-                req.session.proyecto = req.query.proyectoElegido
+                req.session.proyecto = req.query.proyectoElegido;
+                sass = req.session;
                 if (err) response.redirect("/home");
                 else
                     var productOwner;
@@ -208,7 +206,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.get("/detalleProyecto/findDevelopers/:idProyecto", function (req, response) {
-        console.log(req.params.idProyecto);
         Proyecto.findById({"_id": req.params.idProyecto}).populate({
             path: 'participantes.usuario',
             model: 'Usuario'
@@ -278,7 +275,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.post("/agregarOwner", isLoggedIn, function (req, response) {
-        console.log("IDPROYECTO: " + req.body.idProyecto);
         req.session = sass;
         var rol = new Rol({
             rol: "product-owner",
@@ -294,9 +290,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.post("/agregarDesarrollador", isLoggedIn, function (req, response) {
-
-        console.log("IDPROYECTO: " + req.body.idProyecto);
-        console.log(req.body.usuarioOwner);
         var rol = new Rol({
             rol: "developer",
             usuario: mongoose.Types.ObjectId(req.body.usuarioOwner)
@@ -309,14 +302,18 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.get("/find/historias/proyecto/:idProyecto", function(req, response){
-      console.log("--> " + req.params.idProyecto)
       HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto)})
           .exec(function (err, obj) {
-                console.log("->"+obj);
                 response.json(obj);
-
           });
       });
+
+      app.get("/find/release/proyecto/:idProyecto", function(req, response){
+        LiberacionBacklog.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto)})
+            .exec(function (err, obj) {
+                  response.json(obj);
+            });
+        });
 /*---------------------------- Users -----------------------------------------*/
     app.post("/crearUsuario", isLoggedIn, function (req, res) {
         var usuario = new Usuario({
@@ -357,8 +354,134 @@ module.exports = function (app, passport, roles, mongoose, io) {
     app.get("/detallesprint", isLoggedIn, function (req, res) {
         res.render("detalleSprint");
     });
-    /*---------------------------- Historias -----------------------------------------*/
+    /*---------------------------- Release -----------------------------------------*/
 
+    app.get('/addReleaseBacklog',isLoggedIn, function (req, res) {
+      req.session = sass;
+      Proyecto.findOne({"_id": mongoose.Types.ObjectId(req.session.proyecto)})
+      .exec(function (err, proyecto){
+        HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.session.proyecto), "liberacionBacklog": {
+          "$exists": false
+        }}).select("-__v").exec(function(err, obj){
+            var jsonHistorias = JSON.stringify(obj);
+            res.render('releaseBackLog', {usuario: req.user, proyecto: proyecto, historias: jsonHistorias});
+        });
+      });
+
+    });
+
+    app.get('/showReleaseBacklog',isLoggedIn, function (req, res) {
+      if(!req.query.releaseElegido){
+        LiberacionBacklog.findById(req.session.releaseElegido)
+        .exec(function (err, release){
+          Proyecto.findById(release.proyecto)
+          .exec(function(err, proyecto){
+            res.render('showReleaseBacklog', {usuario: req.user, proyecto: proyecto, release: release});
+          });
+        });
+      } else {
+        req.session = sass;
+        req.session.releaseElegido = req.query.releaseElegido;
+        sass = req.session;
+        LiberacionBacklog.findById(req.query.releaseElegido)
+        .exec(function (err, release){
+          Proyecto.findById(release.proyecto)
+          .exec(function(err, proyecto){
+            res.render('showReleaseBacklog', {usuario: req.user, proyecto: proyecto, release: release});
+          });
+        });
+      }
+
+    });
+
+    app.post("/crearRelease", function (req, res) {
+      if(req.body.historias.length<1){
+        return res.status(400).send({message:"No hay historias en el Release"});
+      }
+      if(!req.body.release.nombreRelease){
+        return res.status(400).send({message:"No hay nombre en el Release"});
+      }
+      if(!req.body.release.descripcionRelease){
+        return res.status(400).send({message:"No hay descripción en el Release"});
+      }
+
+      console.log(req.body.release);
+      var newRelease = new LiberacionBacklog({
+        proyecto: mongoose.Types.ObjectId(req.body.release.proyecto),
+        finalizo:false,
+        fechaFinalizacion: Date(),
+        descripcionRelease: req.body.release.descripcionRelease,
+        nombreRelease: req.body.release.nombreRelease
+      });
+      newRelease.save(function(err, obj){
+        if(err){
+          return res.status(400).send({message:"Error al guardar"});
+        }
+        req.body.historias.forEach(function(historia){
+          HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(historia._id)},
+            {$set: {"liberacionBacklog": mongoose.Types.ObjectId(obj._id)}},
+            function (err) {
+            if (err) {
+              err();
+            }
+        });
+      });
+        res.json("{}");
+    });
+  });
+
+  app.post("/crearSprint", function (req, res) {
+    console.log(req.body.sprint);
+    if(req.body.historias.length<1){
+      return res.status(400).send({message:"No hay historias en el Release"});
+    }
+    if(!req.body.sprint.nombreSprint){
+      return res.status(400).send({message:"No hay nombre en el Release"});
+    }
+    if(!req.body.sprint.descripcionSprint){
+      return res.status(400).send({message:"No hay descripción en el Release"});
+    }
+
+    console.log(req.body.sprint);
+    var newSprint = new Sprint({
+      liberacionBacklog: mongoose.Types.ObjectId(req.body.sprint.liberacionBacklog),
+      finalizo:false,
+      fechaFinal: Date(),
+      descripcionSprint: req.body.sprint.descripcionSprint,
+      nombreSprint: req.body.sprint.nombreSprint
+    });
+    newSprint.save(function(err, obj){
+      console.log("============obj");
+      console.log(obj);
+      if(err){
+        return res.status(400).send({message:"Error al guardar"});
+      }
+      req.body.historias.forEach(function(historia){
+        HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(historia._id)},
+          {$set: {"sprint": mongoose.Types.ObjectId(obj._id)}},
+          function (err) {
+          if (err) {
+            err();
+          }
+      });
+    });
+      res.json("{}");
+  });
+});
+
+  app.get("/find/historias/release/:idRelease", function(req, response){
+    HistoriaUsuario.find({"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease), "sprint":{$exists:false}})
+        .exec(function (err, obj) {
+              response.json(obj);
+        });
+    });
+
+    app.get("/find/sprints/release/:idRelease", function(req, response){
+      Sprint.find({"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease)})
+          .exec(function (err, obj) {
+                response.json(obj);
+          });
+      });
 
     var getHistorias = HistoriaUsuario.find({}).then(function successCallback(success) {
         return success;
@@ -367,17 +490,16 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     io.on('connect', function (socket) {
-        // console.log(getMessages());
         socket.emit('sendHistorias');
 
         socket.on('newHistoria', function (data) {
             var historiaNueva = new HistoriaUsuario(data);
             historiaNueva.save(function (err, obj) {
-                console.log(obj);
                 if (obj) {
                     io.emit('sendHistoria')
                 }
             });
         });
+
     });
 };

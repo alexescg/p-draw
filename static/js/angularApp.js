@@ -25,6 +25,7 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     $scope.productOwner={};
     $scope.idProyecto={};
     $scope.desarrolladores = [];
+    $scope.liberaciones = [];
 
     $scope.init = function(scrumMaster, owner, idProyecto){
       $scope.scrumMaster =scrumMaster;
@@ -47,6 +48,7 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
         $scope.$apply();
     });
 
+
     socket.on('sendHistoria', function () {
         $scope.findHistoriasByProyecto();
         $scope.$apply();
@@ -59,9 +61,19 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
           //TODO:Error
           });
     };
+
+    $scope.findReleaseByProyecto = function(){
+      $http.get('/find/release/proyecto/'+$scope.idProyecto).success(function(data) {
+            $scope.liberaciones = data;
+            console.log("--------")
+            console.log(data);
+        }).error(function(data){
+          //TODO:Error
+          });
+    };
+
     $scope.getNombreCompleto = function(obj){
       if(obj.google){
-        console.log("Entre al google")
         return obj.google.name;
       } else if (obj.twitter){
         return obj.twitter.displayName;
@@ -122,9 +134,99 @@ app.controller('productBacklogCtrl',['$scope', function($scope){
   $scope.titulo = "Titulo 1";
 }]);
 
-app.controller('releaseBacklogCtrl',['$scope', function($scope){
-  $scope.mensaje = "hola";
-  $scope.titulo = "Titulo 2";
+app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scope, $http, $window){
+  $scope.verDetalles = false;
+  $scope.historiasSprint = [];
+  $scope.release = {}
+
+  $scope.init = function(idProy, historias){
+    $scope.idProyecto = idProy;
+    $scope.historias = historias;
+    console.log("Nombre Release");
+    console.log($scope.release.nombreRelease);
+    console.log($scope.release.descripcionRelease);
+
+  };
+
+  $scope.agregarHistoriaSprint = function(idHistoria){
+    var i =0;
+    for(i = 0; i<$scope.historias.length;i++){
+      if($scope.historias[i]._id === idHistoria){
+          $scope.historiasSprint.push($scope.historias[i]);
+          break;
+      }
+    };
+    $scope.historias.splice(i,1);
+  };
+
+  $scope.crearRelease = function(){
+    $scope.release.proyecto = $scope.idProyecto
+    $http({
+      url:'/crearRelease',
+      method:'POST',
+      data: {historias:$scope.historiasSprint,
+      release:$scope.release}
+    }).then(function(data){
+      $window.location.href = "/detalleProyecto";
+    }, function(data){
+      $window.location.href = "/addReleaseBacklog";
+    });
+  };
+
+}]);
+
+app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($scope, $http, $window){
+  $scope.verDetalles = false;
+  $scope.historiasSprint = [];
+  $scope.sprint = {}
+  $scope.historiaSeleccionada="";
+
+  $scope.init = function(idProy, idRelease){
+    $scope.idProyecto = idProy;
+    $scope.idRelease = idRelease;
+    $scope.findHistoriasByRelease();
+    $scope.findSprintsByRelease();
+
+  };
+
+  $scope.agregarHistoriaSprint = function(idHistoria){
+    var i =0;
+    for(i = 0; i<$scope.historias.length;i++){
+      if($scope.historias[i]._id === idHistoria){
+          $scope.historiasSprint.push($scope.historias[i]);
+          break;
+      }
+    };
+    $scope.historias.splice(i,1);
+  };
+
+  $scope.findHistoriasByRelease = function(){
+    $http.get("/find/historias/release/"+$scope.idRelease).success(function(data){
+      $scope.historias = data;
+    });
+  }
+
+  $scope.findSprintsByRelease = function(){
+    $http.get("/find/sprints/release/"+$scope.idRelease).success(function(data){
+      $scope.sprints = data;
+    });
+  }
+
+  $scope.crearSprint = function(){
+    $scope.sprint.liberacionBacklog = $scope.idRelease;
+    $http({
+      url:'/crearSprint',
+      method:'POST',
+      data: {historias:$scope.historiasSprint,
+      sprint:$scope.sprint}
+    }).then(function(data){
+      $window.location.href = "/showReleaseBacklog";
+    }, function(data){
+      $window.location.href = "/showReleaseBacklog";
+    });
+  };
+
+
 }]);
 
 app.controller('sprintsCtrl',['$scope', function($scope){

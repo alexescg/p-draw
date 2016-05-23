@@ -38,6 +38,7 @@ app.use(bodyParser.urlencoded({extended: false}));// Multipart con array
 app.set("view engine", "jade");
 //
 //
+//app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use("/static", express.static(__dirname + "/static"));
 //
 //
@@ -95,7 +96,7 @@ app.get('/partials/:name', function (req, res) {
 });
 
 app.get('/', function (req, res) {
-    res.render('index');
+    res.render('landing');
 });
 
 app.get('/landing', function (req, res) {
