@@ -32,6 +32,7 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
       $scope.productOwner=owner;
       $scope.idProyecto = idProyecto;
       $scope.getDesarrolladores();
+      $scope.findReleaseByProyecto();
     }
 
     $scope.historia = new Object();
