@@ -48,11 +48,6 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
         $scope.$apply();
     });
 
-    socket.on('sendLiberaciones', function (data) {
-        $scope.findReleaseByProyecto();
-        console.log($scope.liberaciones);
-        $scope.$apply();
-    });
 
     socket.on('sendHistoria', function () {
         $scope.findHistoriasByProyecto();

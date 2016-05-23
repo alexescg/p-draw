@@ -491,7 +491,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
     io.on('connect', function (socket) {
         socket.emit('sendHistorias');
-        socket.emit('sendLiberaciones')
 
         socket.on('newHistoria', function (data) {
             var historiaNueva = new HistoriaUsuario(data);
