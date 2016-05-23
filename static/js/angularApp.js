@@ -79,7 +79,6 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
 
     $scope.getNombreCompleto = function(obj){
       if(obj.google){
-        console.log("Entre al google")
         return obj.google.name;
       } else if (obj.twitter){
         return obj.twitter.displayName;
@@ -143,12 +142,15 @@ app.controller('productBacklogCtrl',['$scope', function($scope){
 app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scope, $http, $window){
   $scope.verDetalles = false;
   $scope.historiasSprint = [];
-
-  var socket = io.connect({'forceNew': true});
+  $scope.release = {}
 
   $scope.init = function(idProy, historias){
     $scope.idProyecto = idProy;
     $scope.historias = historias;
+    console.log("Nombre Release");
+    console.log($scope.release.nombreRelease);
+    console.log($scope.release.descripcionRelease);
+
   };
 
   $scope.agregarHistoriaSprint = function(idHistoria){
@@ -163,8 +165,70 @@ app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scop
   };
 
   $scope.crearRelease = function(){
-    socket.emit('newRelease', $scope.historias, $scope.idProyecto);
-    $window.location.href = "/detalleProyecto";
+    $scope.release.proyecto = $scope.idProyecto
+    $http({
+      url:'/crearRelease',
+      method:'POST',
+      data: {historias:$scope.historiasSprint,
+      release:$scope.release}
+    }).then(function(data){
+      $window.location.href = "/detalleProyecto";
+    }, function(data){
+      $window.location.href = "/addReleaseBacklog";
+    });
+  };
+
+}]);
+
+app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($scope, $http, $window){
+  $scope.verDetalles = false;
+  $scope.historiasSprint = [];
+  $scope.sprint = {}
+  $scope.historiaSeleccionada="";
+
+  $scope.init = function(idProy, idRelease){
+    $scope.idProyecto = idProy;
+    $scope.idRelease = idRelease;
+    $scope.findHistoriasByRelease();
+    $scope.findSprintsByRelease();
+
+  };
+
+  $scope.agregarHistoriaSprint = function(idHistoria){
+    var i =0;
+    for(i = 0; i<$scope.historias.length;i++){
+      if($scope.historias[i]._id === idHistoria){
+          $scope.historiasSprint.push($scope.historias[i]);
+          break;
+      }
+    };
+    $scope.historias.splice(i,1);
+  };
+
+  $scope.findHistoriasByRelease = function(){
+    $http.get("/find/historias/release/"+$scope.idRelease).success(function(data){
+      $scope.historias = data;
+    });
+  }
+
+  $scope.findSprintsByRelease = function(){
+    $http.get("/find/sprints/release/"+$scope.idRelease).success(function(data){
+      $scope.sprints = data;
+    });
+  }
+
+  $scope.crearSprint = function(){
+    $scope.sprint.liberacionBacklog = $scope.idRelease;
+    $http({
+      url:'/crearSprint',
+      method:'POST',
+      data: {historias:$scope.historiasSprint,
+      sprint:$scope.sprint}
+    }).then(function(data){
+      $window.location.href = "/showReleaseBacklog";
+    }, function(data){
+      $window.location.href = "/showReleaseBacklog";
+    });
   };
 
 

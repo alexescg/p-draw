@@ -8,6 +8,14 @@ block content
         .mdl-card__supporting-text
           p.letras-negras.
             #{proyecto.descripcionProy}
+          div
+            .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                input.mdl-textfield__input(type="text" id="nombreRelease" name="nombreRelease" ng-model="release.nombreRelease" style="color: black" required="required")
+                label(for="nombreRelease" class="mdl-textfield__label") Nombre del Release
+          div
+            .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+              textarea(class="mdl-textfield__input" type="text" ng-model="release.descripcionRelease" rows="4" id="descripcionRelease" name="descripcionRelease")
+              label(class="mdl-textfield__label" for="descripcionRelease") Descripción del Release
       br
       br
       .mdl-card.mdl-shadow--2dp

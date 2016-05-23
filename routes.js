@@ -3,6 +3,7 @@ var Proyecto = require('./models/proyectos');
 var ProductBacklog = require('./models/productsBacklog');
 var LiberacionBacklog = require('./models/liberacionesBacklog');
 var Rol = require('./models/roles');
+var Sprint = require('./models/sprints');
 var HistoriaUsuario = require('./models/historiaUsuarios');
 //var mongoose = require('mongoose');
 
@@ -41,21 +42,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
             successRedirect: '/home',
             failureRedirect: '/landing'
         }));
-
-
-    app.get('/addReleaseBacklog',isLoggedIn, function (req, res) {
-      req.session = sass;
-      Proyecto.findOne({"_id": mongoose.Types.ObjectId(req.session.proyecto)})
-      .exec(function (err, proyecto){
-        HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.session.proyecto), "liberacionBacklog": {
-          "$exists": false
-        }}).select("-__v").exec(function(err, obj){
-            var jsonHistorias = JSON.stringify(obj);
-            res.render('releaseBackLog', {usuario: req.user, proyecto: proyecto, historias: jsonHistorias});
-        });
-      });
-
-    });
 
     app.post('/register', passport.authenticate('local-signup', {
         successRedirect: '/profile',
@@ -368,28 +354,134 @@ module.exports = function (app, passport, roles, mongoose, io) {
     app.get("/detallesprint", isLoggedIn, function (req, res) {
         res.render("detalleSprint");
     });
-    /*---------------------------- Historias -----------------------------------------*/
-    app.post("/crearSprint", function (req, res) {
-        var release = new LiberacionBacklog({
-          proyecto: mongoose.Types.ObjectId(req.body.idProyecto),
-          finalizo:false,
-          fechaFinalizacion: Date()
-        });
-        release.save(function(err, obj){
-            req.body.historias.forEach(function(historia){
-              HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(historia._id)},
-                {$set: {"liberacionBacklog": mongoose.Types.ObjectId(obj._id)}},
-                function (err) {
-                if (err) {
-                  err();
-                }
+    /*---------------------------- Release -----------------------------------------*/
 
-            });
-          });
-          res.redirect("/detalleproyecto");
+    app.get('/addReleaseBacklog',isLoggedIn, function (req, res) {
+      req.session = sass;
+      Proyecto.findOne({"_id": mongoose.Types.ObjectId(req.session.proyecto)})
+      .exec(function (err, proyecto){
+        HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.session.proyecto), "liberacionBacklog": {
+          "$exists": false
+        }}).select("-__v").exec(function(err, obj){
+            var jsonHistorias = JSON.stringify(obj);
+            res.render('releaseBackLog', {usuario: req.user, proyecto: proyecto, historias: jsonHistorias});
         });
+      });
 
     });
+
+    app.get('/showReleaseBacklog',isLoggedIn, function (req, res) {
+      if(!req.query.releaseElegido){
+        LiberacionBacklog.findById(req.session.releaseElegido)
+        .exec(function (err, release){
+          Proyecto.findById(release.proyecto)
+          .exec(function(err, proyecto){
+            res.render('showReleaseBacklog', {usuario: req.user, proyecto: proyecto, release: release});
+          });
+        });
+      } else {
+        req.session = sass;
+        req.session.releaseElegido = req.query.releaseElegido;
+        sass = req.session;
+        LiberacionBacklog.findById(req.query.releaseElegido)
+        .exec(function (err, release){
+          Proyecto.findById(release.proyecto)
+          .exec(function(err, proyecto){
+            res.render('showReleaseBacklog', {usuario: req.user, proyecto: proyecto, release: release});
+          });
+        });
+      }
+
+    });
+
+    app.post("/crearRelease", function (req, res) {
+      if(req.body.historias.length<1){
+        return res.status(400).send({message:"No hay historias en el Release"});
+      }
+      if(!req.body.release.nombreRelease){
+        return res.status(400).send({message:"No hay nombre en el Release"});
+      }
+      if(!req.body.release.descripcionRelease){
+        return res.status(400).send({message:"No hay descripción en el Release"});
+      }
+
+      console.log(req.body.release);
+      var newRelease = new LiberacionBacklog({
+        proyecto: mongoose.Types.ObjectId(req.body.release.proyecto),
+        finalizo:false,
+        fechaFinalizacion: Date(),
+        descripcionRelease: req.body.release.descripcionRelease,
+        nombreRelease: req.body.release.nombreRelease
+      });
+      newRelease.save(function(err, obj){
+        if(err){
+          return res.status(400).send({message:"Error al guardar"});
+        }
+        req.body.historias.forEach(function(historia){
+          HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(historia._id)},
+            {$set: {"liberacionBacklog": mongoose.Types.ObjectId(obj._id)}},
+            function (err) {
+            if (err) {
+              err();
+            }
+        });
+      });
+        res.json("{}");
+    });
+  });
+
+  app.post("/crearSprint", function (req, res) {
+    console.log(req.body.sprint);
+    if(req.body.historias.length<1){
+      return res.status(400).send({message:"No hay historias en el Release"});
+    }
+    if(!req.body.sprint.nombreSprint){
+      return res.status(400).send({message:"No hay nombre en el Release"});
+    }
+    if(!req.body.sprint.descripcionSprint){
+      return res.status(400).send({message:"No hay descripción en el Release"});
+    }
+
+    console.log(req.body.sprint);
+    var newSprint = new Sprint({
+      liberacionBacklog: mongoose.Types.ObjectId(req.body.sprint.liberacionBacklog),
+      finalizo:false,
+      fechaFinal: Date(),
+      descripcionSprint: req.body.sprint.descripcionSprint,
+      nombreSprint: req.body.sprint.nombreSprint
+    });
+    newSprint.save(function(err, obj){
+      console.log("============obj");
+      console.log(obj);
+      if(err){
+        return res.status(400).send({message:"Error al guardar"});
+      }
+      req.body.historias.forEach(function(historia){
+        HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(historia._id)},
+          {$set: {"sprint": mongoose.Types.ObjectId(obj._id)}},
+          function (err) {
+          if (err) {
+            err();
+          }
+      });
+    });
+      res.json("{}");
+  });
+});
+
+  app.get("/find/historias/release/:idRelease", function(req, response){
+    HistoriaUsuario.find({"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease), "sprint":{$exists:false}})
+        .exec(function (err, obj) {
+              response.json(obj);
+        });
+    });
+
+    app.get("/find/sprints/release/:idRelease", function(req, response){
+      Sprint.find({"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease)})
+          .exec(function (err, obj) {
+                response.json(obj);
+          });
+      });
 
     var getHistorias = HistoriaUsuario.find({}).then(function successCallback(success) {
         return success;
@@ -410,26 +502,5 @@ module.exports = function (app, passport, roles, mongoose, io) {
             });
         });
 
-        socket.on('newRelease', function (historias, idProyecto) {
-          var release = new LiberacionBacklog({
-            proyecto: mongoose.Types.ObjectId(idProyecto),
-            finalizo:false,
-            fechaFinalizacion: Date()
-          });
-          console.log("entre a este pedo");
-          release.save(function(err, obj){
-              historias.forEach(function(historia){
-                HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(historia._id)},
-                  {$set: {"liberacionBacklog": mongoose.Types.ObjectId(obj._id)}},
-                  function (err) {
-                  if (err) {
-                    err();
-                  }
-                  console.log("no entre tanto a este pedo :3");
-              });
-            });
-            io.emit('sendLiberaciones');
-          });
-        });
     });
 };
