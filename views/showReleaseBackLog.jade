@@ -103,5 +103,7 @@ block content
                   .mdl-card__title
                       h2.mdl-card__title-text {{sprint.nombreSprint}}
                   .mdl-card__supporting-text
-                      {{sprint.descripcionSprint}}
-                      button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarHistoriaSprint(historia._id)") Agregar historia
+                      p.letras-negras {{sprint.descripcionSprint}}
+                      form(action="/showSprintBacklog" method="GET" class="form")
+                        input(value="{{sprint._id}}" type="hidden" id="sprintElegido" name="sprintElegido")
+                        button.mdl-button.mdl-js-button.mdl-js-ripple-effect(type="submit") Ver

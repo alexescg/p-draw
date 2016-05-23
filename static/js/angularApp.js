@@ -32,6 +32,7 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
       $scope.productOwner=owner;
       $scope.idProyecto = idProyecto;
       $scope.getDesarrolladores();
+      $scope.findReleaseByProyecto();
     }
 
     $scope.historia = new Object();
@@ -228,6 +229,59 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
 
 
 }]);
+
+app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($scope, $http, $window){
+  $scope.verDetalles = false;
+  $scope.historiasDesarrollador = [];
+  $scope.historias = [];
+  $scope.sprint = {};
+  $scope.historiaSeleccionada="";
+
+  $scope.init = function(idProy, idSprint){
+    $scope.idProyecto = idProy;
+    $scope.idSprint = idSprint;
+    $scope.findHistoriasBySprint();
+    $scope.findHistoriasBySprintDesarrollador();
+  };
+
+  $scope.agregarDesarrollador = function(idHistoria){
+    $http.get("/findBy/historias/"+ idHistoria).success(function(data){
+      $scope.historiaSeleccionada = data;
+      console.log($scope.historiaSeleccionada);
+    });
+  };
+
+  $scope.getNombreCompleto = function(obj){
+    if(obj.google){
+      return obj.google.name;
+    } else if (obj.twitter){
+      return obj.twitter.displayName;
+    } else if (obj.facebook){
+      return obj.facebook.name;
+    }
+    return obj.nombre;
+  };
+
+  $scope.findHistoriasBySprint = function(){
+    $http.get("/find/historias/sprint/"+$scope.idSprint).success(function(data){
+      $scope.historias = data;
+    });
+  };
+
+  $scope.findHistoriasBySprintDesarrollador = function(){
+    $http.get("/find/historias/desarrollador/sprint/"+$scope.idSprint).success(function(data){
+      $scope.historiasDesarrollador = data;
+    });
+  };
+
+  $scope.findDesarrolladoresByProyecto = function(){
+    $http.get("/find/desarrolladores/by/proyecto/" + $scope.idProyecto).success(function(data){
+      $scope.desarrolladores = data;
+    });
+  };
+
+}]);
+
 
 app.controller('sprintsCtrl',['$scope', function($scope){
   $scope.mensaje = "no se";

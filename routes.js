@@ -394,6 +394,34 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
     });
 
+    app.get('/showSprintBacklog',isLoggedIn, function (req, res) {
+      if(!req.query.sprintElegido){
+        Sprint.findById(req.session.sprintElegido).populate("liberacionBacklog")
+        .exec(function (err, sprint){
+          Proyecto.findById(sprint.liberacionBacklog.proyecto._id.str)
+          .exec(function(err, proyecto){
+            res.render('showSprintBacklog', {usuario: req.user, proyecto: proyecto, sprint: sprint});
+          });
+        });
+      } else {
+        req.session = sass;
+        req.session.sprintElegido = req.query.sprintElegido;
+        sass = req.session;
+        Sprint.findById(req.query.sprintElegido).populate("liberacionBacklog")
+        .exec(function (err, sprint){
+          console.log("------------------------------------>");
+          console.log(sprint);
+          Proyecto.findById(sprint.liberacionBacklog.proyecto)
+          .exec(function(err, proyecto){
+            console.log("---------------------------------------------------->");
+            console.log(proyecto);
+            res.render('showSprintBacklog', {usuario: req.user, proyecto: proyecto, sprint: sprint});
+          });
+        });
+      }
+
+    });
+
     app.post("/crearRelease", function (req, res) {
       if(req.body.historias.length<1){
         return res.status(400).send({message:"No hay historias en el Release"});
@@ -475,6 +503,30 @@ module.exports = function (app, passport, roles, mongoose, io) {
               response.json(obj);
         });
     });
+
+    app.get("/findBy/historias/:idHistoria", function(req, response){
+      HistoriaUsuario.findById(req.params.idHistoria)
+          .exec(function (err, obj) {
+            console.log(obj)
+                response.json(obj);
+          });
+      });
+
+
+
+    app.get("/find/historias/sprint/:idSprint", function(req, response){
+      HistoriaUsuario.find({"sprint": mongoose.Types.ObjectId(req.params.idSprint), "desarrollador":{$exists:false}})
+          .exec(function (err, obj) {
+                response.json(obj);
+          });
+      });
+
+    app.get("/find/historias/sprint/desarrollador/:idSprint", function(req, response){
+      HistoriaUsuario.find({"sprint": mongoose.Types.ObjectId(req.params.idSprint), "desarrollador":{$exists:true}})
+          .exec(function (err, obj) {
+                response.json(obj);
+          });
+      });
 
     app.get("/find/sprints/release/:idRelease", function(req, response){
       Sprint.find({"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease)})
