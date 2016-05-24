@@ -139,6 +139,7 @@ app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scop
   $scope.verDetalles = false;
   $scope.historiasSprint = [];
   $scope.release = {}
+  $scope.historiaSeleccionada = "";
 
   $scope.init = function(idProy, historias){
     $scope.idProyecto = idProy;
@@ -172,6 +173,17 @@ app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scop
     }, function(data){
       $window.location.href = "/addReleaseBacklog";
     });
+  };
+
+  $scope.verDetalleHistoria = function(idHistoria){
+    $http.get("/findBy/historias/"+ idHistoria).success(function(data){
+      $scope.historiaSeleccionada = data;
+      console.log($scope.historiaSeleccionada);
+    });
+  };
+
+  $scope.cerrarDetalle = function(){
+    $scope.historiaSeleccionada="";
   };
 
 }]);
@@ -227,8 +239,86 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
     });
   };
 
+  $scope.verDetalleHistoria = function(idHistoria){
+    $http.get("/findBy/historias/"+ idHistoria).success(function(data){
+      $scope.historiaSeleccionada = data;
+      console.log($scope.historiaSeleccionada);
+    });
+  };
+
+  $scope.cerrarDetalle = function(){
+    $scope.historiaSeleccionada="";
+  };
 
 }]);
+
+app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($scope, $http, $window){
+  $scope.verDetalles = false;
+  $scope.historiasDesarrollador = [];
+  $scope.historias = [];
+  $scope.sprint = {};
+  $scope.historiaSeleccionada="";
+
+  $scope.init = function(idProy, idSprint){
+    $scope.idProyecto = idProy;
+    $scope.idSprint = idSprint;
+    $scope.findHistoriasBySprint();
+    $scope.findHistoriasBySprintDesarrollador();
+  };
+
+  $scope.asignarTarjeta = function (idDesarrollador) {
+      $scope.historiaSeleccionada.desarrollador = idDesarrollador;
+      socket.emit('updateHistoria', $scope.historiaSeleccionada._id, idDesarrollador);
+  };
+
+  var socket = io.connect({'forceNew': true});
+  $scope.historias = $scope.historias || [];
+
+  socket.on('updateHistoriasDesarrollador', function (data) {
+      $scope.findHistoriasBySprint();
+      $scope.findHistoriasBySprintDesarrollador();
+      $scope.$apply();
+  });
+
+  $scope.agregarDesarrollador = function(idHistoria){
+    $http.get("/findBy/historias/"+ idHistoria).success(function(data){
+      $scope.historiaSeleccionada = data;
+      console.log($scope.historiaSeleccionada);
+    });
+  };
+
+  $scope.getNombreCompleto = function(obj){
+    if(obj.google && obj.google.name){
+      return obj.google.name;
+    } else if (obj.twitter && obj.twitter.displayName){
+      return obj.twitter.displayName;
+    } else if (obj.facebook && obj.facebook.name){
+      return obj.facebook.name;
+    }
+    return obj.nombre;
+  };
+
+  $scope.findHistoriasBySprint = function(){
+    $http.get("/find/historias/sprint/"+$scope.idSprint).success(function(data){
+      $scope.historias = data;
+    });
+  };
+
+  $scope.findHistoriasBySprintDesarrollador = function(){
+    $http.get("/find/historias/sprint/desarrollador/"+$scope.idSprint).success(function(data){
+      $scope.historiasDesarrollador = data;
+    });
+  };
+
+  $scope.findDesarrolladoresByProyecto = function(){
+    $http.get("/sprint/findDevelopers/" + $scope.idProyecto).success(function(data){
+      console.log($scope.idProyecto);
+      $scope.desarrolladores = data;
+    });
+  };
+
+}]);
+
 
 app.controller('sprintsCtrl',['$scope', function($scope){
   $scope.mensaje = "no se";
