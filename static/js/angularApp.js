@@ -217,6 +217,33 @@ app.controller("resumenHistoriasDesarrollador", ['$scope','$http', function($sco
 
 }]);
 
+app.controller("resumenHistoriasProductOwner", ['$scope','$http', function($scope, $http){
+  $scope.historiasPorValidar = [];
+  $scope.historiasValidadas = [];
+  $scope.idProyecto = "";
+
+  $scope.init = function(idProyecto){
+    $scope.idProyecto = idProyecto;
+    $scope.findHistoriasPorValidar();
+    $scope.findHistoriasValidadas();
+  };
+
+  $scope.findHistoriasPorValidar = function(){
+    $http.get("/find/historias/porValidar/"+ $scope.idProyecto).success(function(data){
+      $scope.historiasPorValidar = data;
+      console.log("Historias por validar");
+      console.log(data);
+    });
+  }
+
+  $scope.findHistoriasValidadas = function(){
+    $http.get("/find/historias/validadas/" + $scope.idProyecto).success(function(data){
+      $scope.historiasValidadas = data;
+    });
+  }
+
+}]);
+
 app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($scope, $http, $window){
   $scope.verDetalles = false;
   $scope.historiasSprint = [];
