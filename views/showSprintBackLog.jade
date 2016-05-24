@@ -23,7 +23,7 @@ block content
           p.letras-negras.
             #{sprint.descripcionSprint}
 
-    .mdl-cell.mdl-cell--9-col-desktop.mdl-cell--6-col-tablet.mdl-cell--5-col-phone
+    .mdl-cell.mdl-cell--9-col-desktop.mdl-cell--9-col-tablet.mdl-cell--5-col-phone
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Historias sin Desarrollador
@@ -49,24 +49,7 @@ block content
                       p.letras-negras.
                        {{historia.descripcion}}
                       button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarHistoriaSprint(historia._id)") Agregar historia
-    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
-      .mdl-card.mdl-shadow--2dp
-        .mdl-card__title
-          h2.mdl-card__title-text Crear Sprint
-        .mdl-card__supporting-text
-          div
-            .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-                input.mdl-textfield__input(type="text" id="nombreSprint" name="nombreSprint" ng-model="sprint.nombreSprint" style="color: black" required="required")
-                label(for="nombreSprint" class="mdl-textfield__label") Nombre del Sprint
-          div
-            .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-              textarea(class="mdl-textfield__input" type="text" ng-model="sprint.descripcionSprint" rows="4" id="descripcionSprint" name="descripcionSprint")
-              label(class="mdl-textfield__label" for="descripcionSprint") Descripción del Sprint
-          ul.mdl-list
-            li.mdl-list__item(ng-repeat="historia in historiasSprint")
-              span.mdl-list__item-primary-content.list__item-text.letras-negras {{historia.nombre}}
-          button.mdl-button(type="submit" ng-click="crearSprint()") Crear
-    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone(ng-if="historiaSeleccionada!==''")
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone(ng-show="historiaSeleccionada!==''")
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Detalles De Historia
@@ -100,7 +83,7 @@ block content
                   input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.tamanio}}" id="tamanioSprint" name="tamanioSprint" style="color: black" readonly)
                   label(for="tamanioSprint" class="mdl-textfield__label") Tamaño
           div(class="mdl-card__actions mdl-card--border")
-            button(class="mdl-button asignar-desarrollador-button" id="button-asignar-developer" type="button" ng-click="getDesarrolladores()") Asignar Desarrollador
+            button(class="mdl-button asignar-desarrollador-button" id="button-asignar-developer" type="button" ng-click="findDesarrolladoresByProyecto()") Asignar Desarrollador
             dialog(class="mdl-dialog-big asignar-desarrollador-dialog")
               h2.mdl-dialog__title Desarolladores
                 .mdl-dialog__content
@@ -111,18 +94,18 @@ block content
                         th.mdl-data-table__cell--non-numeric
                     tbody
                       tr(ng-repeat="desarrollador in desarrolladores")
-                        td.mdl-data-table__cell--non-numeric {{getNombreCompleto(usuario)}}
+                        td.mdl-data-table__cell--non-numeric {{getNombreCompleto(desarrollador)}}
                         td.mdl-data-table__cell--non-numeric
-                          button.mdl-button(type="button" ng-click="asignarOwner(desarrollador._id)") Asignar
+                          button.mdl-button(type="button" ng-click="asignarTarjeta(desarrollador._id)") Asignar
 
   script.
-    var dialogOwner = document.querySelector('.show-owner-dialog');
-    if(dialogOwner){
-      var showDialogButtonOwner = document.querySelector('.show-owner-button');
-      if (! dialogOwner.showModal) {
-        dialogPolyfill.registerDialog(dialogOwner);
+    var dialogAsignarDes = document.querySelector('.asignar-desarrollador-dialog');
+    if(dialogAsignarDes){
+      var showDialogButtonAsignarDes = document.querySelector('.asignar-desarrollador-button');
+      if (! dialogAsignarDes.showModal) {
+        dialogPolyfill.registerDialog(dialogAsignarDes);
       }
-      showDialogButtonOwner.addEventListener('click', function() {
-        dialogOwner.showModal();
+      showDialogButtonAsignarDes.addEventListener('click', function() {
+        dialogAsignarDes.showModal();
         });
     }

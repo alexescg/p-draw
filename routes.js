@@ -206,6 +206,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.get("/detalleProyecto/findDevelopers/:idProyecto", function (req, response) {
+      console.log(req.params.idProyecto);
         Proyecto.findById({"_id": req.params.idProyecto}).populate({
             path: 'participantes.usuario',
             model: 'Usuario'
@@ -398,7 +399,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
       if(!req.query.sprintElegido){
         Sprint.findById(req.session.sprintElegido).populate("liberacionBacklog")
         .exec(function (err, sprint){
-          Proyecto.findById(sprint.liberacionBacklog.proyecto._id.str)
+          Proyecto.findById(sprint.liberacionBacklog.proyecto)
           .exec(function(err, proyecto){
             res.render('showSprintBacklog', {usuario: req.user, proyecto: proyecto, sprint: sprint});
           });
@@ -421,6 +422,30 @@ module.exports = function (app, passport, roles, mongoose, io) {
       }
 
     });
+
+    app.get("/sprint/findDevelopers/:idProyecto", function (req, response) {
+      console.log(req.params.idProyecto);
+        Proyecto.findById({"_id": req.params.idProyecto}).populate({
+            path: 'participantes.usuario',
+            model: 'Usuario'
+        })
+            .exec(function (err, obj) {
+                console.log("PROYECTO:");
+                console.log(obj);
+                if (err) response.redirect("/showSprintBacklog");
+                else {
+                    var desarrolladores = [];
+                    obj.participantes.forEach(function (participante) {
+                        if (participante.rol === "developer") {
+                            desarrolladores.push(participante.usuario);
+                    }
+                });
+                console.log("DESARROLLADOREs:");
+                console.log(desarrolladores);
+                response.json(desarrolladores);
+              }
+          });
+      });
 
     app.post("/crearRelease", function (req, res) {
       if(req.body.historias.length<1){
@@ -551,6 +576,17 @@ module.exports = function (app, passport, roles, mongoose, io) {
                     io.emit('sendHistoria')
                 }
             });
+        });
+
+        socket.on('updateHistoria', function (data, idDesarrollador) {
+            HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(data)},
+              {$set:{"desarrollador": mongoose.Types.ObjectId(idDesarrollador)}},
+              function (err) {
+              if (err) {
+                err();
+              }
+              io.emit('updateHistoriasDesarrollador');
+          });
         });
 
     });
