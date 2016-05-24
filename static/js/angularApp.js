@@ -139,6 +139,7 @@ app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scop
   $scope.verDetalles = false;
   $scope.historiasSprint = [];
   $scope.release = {}
+  $scope.historiaSeleccionada = "";
 
   $scope.init = function(idProy, historias){
     $scope.idProyecto = idProy;
@@ -172,6 +173,17 @@ app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scop
     }, function(data){
       $window.location.href = "/addReleaseBacklog";
     });
+  };
+
+  $scope.verDetalleHistoria = function(idHistoria){
+    $http.get("/findBy/historias/"+ idHistoria).success(function(data){
+      $scope.historiaSeleccionada = data;
+      console.log($scope.historiaSeleccionada);
+    });
+  };
+
+  $scope.cerrarDetalle = function(){
+    $scope.historiaSeleccionada="";
   };
 
 }]);
