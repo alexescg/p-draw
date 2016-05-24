@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 var LiberacionBacklog = mongoose.model('LiberacionBacklog');
 var Sprint = mongoose.model('Sprint');
 var Proyecto = mongoose.model('Proyecto');
+var Usuario = mongoose.model('Usuario');
 
 var historiaUsuarioSchema = new Schema({
     nombre:{type:String, required:true},
@@ -16,7 +17,8 @@ var historiaUsuarioSchema = new Schema({
     tamanio:{type:Number, required:true},
     liberacionBacklog:{type: Schema.ObjectId, ref: "LiberacionBacklog"},
     sprint:{type: Schema.ObjectId, ref: "Sprint"},
-    proyecto:{type: Schema.ObjectId, ref: "Proyecto", required: true}
+    proyecto:{type: Schema.ObjectId, ref: "Proyecto", required: true},
+    desarrollador:{type: Schema.ObjectId, ref:"Usuario"}
 });
 
 var HistoriaUsuario = mongoose.model("HistoriaUsuario", historiaUsuarioSchema);
