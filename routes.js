@@ -553,6 +553,47 @@ module.exports = function (app, passport, roles, mongoose, io) {
           });
       });
 
+    app.get("/resumenHistoriasDesarrollador", isLoggedIn, function(req, response){
+      console.log(req.session.proyecto);
+      if(!req.session.proyecto){
+        req.session = sass;
+      }
+      Proyecto.findById(req.session.proyecto)
+          .exec(function (err, obj) {
+              if (err) response.redirect("/home");
+              else
+                response.render("resumenHistoriasDesarrollador",
+                    {
+                        usuario: req.user,
+                        proyecto: obj
+                    });
+          });
+    });
+
+    app.get("/find/historias/asignadas/:idProyecto/:idDesarrollador", function(req, res){
+      console.log(req.session.proyecto);
+      console.log("--------------------------------->");
+      console.log(req.user);
+      HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
+      "desarrollador": mongoose.Types.ObjectId(req.params.idDesarrollador),
+      $or:[{"terminada": {$exists:false}},{"terminada":false}],
+      $or:[{"revisada": {$exists:false}},{"revisada":false}]})
+      .exec(function(err, obj){
+        res.json(obj);
+      });
+    });
+
+    app.get("/find/historias/asignadas/revisadas/:idProyecto/:idDesarrollador", function(req, res){
+      console.log(req.session.proyecto);
+      HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
+      "desarrollador": mongoose.Types.ObjectId(req.params.idDesarrollador),
+      "terminada":true,
+      $or:[{"revisada": {$exists:false}},{"revisada":false}]})
+      .exec(function(err, obj){
+        res.json(obj);
+      });
+    });
+
     app.get("/find/sprints/release/:idRelease", function(req, response){
       Sprint.find({"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease)})
           .exec(function (err, obj) {

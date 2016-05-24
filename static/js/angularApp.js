@@ -188,6 +188,35 @@ app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scop
 
 }]);
 
+app.controller("resumenHistoriasDesarrollador", ['$scope','$http', function($scope, $http){
+  $scope.historiasDesarrollador = [];
+  $scope.historiasRevisadas = [];
+  $scope.idProyecto = "";
+  $scope.idDesarrollador = "";
+
+  $scope.init = function(idProyecto, idDesarrollador){
+    $scope.idProyecto = idProyecto;
+    $scope.idDesarrollador = idDesarrollador;
+    $scope.findHistoriasByDesarrollador();
+    $scope.findHistoriasByRevisadas();
+  };
+
+  $scope.findHistoriasByDesarrollador = function(){
+    $http.get("/find/historias/asignadas/"+ $scope.idProyecto +"/"+ $scope.idDesarrollador).success(function(data){
+      $scope.historiasDesarrollador = data;
+      console.log("Historias sin desarrollador");
+      console.log(data);
+    });
+  }
+
+  $scope.findHistoriasByRevisadas = function(){
+    $http.get("/find/historias/asignadas/revisadas/" + $scope.idProyecto +"/"+ $scope.idDesarrollador).success(function(data){
+      $scope.historiasRevisadas = data;
+    });
+  }
+
+}]);
+
 app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($scope, $http, $window){
   $scope.verDetalles = false;
   $scope.historiasSprint = [];
