@@ -26,6 +26,7 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     $scope.idProyecto={};
     $scope.desarrolladores = [];
     $scope.liberaciones = [];
+    $scope.totalDias = 0;
 
     $scope.init = function(scrumMaster, owner, idProyecto){
       $scope.scrumMaster =scrumMaster;
@@ -46,12 +47,14 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
 
     socket.on('sendHistorias', function (data) {
         $scope.findHistoriasByProyecto();
+        $scope.getTotalDiasProyecto();
         $scope.$apply();
     });
 
 
     socket.on('sendHistoria', function () {
         $scope.findHistoriasByProyecto();
+        $scope.getTotalDiasProyecto();
         $scope.$apply();
     });
 
@@ -62,6 +65,18 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
           //TODO:Error
           });
     };
+
+    $scope.getTotalDiasProyecto = function(){
+      $http.get('/count/dias/proyecto/'+$scope.idProyecto).success(function(dias){
+        $scope.totalDias=dias;
+      });
+    }
+
+    socket.on('updateHistorias', function (data) {
+        $scope.findHistoriasByProyecto();
+        $scope.getTotalDiasProyecto();
+        $scope.$apply();
+    });
 
     $scope.findReleaseByProyecto = function(){
       $http.get('/find/release/proyecto/'+$scope.idProyecto).success(function(data) {
@@ -222,13 +237,15 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
   $scope.historiasSprint = [];
   $scope.sprint = {}
   $scope.historiaSeleccionada="";
+  $scope.totalDias=0;
+  var socket = io.connect({'forceNew': true});
 
   $scope.init = function(idProy, idRelease){
     $scope.idProyecto = idProy;
     $scope.idRelease = idRelease;
     $scope.findHistoriasByRelease();
     $scope.findSprintsByRelease();
-
+    $scope.getTotalDiasRelease();
   };
 
   $scope.agregarHistoriaSprint = function(idHistoria){
@@ -242,9 +259,22 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
     $scope.historias.splice(i,1);
   };
 
+  socket.on('updateHistorias', function (data) {
+      $scope.findHistoriasByRelease();
+      $scope.findSprintsByRelease();
+      $scope.getTotalDiasRelease();
+      $scope.$apply();
+  });
+
   $scope.findHistoriasByRelease = function(){
     $http.get("/find/historias/release/"+$scope.idRelease).success(function(data){
       $scope.historias = data;
+    });
+  }
+
+  $scope.getTotalDiasRelease = function(){
+    $http.get('/count/dias/release/'+$scope.idRelease).success(function(dias){
+      $scope.totalDias=dias;
     });
   }
 
@@ -293,6 +323,7 @@ app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($s
     $scope.idSprint = idSprint;
     $scope.findHistoriasBySprint();
     $scope.findHistoriasBySprintDesarrollador();
+    $scope.getTotalDiasSprint();
   };
 
   $scope.asignarTarjeta = function (idDesarrollador) {
@@ -303,11 +334,18 @@ app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($s
   var socket = io.connect({'forceNew': true});
   $scope.historias = $scope.historias || [];
 
-  socket.on('updateHistoriasDesarrollador', function (data) {
+  socket.on('updateHistorias', function (data) {
       $scope.findHistoriasBySprint();
       $scope.findHistoriasBySprintDesarrollador();
+      $scope.getTotalDiasSprint();
       $scope.$apply();
   });
+
+  $scope.getTotalDiasSprint = function(){
+    $http.get('/count/dias/sprint/'+$scope.idSprint).success(function(dias){
+      $scope.totalDias=dias;
+    });
+  }
 
   $scope.agregarDesarrollador = function(idHistoria){
     $http.get("/findBy/historias/"+ idHistoria).success(function(data){
