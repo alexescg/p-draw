@@ -434,7 +434,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
         .exec(function (err, release){
           Proyecto.findById(release.proyecto)
           .exec(function(err, proyecto){
-            res.render('showReleaseBacklog', {usuario: req.user, proyecto: proyecto, release: release});
+            res.render('showReleaseBackLog', {usuario: req.user, proyecto: proyecto, release: release});
           });
         });
       } else {
@@ -445,7 +445,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
         .exec(function (err, release){
           Proyecto.findById(release.proyecto)
           .exec(function(err, proyecto){
-            res.render('showReleaseBacklog', {usuario: req.user, proyecto: proyecto, release: release});
+            res.render('showReleaseBackLog', {usuario: req.user, proyecto: proyecto, release: release});
           });
         });
       }
@@ -458,7 +458,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
         .exec(function (err, sprint){
           Proyecto.findById(sprint.liberacionBacklog.proyecto)
           .exec(function(err, proyecto){
-            res.render('showSprintBacklog', {usuario: req.user, proyecto: proyecto, sprint: sprint});
+            res.render('showSprintBackLog', {usuario: req.user, proyecto: proyecto, sprint: sprint});
           });
         });
       } else {
@@ -473,7 +473,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
           .exec(function(err, proyecto){
             console.log("---------------------------------------------------->");
             console.log(proyecto);
-            res.render('showSprintBacklog', {usuario: req.user, proyecto: proyecto, sprint: sprint});
+            res.render('showSprintBackLog', {usuario: req.user, proyecto: proyecto, sprint: sprint});
           });
         });
       }
