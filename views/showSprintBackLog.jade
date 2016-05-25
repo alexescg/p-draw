@@ -39,7 +39,7 @@ block content
                       h2.mdl-card__title-text {{historia.nombre}}
                   .mdl-card__supporting-text
                       {{historia.descripcion}}
-                      button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarDesarrollador(historia._id)") Agregar historia
+                      button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarDesarrollador(historia._id)") Asignar Desarrollador
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Historias con Desarrollador
@@ -52,7 +52,7 @@ block content
                   .mdl-card__supporting-text
                       p.letras-negras.
                        {{historia.descripcion}}
-                      button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarDesarrollador(historia._id)") Agregar historia
+                      button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarDesarrollador(historia._id)") Ver Detalle
     .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone(ng-show="historiaSeleccionada!==''")
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
@@ -89,7 +89,7 @@ block content
           div(class="mdl-card__actions mdl-card--border" ng-if="!historiaSeleccionada.desarrollador")
             button(class="mdl-button asignar-desarrollador-button" id="button-asignar-developer" type="button" ng-click="findDesarrolladoresByProyecto()") Asignar Desarrollador
             dialog(class="mdl-dialog-big asignar-desarrollador-dialog")
-              h2.mdl-dialog__title Desarolladores
+              h2.mdl-dialog__title Desarrolladores
                 .mdl-dialog__content
                   table.mdl-data-table.mdl-js-data-table.mdl-data-table.projects-table
                     thead
@@ -104,7 +104,6 @@ block content
 
   script.
     var dialogAsignarDes = document.querySelector('.asignar-desarrollador-dialog');
-    if(dialogAsignarDes){
       var showDialogButtonAsignarDes = document.querySelector('.asignar-desarrollador-button');
       if (! dialogAsignarDes.showModal) {
         dialogPolyfill.registerDialog(dialogAsignarDes);
@@ -112,4 +111,3 @@ block content
       showDialogButtonAsignarDes.addEventListener('click', function() {
         dialogAsignarDes.showModal();
         });
-    }

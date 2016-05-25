@@ -208,6 +208,7 @@ app.controller("resumenHistoriasDesarrollador", ['$scope','$http', function($sco
   $scope.historiasRevisadas = [];
   $scope.idProyecto = "";
   $scope.idDesarrollador = "";
+  $scope.historiaSeleccionada="";
 
   $scope.init = function(idProyecto, idDesarrollador){
     $scope.idProyecto = idProyecto;
@@ -229,6 +230,30 @@ app.controller("resumenHistoriasDesarrollador", ['$scope','$http', function($sco
       $scope.historiasRevisadas = data;
     });
   }
+
+  $scope.verDetalleHistoria = function(idHistoria){
+    $http.get("/findBy/historias/"+ idHistoria).success(function(data){
+      $scope.historiaSeleccionada = data;
+      console.log($scope.historiaSeleccionada);
+    });
+  };
+
+  $scope.finalizarTarjeta = function (idDesarrollador) {
+      socket.emit('finalizarHistoria', $scope.historiaSeleccionada._id);
+  };
+
+  var socket = io.connect({'forceNew': true});
+  $scope.historias = $scope.historias || [];
+
+  socket.on('updateHistorias', function (data) {
+      $scope.findHistoriasByDesarrollador();
+      $scope.findHistoriasByRevisadas();
+      $scope.$apply();
+  });
+
+  $scope.cerrarDetalle = function(){
+    $scope.historiaSeleccionada="";
+  };
 
 }]);
 
@@ -345,7 +370,7 @@ app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($s
     $http.get('/count/dias/sprint/'+$scope.idSprint).success(function(dias){
       $scope.totalDias=dias;
     });
-  }
+  };
 
   $scope.agregarDesarrollador = function(idHistoria){
     $http.get("/findBy/historias/"+ idHistoria).success(function(data){
