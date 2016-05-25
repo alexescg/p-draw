@@ -302,19 +302,76 @@ module.exports = function (app, passport, roles, mongoose, io) {
         });
     });
 
-    app.get("/find/historias/proyecto/:idProyecto", function(req, response){
-      HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto)})
-          .exec(function (err, obj) {
-                response.json(obj);
-          });
-      });
-
-      app.get("/find/release/proyecto/:idProyecto", function(req, response){
-        LiberacionBacklog.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto)})
-            .exec(function (err, obj) {
-                  response.json(obj);
-            });
+  app.get("/find/historias/proyecto/:idProyecto", function(req, response){
+    HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto)})
+        .exec(function (err, obj) {
+              response.json(obj);
         });
+    });
+
+  app.get("/count/dias/proyecto/:idProyecto", function(req, response){
+    var dias = 0;
+    HistoriaUsuario.find(
+      {"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
+      $or:[{"terminada":{$exists:false}}, {"terminada":false}]})
+        .exec(function (err, historias) {
+          if(!historias){
+            response.json(0);
+          }
+          if(historias.length<1){
+            response.json(0);
+          }
+            historias.forEach(function(historia){
+              dias += historia.tamanio;
+            });
+          response.json(dias);
+        });
+  });
+
+  app.get("/find/release/proyecto/:idProyecto", function(req, response){
+    LiberacionBacklog.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto)})
+        .exec(function (err, obj) {
+              response.json(obj);
+      });
+  });
+
+  app.get("/count/dias/release/:idRelease", function(req, response){
+    var dias = 0;
+    HistoriaUsuario.find(
+      {"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease),
+      $or:[{"terminada":{$exists:false}}, {"terminada":false}]})
+        .exec(function (err, historias) {
+          if(!historias){
+            response.json(0);
+          }
+          if(historias.length<1){
+            response.json(0);
+          }
+            historias.forEach(function(historia){
+              dias += historia.tamanio;
+            });
+          response.json(dias);
+        });
+  });
+
+  app.get("/count/dias/sprint/:idSprint", function(req, response){
+    var dias = 0;
+    HistoriaUsuario.find(
+      {"sprint": mongoose.Types.ObjectId(req.params.idSprint),
+      $or:[{"terminada":{$exists:false}}, {"terminada":false}]})
+        .exec(function (err, historias) {
+          if(!historias){
+            response.json(0);
+          }
+          if(historias.length<1){
+            response.json(0);
+          }
+            historias.forEach(function(historia){
+              dias += historia.tamanio;
+            });
+          response.json(dias);
+        });
+  });
 /*---------------------------- Users -----------------------------------------*/
     app.post("/crearUsuario", isLoggedIn, function (req, res) {
         var usuario = new Usuario({
@@ -571,6 +628,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
         socket.on('newHistoria', function (data) {
             var historiaNueva = new HistoriaUsuario(data);
+            historiaNueva.estatus = false;
             historiaNueva.save(function (err, obj) {
                 if (obj) {
                     io.emit('sendHistoria')
@@ -585,7 +643,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
               if (err) {
                 err();
               }
-              io.emit('updateHistoriasDesarrollador');
+              io.emit('updateHistorias');
           });
         });
 
