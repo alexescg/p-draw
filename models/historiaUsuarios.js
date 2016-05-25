@@ -18,7 +18,9 @@ var historiaUsuarioSchema = new Schema({
     liberacionBacklog:{type: Schema.ObjectId, ref: "LiberacionBacklog"},
     sprint:{type: Schema.ObjectId, ref: "Sprint"},
     proyecto:{type: Schema.ObjectId, ref: "Proyecto", required: true},
-    desarrollador:{type: Schema.ObjectId, ref:"Usuario"}
+    desarrollador:{type: Schema.ObjectId, ref:"Usuario"},
+    terminada:{type: Boolean, required:true},
+    revisada:{type: Boolean, required:true}
 });
 
 var HistoriaUsuario = mongoose.model("HistoriaUsuario", historiaUsuarioSchema);

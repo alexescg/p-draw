@@ -39,7 +39,13 @@ block content
                         td.mdl-data-table__cell--non-numeric {{getNombreCompleto(usuario)}}
                         td.mdl-data-table__cell--non-numeric
                           button.mdl-button(type="button" ng-click="asignarOwner(usuario._id)") Asignar
-
+      br
+      br
+      .mdl-card.mdl-shadow--2dp
+        .mdl-card__title
+          h2.mdl-card__title-text Días para Finalizar: {{totalDias}}
+        .mdl-card__actions.mdl-card--border(ng-if="totalDias <= 0")
+          button(class="mdl-button asignar-desarrollador-button" id="button-asignar-developer" type="button" ng-click="cerrarProyecto()") Cerrar Proyecto
 
     .mdl-cell.mdl-cell--6-col-desktop.mdl-cell--6-col-tablet.mdl-cell--4-col-phone
       .mdl-card-2.mdl-shadow--2dp-2

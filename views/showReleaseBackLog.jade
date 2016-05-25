@@ -16,6 +16,9 @@ block content
           p.letras-negras.
             #{release.descripcionRelease}
       br
+      .mdl-card.mdl-shadow--2dp
+        .mdl-card__title
+          h2.mdl-card__title-text Días para Finalizar: {{totalDias}}
 
     .mdl-cell.mdl-cell--9-col-desktop.mdl-cell--6-col-tablet.mdl-cell--5-col-phone
       .mdl-card.mdl-shadow--2dp
@@ -26,8 +29,7 @@ block content
           .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--6-col-tablet.mdl-cell--2-col-phone(ng-repeat="historia in historias")
               .mdl-card.mdl-shadow--2dp
                   .mdl-card__title
-                      h2.mdl-card__title-text
-                       {{historia.nombre}}
+                      h2.mdl-card__title-text {{historia.nombre}}
                   .mdl-card__supporting-text
                       p.letras-negras.
                         {{historia.descripcion}}
