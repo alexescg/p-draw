@@ -618,6 +618,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
           });
     });
 
+
     app.get("/find/historias/asignadas/:idProyecto/:idDesarrollador", function(req, res){
       HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
       "desarrollador": mongoose.Types.ObjectId(req.params.idDesarrollador),
@@ -638,6 +639,46 @@ module.exports = function (app, passport, roles, mongoose, io) {
         res.json(obj);
       });
     });
+
+    app.get("/resumenHistoriasProductOwner", isLoggedIn, function(req, response){
+      console.log(req.session.proyecto);
+      if(!req.session.proyecto){
+        req.session = sass;
+      }
+      Proyecto.findById(req.session.proyecto)
+          .exec(function (err, obj) {
+              if (err) response.redirect("/home");
+              else
+                response.render("resumenHistoriasProductOwner",
+                    {
+                        usuario: req.user,
+                        proyecto: obj
+                    });
+          });
+    });
+
+    app.get("/find/historias/porValidar/:idProyecto", function(req, res){
+      console.log(req.session.proyecto);
+      console.log("--------------------------------->");
+      HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
+      "terminada": true,
+      $or:[{"revisada": {$exists:false}},{"revisada":false}]})
+      .exec(function(err, obj){
+        res.json(obj);
+      });
+    });
+
+    app.get("/find/historias/validadas/:idProyecto", function(req, res){
+      console.log(req.session.proyecto);
+      console.log("--------------------------------->");
+      HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
+      "terminada": true,
+      "revisada": true})
+      .exec(function(err, obj){
+        res.json(obj);
+      });
+    });
+
 
     app.get("/find/sprints/release/:idRelease", function(req, response){
       Sprint.find({"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease)})
