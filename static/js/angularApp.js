@@ -203,6 +203,87 @@ app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scop
 
 }]);
 
+app.controller("resumenHistoriasDesarrollador", ['$scope','$http', function($scope, $http){
+  $scope.historiasDesarrollador = [];
+  $scope.historiasRevisadas = [];
+  $scope.idProyecto = "";
+  $scope.idDesarrollador = "";
+  $scope.historiaSeleccionada="";
+
+  $scope.init = function(idProyecto, idDesarrollador){
+    $scope.idProyecto = idProyecto;
+    $scope.idDesarrollador = idDesarrollador;
+    $scope.findHistoriasByDesarrollador();
+    $scope.findHistoriasByRevisadas();
+  };
+
+  $scope.findHistoriasByDesarrollador = function(){
+    $http.get("/find/historias/asignadas/"+ $scope.idProyecto +"/"+ $scope.idDesarrollador).success(function(data){
+      $scope.historiasDesarrollador = data;
+      console.log("Historias sin desarrollador");
+      console.log(data);
+    });
+  }
+
+  $scope.findHistoriasByRevisadas = function(){
+    $http.get("/find/historias/asignadas/revisadas/" + $scope.idProyecto +"/"+ $scope.idDesarrollador).success(function(data){
+      $scope.historiasRevisadas = data;
+    });
+  }
+
+  $scope.verDetalleHistoria = function(idHistoria){
+    $http.get("/findBy/historias/"+ idHistoria).success(function(data){
+      $scope.historiaSeleccionada = data;
+      console.log($scope.historiaSeleccionada);
+    });
+  };
+
+  $scope.finalizarTarjeta = function (idDesarrollador) {
+      socket.emit('finalizarHistoria', $scope.historiaSeleccionada._id);
+  };
+
+  var socket = io.connect({'forceNew': true});
+  $scope.historias = $scope.historias || [];
+
+  socket.on('updateHistorias', function (data) {
+      $scope.findHistoriasByDesarrollador();
+      $scope.findHistoriasByRevisadas();
+      $scope.$apply();
+  });
+
+  $scope.cerrarDetalle = function(){
+    $scope.historiaSeleccionada="";
+  };
+
+}]);
+
+app.controller("resumenHistoriasProductOwner", ['$scope','$http', function($scope, $http){
+  $scope.historiasPorValidar = [];
+  $scope.historiasValidadas = [];
+  $scope.idProyecto = "";
+
+  $scope.init = function(idProyecto){
+    $scope.idProyecto = idProyecto;
+    $scope.findHistoriasPorValidar();
+    $scope.findHistoriasValidadas();
+  };
+
+  $scope.findHistoriasPorValidar = function(){
+    $http.get("/find/historias/porValidar/"+ $scope.idProyecto).success(function(data){
+      $scope.historiasPorValidar = data;
+      console.log("Historias por validar");
+      console.log(data);
+    });
+  }
+
+  $scope.findHistoriasValidadas = function(){
+    $http.get("/find/historias/validadas/" + $scope.idProyecto).success(function(data){
+      $scope.historiasValidadas = data;
+    });
+  }
+
+}]);
+
 app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($scope, $http, $window){
   $scope.verDetalles = false;
   $scope.historiasSprint = [];
@@ -316,7 +397,7 @@ app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($s
     $http.get('/count/dias/sprint/'+$scope.idSprint).success(function(dias){
       $scope.totalDias=dias;
     });
-  }
+  };
 
   $scope.agregarDesarrollador = function(idHistoria){
     $http.get("/findBy/historias/"+ idHistoria).success(function(data){

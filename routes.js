@@ -165,8 +165,9 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
     /*------------------------ Rutas para Proyectos -------------------------------*/
     app.get("/detalleproyecto", isLoggedIn, function (req, response) {
+
         if (req.query.proyectoElegido === undefined) {
-            req.query.proyectoElegido = req.session.proyecto;
+            req.query.proyectoElegido = sass.proyecto;
         }
         Proyecto.findById({"_id": req.query.proyectoElegido}).populate({
             path: 'participantes.usuario',
@@ -236,6 +237,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
             fechaSolicitud: Date(),
             fechaArranque: req.body.fechaArranque,
             descripcionProy: req.body.descripcionProy,
+            abierto:true
         });
         proyecto.participantes.push(rol);
         //err tiene los errores que pueden pasar y obj el objeto a guardar.
@@ -316,15 +318,16 @@ module.exports = function (app, passport, roles, mongoose, io) {
       $or:[{"terminada":{$exists:false}}, {"terminada":false}]})
         .exec(function (err, historias) {
           if(!historias){
-            response.json(0);
+            response.json("0");
           }
           if(historias.length<1){
-            response.json(0);
-          }
+            response.json("0");
+          } else {
             historias.forEach(function(historia){
               dias += historia.tamanio;
             });
-          response.json(dias);
+            response.json(dias);
+          }
         });
   });
 
@@ -342,11 +345,11 @@ module.exports = function (app, passport, roles, mongoose, io) {
       $or:[{"terminada":{$exists:false}}, {"terminada":false}]})
         .exec(function (err, historias) {
           if(!historias){
-            response.json(0);
+            response.json("0");
           }
           if(historias.length<1){
-            response.json(0);
-          }
+            response.json("0");
+          } else
             historias.forEach(function(historia){
               dias += historia.tamanio;
             });
@@ -361,15 +364,16 @@ module.exports = function (app, passport, roles, mongoose, io) {
       $or:[{"terminada":{$exists:false}}, {"terminada":false}]})
         .exec(function (err, historias) {
           if(!historias){
-            response.json(0);
+            response.json("0");
           }
           if(historias.length<1){
-            response.json(0);
-          }
+            response.json("0");
+          } else {
             historias.forEach(function(historia){
               dias += historia.tamanio;
             });
-          response.json(dias);
+            response.json(dias);
+          }
         });
   });
 /*---------------------------- Users -----------------------------------------*/
@@ -467,12 +471,8 @@ module.exports = function (app, passport, roles, mongoose, io) {
         sass = req.session;
         Sprint.findById(req.query.sprintElegido).populate("liberacionBacklog")
         .exec(function (err, sprint){
-          console.log("------------------------------------>");
-          console.log(sprint);
           Proyecto.findById(sprint.liberacionBacklog.proyecto)
           .exec(function(err, proyecto){
-            console.log("---------------------------------------------------->");
-            console.log(proyecto);
             res.render('showSprintBackLog', {usuario: req.user, proyecto: proyecto, sprint: sprint});
           });
         });
@@ -487,18 +487,14 @@ module.exports = function (app, passport, roles, mongoose, io) {
             model: 'Usuario'
         })
             .exec(function (err, obj) {
-                console.log("PROYECTO:");
-                console.log(obj);
                 if (err) response.redirect("/showSprintBacklog");
                 else {
                     var desarrolladores = [];
                     obj.participantes.forEach(function (participante) {
                         if (participante.rol === "developer") {
                             desarrolladores.push(participante.usuario);
-                    }
-                });
-                console.log("DESARROLLADOREs:");
-                console.log(desarrolladores);
+                          }
+                    });
                 response.json(desarrolladores);
               }
           });
@@ -514,8 +510,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
       if(!req.body.release.descripcionRelease){
         return res.status(400).send({message:"No hay descripción en el Release"});
       }
-
-      console.log(req.body.release);
       var newRelease = new LiberacionBacklog({
         proyecto: mongoose.Types.ObjectId(req.body.release.proyecto),
         finalizo:false,
@@ -552,7 +546,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
       return res.status(400).send({message:"No hay descripción en el Release"});
     }
 
-    console.log(req.body.sprint);
     var newSprint = new Sprint({
       liberacionBacklog: mongoose.Types.ObjectId(req.body.sprint.liberacionBacklog),
       finalizo:false,
@@ -561,8 +554,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
       nombreSprint: req.body.sprint.nombreSprint
     });
     newSprint.save(function(err, obj){
-      console.log("============obj");
-      console.log(obj);
       if(err){
         return res.status(400).send({message:"Error al guardar"});
       }
@@ -610,6 +601,85 @@ module.exports = function (app, passport, roles, mongoose, io) {
           });
       });
 
+    app.get("/resumenHistoriasDesarrollador", isLoggedIn, function(req, response){
+      console.log(req.session.proyecto);
+      if(!req.session.proyecto){
+        req.session = sass;
+      }
+      Proyecto.findById(req.session.proyecto)
+          .exec(function (err, obj) {
+              if (err) response.redirect("/home");
+              else
+                response.render("resumenHistoriasDesarrollador",
+                    {
+                        usuario: req.user,
+                        proyecto: obj
+                    });
+          });
+    });
+
+
+    app.get("/find/historias/asignadas/:idProyecto/:idDesarrollador", function(req, res){
+      HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
+      "desarrollador": mongoose.Types.ObjectId(req.params.idDesarrollador),
+      "terminada":false,
+      "revisada":false})
+      .exec(function(err, obj){
+        res.json(obj);
+      });
+    });
+
+    app.get("/find/historias/asignadas/revisadas/:idProyecto/:idDesarrollador", function(req, res){
+      console.log(req.session.proyecto);
+      HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
+      "desarrollador": mongoose.Types.ObjectId(req.params.idDesarrollador),
+      "terminada":true,
+      "revisada":false})
+      .exec(function(err, obj){
+        res.json(obj);
+      });
+    });
+
+    app.get("/resumenHistoriasProductOwner", isLoggedIn, function(req, response){
+      console.log(req.session.proyecto);
+      if(!req.session.proyecto){
+        req.session = sass;
+      }
+      Proyecto.findById(req.session.proyecto)
+          .exec(function (err, obj) {
+              if (err) response.redirect("/home");
+              else
+                response.render("resumenHistoriasProductOwner",
+                    {
+                        usuario: req.user,
+                        proyecto: obj
+                    });
+          });
+    });
+
+    app.get("/find/historias/porValidar/:idProyecto", function(req, res){
+      console.log(req.session.proyecto);
+      console.log("--------------------------------->");
+      HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
+      "terminada": true,
+      $or:[{"revisada": {$exists:false}},{"revisada":false}]})
+      .exec(function(err, obj){
+        res.json(obj);
+      });
+    });
+
+    app.get("/find/historias/validadas/:idProyecto", function(req, res){
+      console.log(req.session.proyecto);
+      console.log("--------------------------------->");
+      HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
+      "terminada": true,
+      "revisada": true})
+      .exec(function(err, obj){
+        res.json(obj);
+      });
+    });
+
+
     app.get("/find/sprints/release/:idRelease", function(req, response){
       Sprint.find({"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease)})
           .exec(function (err, obj) {
@@ -628,7 +698,8 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
         socket.on('newHistoria', function (data) {
             var historiaNueva = new HistoriaUsuario(data);
-            historiaNueva.estatus = false;
+            historiaNueva.terminada = false;
+            historiaNueva.revisada = false;
             historiaNueva.save(function (err, obj) {
                 if (obj) {
                     io.emit('sendHistoria')
@@ -639,6 +710,17 @@ module.exports = function (app, passport, roles, mongoose, io) {
         socket.on('updateHistoria', function (data, idDesarrollador) {
             HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(data)},
               {$set:{"desarrollador": mongoose.Types.ObjectId(idDesarrollador)}},
+              function (err) {
+              if (err) {
+                err();
+              }
+              io.emit('updateHistorias');
+          });
+        });
+
+        socket.on('finalizarHistoria', function (data) {
+            HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(data)},
+              {$set:{"terminada": true}},
               function (err) {
               if (err) {
                 err();

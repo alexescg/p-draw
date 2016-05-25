@@ -7,7 +7,8 @@ var proyectoSchema = new Schema({
     fechaSolicitud:{type:Date, required:true},
     fechaArranque:{type:Date, required:true},
     descripcionProy:{type:String, required:true},
-    participantes:{type: Array, "default":[]}
+    participantes:{type: Array, "default":[]},
+    abierto:{type:Boolean, required:true}
 });
 
 proyectoSchema.virtual("prettyDate").get(function(){

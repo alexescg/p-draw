@@ -1,6 +1,6 @@
 extends ./index.jade
 block content
-  .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="showSprintBacklogCtrl", ng-init="init('#{proyecto._id}','#{sprint._id}')")
+  .mdl-grid.mdl-cell.mdl-cell--12-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="resumenHistoriasDesarrollador" ng-init="init('#{proyecto._id}', '#{user._id}')")
     .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
@@ -11,49 +11,45 @@ block content
       br
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
-          h2.mdl-card__title-text Release: #{sprint.liberacionBacklog.nombreRelease}
+          h2.mdl-card__title-text Nombre Usuario:
         .mdl-card__supporting-text
           p.letras-negras.
-            #{sprint.liberacionBacklog.descripcionRelease}
+            #{user.nombreCompleto}
       br
-      .mdl-card.mdl-shadow--2dp
-        .mdl-card__title
-          h2.mdl-card__title-text Sprint: #{sprint.nombreSprint}
-        .mdl-card__supporting-text
-          p.letras-negras.
-            #{sprint.descripcionSprint}
-      br
-      .mdl-card.mdl-shadow--2dp
-        .mdl-card__title
-          h2.mdl-card__title-text Días para Finalizar: {{totalDias}}
 
     .mdl-cell.mdl-cell--9-col-desktop.mdl-cell--9-col-tablet.mdl-cell--5-col-phone
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
-          h2.mdl-card__title-text Historias sin Desarrollador
-      .mdl-card-2.mdl-shadow--2dp-2
+          h2.mdl-card__title-text Historias sin Finalizar
+      .mdl-card-2.mdl-shadow--6dp-2
         .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top
-          .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(ng-repeat="historia in historias")
+          .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--6-col-tablet.mdl-cell--2-col-phone(ng-repeat="historia in historiasDesarrollador")
               .mdl-card.mdl-shadow--2dp
                   .mdl-card__title
                       h2.mdl-card__title-text {{historia.nombre}}
                   .mdl-card__supporting-text
-                      {{historia.descripcion}}
-                      button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarDesarrollador(historia._id)") Asignar Desarrollador
+                      p.letras-negras.
+                        {{historia.descripcion}}
+                  div(class="mdl-card__actions mdl-card--border")
+                    button(class="mdl-button blank-sprint-button" type="button" ng-click="finalizarTarjeta(historia._id)") Terminar
+                    br
+                    br
+                    button(class="mdl-button blank-sprint-button" type="button" ng-click="verDetalleHistoria(historia._id)") Ver Detalle
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
-          h2.mdl-card__title-text Historias con Desarrollador
+          h2.mdl-card__title-text Historias en Revisión
       .mdl-card-2.mdl-shadow--2dp-2
         .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top
-          .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(ng-repeat="historia in historiasDesarrollador")
+          .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(ng-repeat="historia in historiasRevisadas")
               .mdl-card.mdl-shadow--2dp
                   .mdl-card__title
                       h2.mdl-card__title-text {{historia.nombre}}
                   .mdl-card__supporting-text
                       p.letras-negras.
                        {{historia.descripcion}}
-                      button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarDesarrollador(historia._id)") Ver Detalle
-    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone(ng-show="historiaSeleccionada!==''")
+                   div(class="mdl-card__actions mdl-card--border")
+                     button(class="mdl-button blank-sprint-button" type="button" ng-click="verDetalleHistoria(historia._id)") Ver Detalle
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone(ng-if="historiaSeleccionada!==''")
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Detalles De Historia
@@ -86,28 +82,7 @@ block content
               .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
                   input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.tamanio}}" id="tamanioSprint" name="tamanioSprint" style="color: black" readonly)
                   label(for="tamanioSprint" class="mdl-textfield__label") Tamaño
-          div(class="mdl-card__actions mdl-card--border" ng-if="!historiaSeleccionada.desarrollador")
-            button(class="mdl-button asignar-desarrollador-button" id="button-asignar-developer" type="button" ng-click="findDesarrolladoresByProyecto()") Asignar Desarrollador
-            dialog(class="mdl-dialog-big asignar-desarrollador-dialog")
-              h2.mdl-dialog__title Desarrolladores
-                .mdl-dialog__content
-                  table.mdl-data-table.mdl-js-data-table.mdl-data-table.projects-table
-                    thead
-                      tr
-                        th.mdl-data-table__cell--non-numeric Usuario
-                        th.mdl-data-table__cell--non-numeric
-                    tbody
-                      tr(ng-repeat="desarrollador in desarrolladores")
-                        td.mdl-data-table__cell--non-numeric {{getNombreCompleto(desarrollador)}}
-                        td.mdl-data-table__cell--non-numeric
-                          button.mdl-button(type="button" ng-click="asignarTarjeta(desarrollador._id)") Asignar
-
-  script.
-    var dialogAsignarDes = document.querySelector('.asignar-desarrollador-dialog');
-      var showDialogButtonAsignarDes = document.querySelector('.asignar-desarrollador-button');
-      if (! dialogAsignarDes.showModal) {
-        dialogPolyfill.registerDialog(dialogAsignarDes);
-      }
-      showDialogButtonAsignarDes.addEventListener('click', function() {
-        dialogAsignarDes.showModal();
-        });
+          div(class="mdl-card__actions mdl-card--border" ng-if="historiaSeleccionada.terminada === false")
+            button(class="mdl-button asignar-desarrollador-button" id="button-asignar-developer" type="button" ng-click="finalizarTarjeta(historiaSeleccionada._id)") Terminar Tarjeta
+          div(class="mdl-card__actions mdl-card--border" ng-if="historiaSeleccionada.terminada === true")
+            button(class="mdl-button asignar-desarrollador-button" id="button-asignar-developer" type="button" ng-click="cerrarDetalle()") Cerrar Detalle

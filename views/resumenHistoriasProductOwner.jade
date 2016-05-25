@@ -1,0 +1,50 @@
+extends ./index.jade
+block content
+  .mdl-grid.mdl-cell.mdl-cell--12-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="resumenHistoriasProductOwner" ng-init="init('#{proyecto._id}')")
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
+      .mdl-card.mdl-shadow--2dp
+        .mdl-card__title
+          h2.mdl-card__title-text #{proyecto.nombreProyecto}
+        .mdl-card__supporting-text
+          p.letras-negras.
+            #{proyecto.descripcionProy}
+      br
+      .mdl-card.mdl-shadow--2dp
+        .mdl-card__title
+          h2.mdl-card__title-text Nombre Usuario:
+        .mdl-card__supporting-text
+          p.letras-negras.
+            #{user.nombreCompleto}
+      br
+
+    .mdl-cell.mdl-cell--9-col-desktop.mdl-cell--9-col-tablet.mdl-cell--5-col-phone
+      .mdl-card.mdl-shadow--2dp
+        .mdl-card__title
+          h2.mdl-card__title-text Historias por Validar
+      .mdl-card-2.mdl-shadow--6dp-2
+        .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top
+          .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--6-col-tablet.mdl-cell--2-col-phone(ng-repeat="historia in historiasPorValidar")
+              .mdl-card.mdl-shadow--2dp
+                  .mdl-card__title
+                      h2.mdl-card__title-text {{historia.nombre}}
+                  .mdl-card__supporting-text
+                      p.letras-negras.
+                        {{historia.descripcion}}
+                  div(class="mdl-card__actions mdl-card--border")
+                    button(class="mdl-button blank-sprint-button" type="button") Agregar historia
+                    br
+                    br
+                    button(class="mdl-button blank-sprint-button" type="button") Ver Detalle
+      .mdl-card.mdl-shadow--2dp
+        .mdl-card__title
+          h2.mdl-card__title-text Historias Validadas
+      .mdl-card-2.mdl-shadow--2dp-2
+        .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top
+          .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(ng-repeat="historia in historiasValidadas")
+              .mdl-card.mdl-shadow--2dp
+                  .mdl-card__title
+                      h2.mdl-card__title-text {{historia.nombre}}
+                  .mdl-card__supporting-text
+                      p.letras-negras.
+                       {{historia.descripcion}}
+                      button(class="mdl-button blank-sprint-button" type="button") Agregar historia
