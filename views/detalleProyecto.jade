@@ -1,6 +1,6 @@
 extends ./index.jade
 block content
-  .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="detalleProyectoCtrl", ng-init="init('#{scrumMaster.nombreCompleto}', '#{owner ? owner.nombreCompleto : ''}', '#{proyecto._id}')")
+  .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="detalleProyectoCtrl", ng-init="init('#{scrumMaster.nombreCompleto}', '#{owner ? owner.nombreCompleto : ''}', '#{proyecto._id}', '#{proyecto.abierto}')")
     .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
@@ -16,7 +16,7 @@ block content
           if(scrumMaster)
             a(href='#', target='_blank') {{scrumMaster}}
           else
-            a.mdl-button(type="submit") Agregar
+            a.mdl-button(type="submit" ng-show="isOpen==='true'") Agregar
       br
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
@@ -25,7 +25,7 @@ block content
           if(owner)
             a(href='#', target='_blank') #{owner.nombreCompleto}
           else
-            button(class="mdl-button show-owner-button" id="button-show-owner" type="button" ng-click="getUsuarios()") Agregar
+            button(class="mdl-button show-owner-button" id="button-show-owner" type="button" ng-click="getUsuarios()" ng-show="isOpen==='true'") Agregar
             dialog(class="mdl-dialog-big show-owner-dialog")
               h2.mdl-dialog__title Usuarios
                 .mdl-dialog__content
@@ -44,12 +44,14 @@ block content
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Días para Finalizar: {{totalDias}}
-        .mdl-card__actions.mdl-card--border(ng-if="totalDias <= 0")
-          button(class="mdl-button asignar-desarrollador-button" id="button-asignar-developer" type="button" ng-click="cerrarProyecto()") Cerrar Proyecto
+        .mdl-card__actions.mdl-card--border(ng-if="totalDias <= 0" ng-show="isOpen==='true'")
+          form(action="/finalizarProyecto" method="POST" class="form")
+            input(value="#{proyecto._id}" type="hidden" id="proyectoElegido" name="proyectoElegido")
+            button(class="mdl-button" type="submit") Cerrar Proyecto
 
     .mdl-cell.mdl-cell--6-col-desktop.mdl-cell--6-col-tablet.mdl-cell--4-col-phone
       .mdl-card-2.mdl-shadow--2dp-2
-        button(class="mdl-button blank-historia-button" type="button") Agregar historia de usuario
+        button(class="mdl-button blank-historia-button" type="button" ng-show="isOpen==='true'") Agregar historia de usuario
         dialog(class="mdl-dialog-big blank-historia-dialog")
           h2.mdl-dialog__title Nuevo Proyecto
             form(action="#" method="POST" class="form")
@@ -74,7 +76,7 @@ block content
             li.mdl-list__item(ng-repeat="desarrollador in desarrolladores")
               span.mdl-list__item-primary-content.list__item-text.letras-negras {{getNombreCompleto(desarrollador)}}
             br
-            li.mdl-list__item
+            li.mdl-list__item(ng-show="isOpen==='true'")
               button(class="mdl-button show-developer-button" id="show-developer" type="button" ng-click="getUsuarios()") Agregar Desarrolladores
               dialog(class="mdl-dialog-big show-developer-dialog")
                 h2.mdl-dialog__title Usuarios
@@ -89,7 +91,41 @@ block content
                           td.mdl-data-table__cell--non-numeric {{getNombreCompleto(usuario)}}
                           td.mdl-data-table__cell--non-numeric
                             button.mdl-button(type="button" ng-click="asignarDesarrollador(usuario._id)") Asignar
-
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone(ng-if="historiaSeleccionada!==''")
+      .mdl-card.mdl-shadow--2dp
+        .mdl-card__title
+          h2.mdl-card__title-text Detalles De Historia
+        .mdl-card__supporting-text
+          .mdl-grid(ng-if="historiaSeleccionada!==''")
+              .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                  input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.nombre}}" id="nombreSprint" name="nombreSprint" style="color: black" readonly)
+                  label(for="nombreSprint" class="mdl-textfield__label") Nombre
+              .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                  input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.descripcion}}" id="descripcionSprint" name="descripcionSprint" style="color: black" readonly)
+                  label(for="descripcionSprint" class="mdl-textfield__label") Descripción
+              .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                  input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.cuando}}" id="cuandoSprint" name="cuandoSprint" style="color: black" readonly)
+                  label(for="cuandoSprint" class="mdl-textfield__label") Cuando
+              .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                  input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.entonces}}" id="entoncesSprint" name="entoncesSprint" style="color: black" readonly)
+                  label(for="entoncesSprint" class="mdl-textfield__label") Entonces
+              .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                  input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.como}}" id="comoSprint" name="comoSprint" style="color: black" readonly)
+                  label(for="comoSprint" class="mdl-textfield__label") Como
+              .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                  input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.quiero}}" id="quieroSprint" name="quieroSprint" style="color: black" readonly)
+                  label(for="quieroSprint" class="mdl-textfield__label") Quiero
+              .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                  input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.deTalManeraQue}}" id="deTalManeraQueSprint" name="deTalManeraQueSprint" style="color: black" readonly)
+                  label(for="deTalManeraQueSprint" class="mdl-textfield__label") De Tal Manera Que
+              .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                  input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.prioridad}}" id="prioridadSprint" name="prioridadSprint" style="color: black" readonly)
+                  label(for="priordadSprint" class="mdl-textfield__label") Prioridad
+              .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                  input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.tamanio}}" id="tamanioSprint" name="tamanioSprint" style="color: black" readonly)
+                  label(for="tamanioSprint" class="mdl-textfield__label") Tamaño
+          div(class="mdl-card__actions mdl-card--border")
+            button(class="mdl-button" type="button" ng-click="cerrarDetalle()") Limpiar Datos
     .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
       tr
         td.mdl-data-table__cell--non-numeric

@@ -27,13 +27,16 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     $scope.desarrolladores = [];
     $scope.liberaciones = [];
     $scope.totalDias = 0;
+    $scope.isOpen='';
 
-    $scope.init = function(scrumMaster, owner, idProyecto){
+    $scope.init = function(scrumMaster, owner, idProyecto, isOpen){
       $scope.scrumMaster =scrumMaster;
       $scope.productOwner=owner;
       $scope.idProyecto = idProyecto;
       $scope.getDesarrolladores();
       $scope.findReleaseByProyecto();
+      $scope.isOpen = isOpen;
+      $scope.historiaSeleccionada="";
     }
 
     $scope.historia = new Object();
@@ -106,6 +109,17 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
         }).error(function(data){
           //TODO:Error
           });
+    };
+
+    $scope.verDetalleHistoria = function(idHistoria){
+      $http.get("/findBy/historias/"+ idHistoria).success(function(data){
+        $scope.historiaSeleccionada = data;
+        console.log($scope.historiaSeleccionada);
+      });
+    };
+
+    $scope.cerrarDetalle = function(){
+      $scope.historiaSeleccionada="";
     };
 
     $scope.getDesarrolladores = function(){
@@ -303,13 +317,11 @@ app.controller("resumenHistoriasProductOwner", ['$scope','$http', function($scop
   };
 
   $scope.validarTarjeta = function (idDesarrollador) {
-      console.log("Este pedo");
       socket.emit('validarHistoria', $scope.historiaSeleccionada._id);
       $scope.historiaSeleccionada="";
   };
 
   $scope.rechazarTarjeta = function (idDesarrollador) {
-      console.log("Vale madres");
       socket.emit('rechazarHistoria', $scope.historiaSeleccionada._id);
       $scope.historiaSeleccionada="";
   };
@@ -322,14 +334,17 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
   $scope.sprint = {}
   $scope.historiaSeleccionada="";
   $scope.totalDias=0;
+  $scope.isOpen='';
   var socket = io.connect({'forceNew': true});
 
-  $scope.init = function(idProy, idRelease){
+  $scope.init = function(idProy, idRelease, isOpen){
     $scope.idProyecto = idProy;
     $scope.idRelease = idRelease;
     $scope.findHistoriasByRelease();
     $scope.findSprintsByRelease();
     $scope.getTotalDiasRelease();
+    $scope.isOpen = isOpen;
+    console.log($scope.isOpen)
   };
 
   $scope.agregarHistoriaSprint = function(idHistoria){
@@ -401,13 +416,15 @@ app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($s
   $scope.historias = [];
   $scope.sprint = {};
   $scope.historiaSeleccionada="";
+  $scope.isOpen = "";
 
-  $scope.init = function(idProy, idSprint){
+  $scope.init = function(idProy, idSprint, isOpen){
     $scope.idProyecto = idProy;
     $scope.idSprint = idSprint;
     $scope.findHistoriasBySprint();
     $scope.findHistoriasBySprintDesarrollador();
     $scope.getTotalDiasSprint();
+    $scope.isOpen = isOpen;
   };
 
   $scope.asignarTarjeta = function (idDesarrollador) {
@@ -421,7 +438,6 @@ app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($s
   };
 
   var socket = io.connect({'forceNew': true});
-  $scope.historias = $scope.historias || [];
 
   socket.on('updateHistorias', function (data) {
       $scope.findHistoriasBySprint();

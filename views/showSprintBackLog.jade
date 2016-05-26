@@ -1,6 +1,6 @@
 extends ./index.jade
 block content
-  .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="showSprintBacklogCtrl", ng-init="init('#{proyecto._id}','#{sprint._id}')")
+  .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="showSprintBacklogCtrl", ng-init="init('#{proyecto._id}','#{sprint._id}', '#{proyecto.abierto}')")
     .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
@@ -28,10 +28,10 @@ block content
           h2.mdl-card__title-text Días para Finalizar: {{totalDias}}
 
     .mdl-cell.mdl-cell--9-col-desktop.mdl-cell--9-col-tablet.mdl-cell--5-col-phone
-      .mdl-card.mdl-shadow--2dp
+      .mdl-card.mdl-shadow--2dp(ng-show="isOpen==='true'")
         .mdl-card__title
           h2.mdl-card__title-text Historias sin Desarrollador
-      .mdl-card-2.mdl-shadow--2dp-2
+      .mdl-card-2.mdl-shadow--2dp-2(ng-show="isOpen==='true'")
         .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top
           .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--4-col-tablet.mdl-cell--2-col-phone(ng-repeat="historia in historias")
               .mdl-card.mdl-shadow--2dp
@@ -39,7 +39,8 @@ block content
                       h2.mdl-card__title-text {{historia.nombre}}
                   .mdl-card__supporting-text
                       {{historia.descripcion}}
-                      button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarDesarrollador(historia._id)") Asignar Desarrollador
+                      button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarDesarrollador(historia._id)" ng-show="isOpen==='true'") Asignar Desarrollador
+                      button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarDesarrollador(historia._id)" ng-show="isOpen==='false'") Ver Detalles
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Historias con Desarrollador
@@ -86,10 +87,10 @@ block content
               .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
                   input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.tamanio}}" id="tamanioSprint" name="tamanioSprint" style="color: black" readonly)
                   label(for="tamanioSprint" class="mdl-textfield__label") Tamaño
-          div(class="mdl-card__actions mdl-card--border" ng-show="!historiaSeleccionada.desarrollador")
+          div(class="mdl-card__actions mdl-card--border")
             button(class="mdl-button" type="button" ng-click="cerrarDetalle()") Limpiar Datos
             &nbsp;
-            button(class="mdl-button asignar-desarrollador-button" id="asignar-desarrollador-button" type="button" ng-click="findDesarrolladoresByProyecto()") Asignar Desarrollador
+            button(class="mdl-button asignar-desarrollador-button" id="asignar-desarrollador-button" type="button" ng-click="findDesarrolladoresByProyecto()" ng-show="isOpen==='true' && !historiaSeleccionada.desarrollador") Asignar Desarrollador
             dialog(class="mdl-dialog-big asignar-desarrollador-dialog")
               h2.mdl-dialog__title Desarrolladores
                 .mdl-dialog__content

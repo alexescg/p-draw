@@ -6,4 +6,5 @@
           .mdl-card__supporting-text
               p(class="letras-negras").
                 {{historia.descripcion}}
-              button.mdl-button.mdl-js-button.mdl-js-ripple-effect Detalles
+          div(class="mdl-card__actions mdl-card--border")
+            button.mdl-button.mdl-js-button.mdl-js-ripple-effect(ng-click="verDetalleHistoria(historia._id)") Detalles

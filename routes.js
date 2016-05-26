@@ -206,6 +206,21 @@ module.exports = function (app, passport, roles, mongoose, io) {
             });
     });
 
+    app.post("/finalizarProyecto", isLoggedIn, function (req, response) {
+
+        if (req.query.proyectoElegido === undefined) {
+            req.query.proyectoElegido = sass.proyecto;
+        }
+        Proyecto.update({"_id": req.body.proyectoElegido},
+           {$set:{"abierto":false}}, function (err) {
+              if (err) {
+                  response.redirect("/home");
+              } else {
+                  response.redirect("/detalleProyecto");
+              }
+        });
+    });
+
     app.get("/detalleProyecto/findDevelopers/:idProyecto", function (req, response) {
       console.log(req.params.idProyecto);
         Proyecto.findById({"_id": req.params.idProyecto}).populate({

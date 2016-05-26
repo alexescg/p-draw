@@ -1,7 +1,25 @@
 extends ./index.jade
 block content
-  .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="showReleaseBacklogCtrl", ng-init="init('#{proyecto._id}','#{release._id}')")
-    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
+  .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="showReleaseBacklogCtrl", ng-init="init('#{proyecto._id}','#{release._id}', '#{proyecto.abierto}')")
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone(ng-show="isOpen==='true'")
+      .mdl-card.mdl-shadow--2dp
+        .mdl-card__title
+          h2.mdl-card__title-text #{proyecto.nombreProyecto}
+        .mdl-card__supporting-text
+          p.letras-negras.
+            #{proyecto.descripcionProy}
+      br
+      .mdl-card.mdl-shadow--2dp
+        .mdl-card__title
+          h2.mdl-card__title-text Release: #{release.nombreRelease}
+        .mdl-card__supporting-text
+          p.letras-negras.
+            #{release.descripcionRelease}
+      br
+      .mdl-card.mdl-shadow--2dp
+        .mdl-card__title
+          h2.mdl-card__title-text Días para Finalizar: {{totalDias}}
+    .mdl-cell.mdl-cell--12-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone(ng-show="isOpen==='false' ")
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text #{proyecto.nombreProyecto}
@@ -20,7 +38,8 @@ block content
         .mdl-card__title
           h2.mdl-card__title-text Días para Finalizar: {{totalDias}}
 
-    .mdl-cell.mdl-cell--9-col-desktop.mdl-cell--6-col-tablet.mdl-cell--5-col-phone
+
+    .mdl-cell.mdl-cell--9-col-desktop.mdl-cell--6-col-tablet.mdl-cell--5-col-phone(ng-show="isOpen==='true'")
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Historias sin Asignar
@@ -35,8 +54,7 @@ block content
                         {{historia.descripcion}}
                   div(class="mdl-card__actions mdl-card--border")
                     button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarHistoriaSprint(historia._id)") Agregar historia
-                    br
-                    br
+                    &nbsp;
                     button(class="mdl-button blank-sprint-button" type="button" ng-click="verDetalleHistoria(historia._id)") Ver Detalle
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
@@ -50,8 +68,9 @@ block content
                   .mdl-card__supporting-text
                       p.letras-negras.
                        {{historia.descripcion}}
-                      button(class="mdl-button blank-sprint-button" type="button" ng-click="verDetalleHistoria(historia._id)") Agregar historia
-    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone
+                 div(class="mdl-card__actions mdl-card--border")
+                    button(class="mdl-button blank-sprint-button" type="button" ng-click="verDetalleHistoria(historia._id)") Agregar historia
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone(ng-show="isOpen==='true'")
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Crear Sprint
