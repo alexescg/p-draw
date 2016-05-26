@@ -153,10 +153,10 @@ module.exports = function (app, passport, roles, mongoose, io) {
                       path: 'participantes.usuario',
                       model: 'Usuario'
                   }, function (err, proyectos) {
-                      response.json(proyectos);
+                      return response.json(proyectos);
                   });
               } else {
-                response.json("{}");
+                return response.json("{}");
               }
           })
     });
@@ -222,7 +222,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
                             desarrolladores.push(participante.usuario);
                     }
                 });
-                response.json(desarrolladores);
+                return response.json(desarrolladores);
               }
           });
       });
@@ -257,7 +257,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
         Usuario.find({}).exec(function (err, usuarios) {
             if (err) response.redirect("/")
             else
-                response.json(usuarios);
+                return response.json(usuarios);
         });
     });
 
@@ -307,7 +307,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
   app.get("/find/historias/proyecto/:idProyecto", function(req, response){
     HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto)})
         .exec(function (err, obj) {
-              response.json(obj);
+              return response.json(obj);
         });
     });
 
@@ -315,18 +315,19 @@ module.exports = function (app, passport, roles, mongoose, io) {
     var dias = 0;
     HistoriaUsuario.find(
       {"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
-      $or:[{"terminada":{$exists:false}}, {"terminada":false}]})
+      "terminada":false})
         .exec(function (err, historias) {
           if(!historias){
-            response.json("0");
+            return response.json("0");
           }
           if(historias.length<1){
-            response.json("0");
+            return response.json("0");
           } else {
-            historias.forEach(function(historia){
-              dias += historia.tamanio;
-            });
-            response.json(dias);
+            if(dias == 0){
+              return response.json("0");
+            } else {
+              return response.json(dias);
+            }
           }
         });
   });
@@ -334,26 +335,36 @@ module.exports = function (app, passport, roles, mongoose, io) {
   app.get("/find/release/proyecto/:idProyecto", function(req, response){
     LiberacionBacklog.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto)})
         .exec(function (err, obj) {
-              response.json(obj);
+              return response.json(obj);
       });
   });
 
   app.get("/count/dias/release/:idRelease", function(req, response){
     var dias = 0;
+    console.log("IDRELEASE:");
+    console.log(req.params.idRelease);
     HistoriaUsuario.find(
       {"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease),
-      $or:[{"terminada":{$exists:false}}, {"terminada":false}]})
+      "terminada":false})
         .exec(function (err, historias) {
+          console.log("HISTORIAS----LENGTh");
+          console.log(historias.length);
           if(!historias){
-            response.json("0");
+            return response.json("0");
           }
           if(historias.length<1){
-            response.json("0");
+            return response.json("0");
           } else
             historias.forEach(function(historia){
               dias += historia.tamanio;
             });
-          response.json(dias);
+            console.log("-----DIAS------Release");
+            console.log(dias);
+            if(dias == 0){
+              return response.json("0");
+            } else {
+              return response.json(dias);
+            }
         });
   });
 
@@ -361,18 +372,22 @@ module.exports = function (app, passport, roles, mongoose, io) {
     var dias = 0;
     HistoriaUsuario.find(
       {"sprint": mongoose.Types.ObjectId(req.params.idSprint),
-      $or:[{"terminada":{$exists:false}}, {"terminada":false}]})
+      "terminada":false})
         .exec(function (err, historias) {
           if(!historias){
-            response.json("0");
+            return response.json("0");
           }
           if(historias.length<1){
-            response.json("0");
+            return response.json("0");
           } else {
             historias.forEach(function(historia){
               dias += historia.tamanio;
             });
-            response.json(dias);
+            if(dias == 0){
+              return response.json("0");
+            } else {
+              return response.json(dias);
+            }
           }
         });
   });
@@ -495,7 +510,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
                             desarrolladores.push(participante.usuario);
                           }
                     });
-                response.json(desarrolladores);
+                return response.json(desarrolladores);
               }
           });
       });
@@ -573,7 +588,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
   app.get("/find/historias/release/:idRelease", function(req, response){
     HistoriaUsuario.find({"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease), "sprint":{$exists:false}})
         .exec(function (err, obj) {
-              response.json(obj);
+              return response.json(obj);
         });
     });
 
@@ -581,7 +596,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
       HistoriaUsuario.findById(req.params.idHistoria)
           .exec(function (err, obj) {
             console.log(obj)
-                response.json(obj);
+                return response.json(obj);
           });
       });
 
@@ -590,14 +605,14 @@ module.exports = function (app, passport, roles, mongoose, io) {
     app.get("/find/historias/sprint/:idSprint", function(req, response){
       HistoriaUsuario.find({"sprint": mongoose.Types.ObjectId(req.params.idSprint), "desarrollador":{$exists:false}})
           .exec(function (err, obj) {
-                response.json(obj);
+                return response.json(obj);
           });
       });
 
     app.get("/find/historias/sprint/desarrollador/:idSprint", function(req, response){
       HistoriaUsuario.find({"sprint": mongoose.Types.ObjectId(req.params.idSprint), "desarrollador":{$exists:true}})
           .exec(function (err, obj) {
-                response.json(obj);
+                return response.json(obj);
           });
       });
 
@@ -662,7 +677,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
       console.log("--------------------------------->");
       HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
       "terminada": true,
-      $or:[{"revisada": {$exists:false}},{"revisada":false}]})
+      "revisada":false})
       .exec(function(err, obj){
         res.json(obj);
       });
@@ -683,7 +698,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
     app.get("/find/sprints/release/:idRelease", function(req, response){
       Sprint.find({"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease)})
           .exec(function (err, obj) {
-                response.json(obj);
+                return response.json(obj);
           });
       });
 
@@ -721,6 +736,29 @@ module.exports = function (app, passport, roles, mongoose, io) {
         socket.on('finalizarHistoria', function (data) {
             HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(data)},
               {$set:{"terminada": true}},
+              function (err) {
+              if (err) {
+                err();
+              }
+              io.emit('updateHistorias');
+          });
+        });
+
+        socket.on('validarHistoria', function (data) {
+          console.log("Entre a validar historia");
+            HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(data)},
+              {$set:{"revisada": true}},
+              function (err) {
+              if (err) {
+                err();
+              }
+              io.emit('updateHistorias');
+          });
+        });
+
+        socket.on('rechazarHistoria', function (data) {
+            HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(data)},
+              {$set:{"terminada": false}},
               function (err) {
               if (err) {
                 err();

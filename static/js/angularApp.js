@@ -261,12 +261,21 @@ app.controller("resumenHistoriasProductOwner", ['$scope','$http', function($scop
   $scope.historiasPorValidar = [];
   $scope.historiasValidadas = [];
   $scope.idProyecto = "";
+  $scope.historiaSeleccionada="";
 
   $scope.init = function(idProyecto){
     $scope.idProyecto = idProyecto;
     $scope.findHistoriasPorValidar();
     $scope.findHistoriasValidadas();
   };
+
+  var socket = io.connect({'forceNew': true});
+
+  socket.on('updateHistorias', function (data) {
+      $scope.findHistoriasPorValidar();
+      $scope.findHistoriasValidadas();
+      $scope.$apply();
+  });
 
   $scope.findHistoriasPorValidar = function(){
     $http.get("/find/historias/porValidar/"+ $scope.idProyecto).success(function(data){
@@ -281,6 +290,29 @@ app.controller("resumenHistoriasProductOwner", ['$scope','$http', function($scop
       $scope.historiasValidadas = data;
     });
   }
+
+  $scope.verDetalleHistoria = function(idHistoria){
+    $http.get("/findBy/historias/"+ idHistoria).success(function(data){
+      $scope.historiaSeleccionada = data;
+      console.log($scope.historiaSeleccionada);
+    });
+  };
+
+  $scope.cerrarDetalle = function(){
+    $scope.historiaSeleccionada="";
+  };
+
+  $scope.validarTarjeta = function (idDesarrollador) {
+      console.log("Este pedo");
+      socket.emit('validarHistoria', $scope.historiaSeleccionada._id);
+      $scope.historiaSeleccionada="";
+  };
+
+  $scope.rechazarTarjeta = function (idDesarrollador) {
+      console.log("Vale madres");
+      socket.emit('rechazarHistoria', $scope.historiaSeleccionada._id);
+      $scope.historiaSeleccionada="";
+  };
 
 }]);
 
@@ -379,8 +411,13 @@ app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($s
   };
 
   $scope.asignarTarjeta = function (idDesarrollador) {
-      $scope.historiaSeleccionada.desarrollador = idDesarrollador;
-      socket.emit('updateHistoria', $scope.historiaSeleccionada._id, idDesarrollador);
+      if($scope.historiaSeleccionada !=-""){
+        $scope.historiaSeleccionada.desarrollador = idDesarrollador;
+        socket.emit('updateHistoria', $scope.historiaSeleccionada._id, idDesarrollador);
+      } else {
+        //TODO:Se tiene que seleccionar primero una historia.
+        console.log("No se ha seleccionado una historia aún");
+      }
   };
 
   var socket = io.connect({'forceNew': true});
@@ -434,6 +471,10 @@ app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($s
       console.log($scope.idProyecto);
       $scope.desarrolladores = data;
     });
+  };
+
+  $scope.cerrarDetalle = function(){
+    $scope.historiaSeleccionada="";
   };
 
 }]);

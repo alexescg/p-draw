@@ -53,12 +53,12 @@ block content
                       p.letras-negras.
                        {{historia.descripcion}}
                       button(class="mdl-button blank-sprint-button" type="button" ng-click="agregarDesarrollador(historia._id)") Ver Detalle
-    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone(ng-show="historiaSeleccionada!==''")
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Detalles De Historia
         .mdl-card__supporting-text
-          .mdl-grid
+          .mdl-grid(ng-if="historiaSeleccionada!==''")
               .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
                   input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.nombre}}" id="nombreSprint" name="nombreSprint" style="color: black" readonly)
                   label(for="nombreSprint" class="mdl-textfield__label") Nombre
@@ -86,8 +86,10 @@ block content
               .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
                   input.mdl-textfield__input(type="text" value="{{historiaSeleccionada.tamanio}}" id="tamanioSprint" name="tamanioSprint" style="color: black" readonly)
                   label(for="tamanioSprint" class="mdl-textfield__label") Tamaño
-          div(class="mdl-card__actions mdl-card--border" ng-if="!historiaSeleccionada.desarrollador")
-            button(class="mdl-button asignar-desarrollador-button" id="button-asignar-developer" type="button" ng-click="findDesarrolladoresByProyecto()") Asignar Desarrollador
+          div(class="mdl-card__actions mdl-card--border" ng-show="!historiaSeleccionada.desarrollador")
+            button(class="mdl-button" type="button" ng-click="cerrarDetalle()") Limpiar Datos
+            &nbsp;
+            button(class="mdl-button asignar-desarrollador-button" id="asignar-desarrollador-button" type="button" ng-click="findDesarrolladoresByProyecto()") Asignar Desarrollador
             dialog(class="mdl-dialog-big asignar-desarrollador-dialog")
               h2.mdl-dialog__title Desarrolladores
                 .mdl-dialog__content
@@ -104,10 +106,10 @@ block content
 
   script.
     var dialogAsignarDes = document.querySelector('.asignar-desarrollador-dialog');
-      var showDialogButtonAsignarDes = document.querySelector('.asignar-desarrollador-button');
-      if (! dialogAsignarDes.showModal) {
-        dialogPolyfill.registerDialog(dialogAsignarDes);
-      }
-      showDialogButtonAsignarDes.addEventListener('click', function() {
-        dialogAsignarDes.showModal();
-        });
+    var showDialogButtonAsignarDes = document.querySelector('.asignar-desarrollador-button');
+    if (! dialogAsignarDes.showModal) {
+      dialogPolyfill.registerDialog(dialogAsignarDes);
+    }
+    showDialogButtonAsignarDes.addEventListener('click', function() {
+      dialogAsignarDes.showModal();
+      });
