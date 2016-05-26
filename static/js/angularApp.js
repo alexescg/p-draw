@@ -27,13 +27,19 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     $scope.desarrolladores = [];
     $scope.liberaciones = [];
     $scope.totalDias = 0;
+    $scope.isOpen='';
+    $scope.rolActual='';
 
-    $scope.init = function(scrumMaster, owner, idProyecto){
+    $scope.init = function(scrumMaster, owner, idProyecto, isOpen, rolActual){
       $scope.scrumMaster =scrumMaster;
       $scope.productOwner=owner;
       $scope.idProyecto = idProyecto;
       $scope.getDesarrolladores();
       $scope.findReleaseByProyecto();
+      $scope.isOpen = isOpen;
+      $scope.historiaSeleccionada="";
+      $scope.rolActual = rolActual;
+      console.log($scope.rolActual);
     }
 
     $scope.historia = new Object();
@@ -106,6 +112,17 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
         }).error(function(data){
           //TODO:Error
           });
+    };
+
+    $scope.verDetalleHistoria = function(idHistoria){
+      $http.get("/findBy/historias/"+ idHistoria).success(function(data){
+        $scope.historiaSeleccionada = data;
+        console.log($scope.historiaSeleccionada);
+      });
+    };
+
+    $scope.cerrarDetalle = function(){
+      $scope.historiaSeleccionada="";
     };
 
     $scope.getDesarrolladores = function(){
@@ -261,12 +278,21 @@ app.controller("resumenHistoriasProductOwner", ['$scope','$http', function($scop
   $scope.historiasPorValidar = [];
   $scope.historiasValidadas = [];
   $scope.idProyecto = "";
+  $scope.historiaSeleccionada="";
 
   $scope.init = function(idProyecto){
     $scope.idProyecto = idProyecto;
     $scope.findHistoriasPorValidar();
     $scope.findHistoriasValidadas();
   };
+
+  var socket = io.connect({'forceNew': true});
+
+  socket.on('updateHistorias', function (data) {
+      $scope.findHistoriasPorValidar();
+      $scope.findHistoriasValidadas();
+      $scope.$apply();
+  });
 
   $scope.findHistoriasPorValidar = function(){
     $http.get("/find/historias/porValidar/"+ $scope.idProyecto).success(function(data){
@@ -282,6 +308,27 @@ app.controller("resumenHistoriasProductOwner", ['$scope','$http', function($scop
     });
   }
 
+  $scope.verDetalleHistoria = function(idHistoria){
+    $http.get("/findBy/historias/"+ idHistoria).success(function(data){
+      $scope.historiaSeleccionada = data;
+      console.log($scope.historiaSeleccionada);
+    });
+  };
+
+  $scope.cerrarDetalle = function(){
+    $scope.historiaSeleccionada="";
+  };
+
+  $scope.validarTarjeta = function (idDesarrollador) {
+      socket.emit('validarHistoria', $scope.historiaSeleccionada._id);
+      $scope.historiaSeleccionada="";
+  };
+
+  $scope.rechazarTarjeta = function (idDesarrollador) {
+      socket.emit('rechazarHistoria', $scope.historiaSeleccionada._id);
+      $scope.historiaSeleccionada="";
+  };
+
 }]);
 
 app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($scope, $http, $window){
@@ -290,14 +337,19 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
   $scope.sprint = {}
   $scope.historiaSeleccionada="";
   $scope.totalDias=0;
+  $scope.isOpen='';
+  $scope.rolActual = "";
   var socket = io.connect({'forceNew': true});
 
-  $scope.init = function(idProy, idRelease){
+  $scope.init = function(idProy, idRelease, isOpen, rolActual){
     $scope.idProyecto = idProy;
     $scope.idRelease = idRelease;
     $scope.findHistoriasByRelease();
     $scope.findSprintsByRelease();
     $scope.getTotalDiasRelease();
+    $scope.isOpen = isOpen;
+    $scope.rolActual = rolActual;
+    console.log($scope.isOpen)
   };
 
   $scope.agregarHistoriaSprint = function(idHistoria){
@@ -369,22 +421,29 @@ app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($s
   $scope.historias = [];
   $scope.sprint = {};
   $scope.historiaSeleccionada="";
+  $scope.isOpen = "";
 
-  $scope.init = function(idProy, idSprint){
+  $scope.init = function(idProy, idSprint, isOpen, rolActual){
     $scope.idProyecto = idProy;
     $scope.idSprint = idSprint;
     $scope.findHistoriasBySprint();
     $scope.findHistoriasBySprintDesarrollador();
     $scope.getTotalDiasSprint();
+    $scope.isOpen = isOpen;
+    $scope.rolActual = rolActual;
   };
 
   $scope.asignarTarjeta = function (idDesarrollador) {
-      $scope.historiaSeleccionada.desarrollador = idDesarrollador;
-      socket.emit('updateHistoria', $scope.historiaSeleccionada._id, idDesarrollador);
+      if($scope.historiaSeleccionada !=-""){
+        $scope.historiaSeleccionada.desarrollador = idDesarrollador;
+        socket.emit('updateHistoria', $scope.historiaSeleccionada._id, idDesarrollador);
+      } else {
+        //TODO:Se tiene que seleccionar primero una historia.
+        console.log("No se ha seleccionado una historia aún");
+      }
   };
 
   var socket = io.connect({'forceNew': true});
-  $scope.historias = $scope.historias || [];
 
   socket.on('updateHistorias', function (data) {
       $scope.findHistoriasBySprint();
@@ -436,6 +495,10 @@ app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($s
     });
   };
 
+  $scope.cerrarDetalle = function(){
+    $scope.historiaSeleccionada="";
+  };
+
 }]);
 
 
@@ -472,11 +535,13 @@ app.controller("dashBoardController", ['$scope', '$http', function($scope, $http
   $scope.totalScrum = 0;
   $scope.totalOwner = 0;
   $scope.totalDeveloper = 0;
+  $scope.rolActual="";
   $scope.init = function(usuario){
     $scope.idUsuario = usuario;
   }
 
   $scope.getProyectosScrum = function(){
+    $scope.rolActual = "scrum-master";
     $http.get('/getProyectos/dashboard/'+$scope.idUsuario+"/"+"scrum-master").success(function(data) {
           if(data != "{}"){
             $scope.proyectos = data;
@@ -489,6 +554,7 @@ app.controller("dashBoardController", ['$scope', '$http', function($scope, $http
   }
 
   $scope.getProyectosOwner = function(){
+    $scope.rolActual = "product-owner";
     $http.get('/getProyectos/dashboard/'+$scope.idUsuario+"/"+"product-owner").success(function(data) {
           if(data != "{}"){
             $scope.proyectos = data;
@@ -501,6 +567,7 @@ app.controller("dashBoardController", ['$scope', '$http', function($scope, $http
   }
 
   $scope.getProyectosDeveloper = function(){
+    $scope.rolActual = "developer";
     $http.get('/getProyectos/dashboard/'+$scope.idUsuario+"/"+"developer").success(function(data) {
           if(data != "{}"){
             $scope.proyectos = data;

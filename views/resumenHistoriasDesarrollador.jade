@@ -11,7 +11,7 @@ block content
       br
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
-          h2.mdl-card__title-text Nombre Usuario:
+          h2.mdl-card__title-text Desarrollador:
         .mdl-card__supporting-text
           p.letras-negras.
             #{user.nombreCompleto}
@@ -32,8 +32,7 @@ block content
                         {{historia.descripcion}}
                   div(class="mdl-card__actions mdl-card--border")
                     button(class="mdl-button blank-sprint-button" type="button" ng-click="finalizarTarjeta(historia._id)") Terminar
-                    br
-                    br
+                    &nbsp;
                     button(class="mdl-button blank-sprint-button" type="button" ng-click="verDetalleHistoria(historia._id)") Ver Detalle
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
