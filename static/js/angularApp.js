@@ -3,10 +3,6 @@ var app = angular.module('app', ['ngRoute']);
 app.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-      when('/Sprints', {
-        templateUrl: 'partials/sprints',
-        controller: 'sprintsCtrl'
-    }).
       when('/ProductBacklog', {
         templateUrl: 'partials/productBacklog',
         controller: 'productBacklogCtrl'
@@ -497,12 +493,6 @@ app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($s
     $scope.historiaSeleccionada="";
   };
 
-}]);
-
-
-app.controller('sprintsCtrl',['$scope', function($scope){
-  $scope.mensaje = "no se";
-  $scope.titulo = "Titulo 3";
 }]);
 
 app.controller('profileCtrl', ['$scope', '$http', function($scope, $http){
