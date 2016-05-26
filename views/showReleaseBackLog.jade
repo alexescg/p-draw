@@ -71,7 +71,7 @@ block content
                        {{historia.descripcion}}
                    div(class="mdl-card__actions mdl-card--border")
                       button(class="mdl-button blank-sprint-button" type="button" ng-click="verDetalleHistoria(historia._id)") Agregar historia
-    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone(ng-if="isOpen==='true' && (rolActual==='scrum-master' || rolActual==='product-owner') && historias.length>0")
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone(ng-if="isOpen==='true' && (rolActual==='scrum-master' || rolActual==='product-owner') && historiasSprint.length>0")
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Crear Sprint

@@ -54,6 +54,11 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
         $scope.$apply();
     });
 
+    socket.on('updateRelease', function (data) {
+        $scope.findReleaseByProyecto();
+        $scope.$apply();
+    });
+
 
     socket.on('sendHistoria', function () {
         $scope.findHistoriasByProyecto();
@@ -200,6 +205,22 @@ app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scop
       $window.location.href = "/addReleaseBacklog";
     });
   };
+  var socket = io.connect({'forceNew': true});
+  $scope.crearRelease = function(){
+    $scope.release.proyecto = $scope.idProyecto
+    socket.emit("newRelease", $scope.historiasSprint, $scope.release);
+    $window.location.href = "/detalleProyecto";
+    //$http({
+    //  url:'/crearRelease',
+    //  method:'POST',
+    //  data: {historias:$scope.historiasSprint,
+    //  release:$scope.release}
+    //}).then(function(data){
+    //  $window.location.href = "/detalleProyecto";
+    //}, function(data){
+    //  $window.location.href = "/addReleaseBacklog";
+    //});
+  };
 
   $scope.verDetalleHistoria = function(idHistoria){
     $http.get("/findBy/historias/"+ idHistoria).success(function(data){
@@ -343,6 +364,7 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
     $scope.getTotalDiasRelease();
     $scope.isOpen = isOpen;
     $scope.rolActual = rolActual;
+    $scope.historiasSprint = [];
     console.log($scope.isOpen)
   };
 
@@ -358,6 +380,12 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
   };
 
   socket.on('updateHistorias', function (data) {
+      $scope.findHistoriasByRelease();
+      $scope.getTotalDiasRelease();
+      $scope.$apply();
+  });
+
+  socket.on('updateSprints', function (data) {
       $scope.findHistoriasByRelease();
       $scope.findSprintsByRelease();
       $scope.getTotalDiasRelease();
@@ -384,16 +412,18 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
 
   $scope.crearSprint = function(){
     $scope.sprint.liberacionBacklog = $scope.idRelease;
-    $http({
-      url:'/crearSprint',
-      method:'POST',
-      data: {historias:$scope.historiasSprint,
-      sprint:$scope.sprint}
-    }).then(function(data){
-      $window.location.href = "/showReleaseBacklog";
-    }, function(data){
-      $window.location.href = "/showReleaseBacklog";
-    });
+    socket.emit("newSprint", $scope.historiasSprint, $scope.sprint);
+    $scope.historiasSprint = [];
+    //$http({
+    //  url:'/crearSprint',
+    //  method:'POST',
+    //  data: {historias:$scope.historiasSprint,
+    //  sprint:$scope.sprint}
+    //}).then(function(data){
+  //    $window.location.href = "/showReleaseBacklog";
+    //}, function(data){
+    //  $window.location.href = "/showReleaseBacklog";
+    //});
   };
 
   $scope.verDetalleHistoria = function(idHistoria){
