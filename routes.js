@@ -237,7 +237,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
             model: 'Usuario'
         })
             .exec(function (err, obj) {
-                req.session.proyecto = req.query.proyectoElegido
                 if (err) response.redirect("/home");
                 else {
                     var desarrolladores = [];
@@ -247,6 +246,28 @@ module.exports = function (app, passport, roles, mongoose, io) {
                     }
                 });
                 return response.json(desarrolladores);
+              }
+          });
+      });
+
+    app.get("/detalleProyecto/findOwner/:idProyecto", function (req, response) {
+      console.log(req.params.idProyecto);
+        Proyecto.findById({"_id": req.params.idProyecto}).populate({
+            path: 'participantes.usuario',
+            model: 'Usuario'
+        })
+            .exec(function (err, obj) {
+                if (err) response.redirect("/home");
+                else {
+                    var productOwner = "";
+                    obj.participantes.forEach(function (participante) {
+                        if (participante.rol === "product-owner") {
+                            productOwner = participante.usuario;
+                    }
+                });
+                console.log("Proyecto:");
+                console.log(obj);
+                return response.json(productOwner);
               }
           });
       });
@@ -341,12 +362,17 @@ module.exports = function (app, passport, roles, mongoose, io) {
       {"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
       "terminada":false})
         .exec(function (err, historias) {
+          console.log("HISTORIAS:");
+          console.log(historias);
           if(!historias){
             return response.json("0");
           }
           if(historias.length<1){
             return response.json("0");
           } else {
+            historias.forEach(function(historia){
+              dias += historia.tamanio;
+            });
             if(dias == 0){
               return response.json("0");
             } else {
@@ -465,7 +491,11 @@ module.exports = function (app, passport, roles, mongoose, io) {
           "$exists": false
         }}).select("-__v").exec(function(err, obj){
             var jsonHistorias = JSON.stringify(obj);
-            res.render('releaseBackLog', {usuario: req.user, proyecto: proyecto, historias: jsonHistorias});
+            if(obj.length>0){
+              res.render('releaseBackLog', {usuario: req.user, proyecto: proyecto, historias: jsonHistorias});
+            } else {
+              res.redirect("/detalleProyecto");
+            }
         });
       });
 
@@ -817,6 +847,35 @@ module.exports = function (app, passport, roles, mongoose, io) {
               }
               io.emit('updateHistorias');
           });
+        });
+
+
+        socket.on('agregarOwner', function (id, idProyecto) {
+            var rol = new Rol({
+                rol: "product-owner",
+                usuario: mongoose.Types.ObjectId(id)
+            });
+            Proyecto.update({_id: idProyecto}, {$push: {participantes: {$each: [rol]}}}, {upsert: true}, function (err) {
+                if (err) {
+                    throw err;
+                } else {
+                    io.emit("updateProyecto");
+                }
+            });
+        });
+
+        socket.on('agregarDesarrollador', function (id, idProyecto) {
+            var rol = new Rol({
+                rol: "developer",
+                usuario: mongoose.Types.ObjectId(id)
+            });
+            Proyecto.update({"_id": idProyecto}, {$push: {participantes: {$each: [rol]}}}, {upsert: true}, function (err) {
+                if (err) {
+                    err();
+                } else {
+                  io.emit("updateProyecto")
+                }
+            });
         });
 
     });
