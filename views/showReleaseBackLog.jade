@@ -71,7 +71,7 @@ block content
                        {{historia.descripcion}}
                    div(class="mdl-card__actions mdl-card--border")
                       button(class="mdl-button blank-sprint-button" type="button" ng-click="verDetalleHistoria(historia._id)") Agregar historia
-    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone(ng-show="isOpen==='true' && (rolActual==='scrum-master' || rolActual==='product-owner')")
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone(ng-if="isOpen==='true' && (rolActual==='scrum-master' || rolActual==='product-owner') && historiasSprint.length>0")
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Crear Sprint
@@ -84,9 +84,6 @@ block content
             .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
               textarea(class="mdl-textfield__input" type="text" ng-model="sprint.descripcionSprint" rows="4" id="descripcionSprint" name="descripcionSprint")
               label(class="mdl-textfield__label" for="descripcionSprint") Descripción del Sprint
-          ul.mdl-list
-            li.mdl-list__item(ng-repeat="historia in historiasSprint")
-              span.mdl-list__item-primary-content.list__item-text.letras-negras {{historia.nombre}}
           button.mdl-button(type="submit" ng-click="crearSprint()") Crear
     .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone(ng-if="historiaSeleccionada!==''")
       .mdl-card.mdl-shadow--2dp

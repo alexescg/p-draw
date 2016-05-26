@@ -169,14 +169,12 @@ module.exports = function (app, passport, roles, mongoose, io) {
         if (req.query.proyectoElegido === undefined) {
             req.query.proyectoElegido = sass.proyecto;
         }
-        console.log("ROLACTUAL:");
 
         if(req.query.rolActual){
             req.session.rolActual = req.query.rolActual;
         } else {
           req.session.rolActual = sass.rolActual
         }
-        console.log(req.query.rolActual);
         Proyecto.findById({"_id": req.query.proyectoElegido}).populate({
             path: 'participantes.usuario',
             model: 'Usuario'
@@ -231,13 +229,11 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.get("/detalleProyecto/findDevelopers/:idProyecto", function (req, response) {
-      console.log(req.params.idProyecto);
         Proyecto.findById({"_id": req.params.idProyecto}).populate({
             path: 'participantes.usuario',
             model: 'Usuario'
         })
             .exec(function (err, obj) {
-                req.session.proyecto = req.query.proyectoElegido
                 if (err) response.redirect("/home");
                 else {
                     var desarrolladores = [];
@@ -247,6 +243,25 @@ module.exports = function (app, passport, roles, mongoose, io) {
                     }
                 });
                 return response.json(desarrolladores);
+              }
+          });
+      });
+
+    app.get("/detalleProyecto/findOwner/:idProyecto", function (req, response) {
+        Proyecto.findById({"_id": req.params.idProyecto}).populate({
+            path: 'participantes.usuario',
+            model: 'Usuario'
+        })
+            .exec(function (err, obj) {
+                if (err) response.redirect("/home");
+                else {
+                    var productOwner = "";
+                    obj.participantes.forEach(function (participante) {
+                        if (participante.rol === "product-owner") {
+                            productOwner = participante.usuario;
+                    }
+                });
+                return response.json(productOwner);
               }
           });
       });
@@ -347,6 +362,9 @@ module.exports = function (app, passport, roles, mongoose, io) {
           if(historias.length<1){
             return response.json("0");
           } else {
+            historias.forEach(function(historia){
+              dias += historia.tamanio;
+            });
             if(dias == 0){
               return response.json("0");
             } else {
@@ -365,14 +383,10 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
   app.get("/count/dias/release/:idRelease", function(req, response){
     var dias = 0;
-    console.log("IDRELEASE:");
-    console.log(req.params.idRelease);
     HistoriaUsuario.find(
       {"liberacionBacklog": mongoose.Types.ObjectId(req.params.idRelease),
       "terminada":false})
         .exec(function (err, historias) {
-          console.log("HISTORIAS----LENGTh");
-          console.log(historias.length);
           if(!historias){
             return response.json("0");
           }
@@ -382,8 +396,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
             historias.forEach(function(historia){
               dias += historia.tamanio;
             });
-            console.log("-----DIAS------Release");
-            console.log(dias);
             if(dias == 0){
               return response.json("0");
             } else {
@@ -465,7 +477,11 @@ module.exports = function (app, passport, roles, mongoose, io) {
           "$exists": false
         }}).select("-__v").exec(function(err, obj){
             var jsonHistorias = JSON.stringify(obj);
-            res.render('releaseBackLog', {usuario: req.user, proyecto: proyecto, historias: jsonHistorias});
+            if(obj.length>0){
+              res.render('releaseBackLog', {usuario: req.user, proyecto: proyecto, historias: jsonHistorias});
+            } else {
+              res.redirect("/detalleProyecto");
+            }
         });
       });
 
@@ -473,25 +489,22 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
     app.get('/showReleaseBacklog',isLoggedIn, function (req, res) {
       if(!req.query.releaseElegido){
+        req.session = sass;
         LiberacionBacklog.findById(req.session.releaseElegido)
         .exec(function (err, release){
           Proyecto.findById(release.proyecto)
           .exec(function(err, proyecto){
-            console.log(req.session.rolActual);
             res.render('showReleaseBackLog', {usuario: req.user, proyecto: proyecto, release: release, rolActual:req.session.rolActual});
           });
         });
       } else {
         req.session = sass;
         req.session.releaseElegido = req.query.releaseElegido;
-        console.log(req.session.rolActual);
         sass = req.session;
         LiberacionBacklog.findById(req.query.releaseElegido)
         .exec(function (err, release){
           Proyecto.findById(release.proyecto)
           .exec(function(err, proyecto){
-            console.log("USUARIO:");
-            console.log(req.user);
             res.render('showReleaseBackLog', {usuario: req.user, proyecto: proyecto, release: release, rolActual:req.session.rolActual});
           });
         });
@@ -501,8 +514,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
     app.get('/showSprintBacklog',isLoggedIn, function (req, res) {
       if(!req.query.sprintElegido){
-        console.log("ROL-ACTUAL-SPRINT:")
-        console.log(req.session.rolActual);
         Sprint.findById(req.session.sprintElegido).populate("liberacionBacklog")
         .exec(function (err, sprint){
           Proyecto.findById(sprint.liberacionBacklog.proyecto)
@@ -513,8 +524,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
       } else {
         req.session = sass;
         req.session.sprintElegido = req.query.sprintElegido;
-        console.log("ROL-ACTUAL-SPRINT2:")
-        console.log(req.session.rolActual);
         sass = req.session;
         Sprint.findById(req.query.sprintElegido).populate("liberacionBacklog")
         .exec(function (err, sprint){
@@ -528,7 +537,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.get("/sprint/findDevelopers/:idProyecto", function (req, response) {
-      console.log(req.params.idProyecto);
         Proyecto.findById({"_id": req.params.idProyecto}).populate({
             path: 'participantes.usuario',
             model: 'Usuario'
@@ -582,7 +590,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
   });
 
   app.post("/crearSprint", function (req, res) {
-    console.log(req.body.sprint);
     if(req.body.historias.length<1){
       return res.status(400).send({message:"No hay historias en el Release"});
     }
@@ -627,7 +634,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
     app.get("/findBy/historias/:idHistoria", function(req, response){
       HistoriaUsuario.findById(req.params.idHistoria)
           .exec(function (err, obj) {
-            console.log(obj)
                 return response.json(obj);
           });
       });
@@ -687,7 +693,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.get("/find/historias/asignadas/revisadas/:idProyecto/:idDesarrollador", function(req, res){
-      console.log(req.session.proyecto);
       HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
       "desarrollador": mongoose.Types.ObjectId(req.params.idDesarrollador),
       "terminada":true,
@@ -698,7 +703,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.get("/resumenHistoriasProductOwner", isLoggedIn, function(req, response){
-      console.log(req.session.proyecto);
       if(!req.session.proyecto){
         if(sass && sass.proyecto){
             req.session = sass;
@@ -725,8 +729,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.get("/find/historias/porValidar/:idProyecto", function(req, res){
-      console.log(req.session.proyecto);
-      console.log("--------------------------------->");
       HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
       "terminada": true,
       "revisada":false})
@@ -736,8 +738,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
     });
 
     app.get("/find/historias/validadas/:idProyecto", function(req, res){
-      console.log(req.session.proyecto);
-      console.log("--------------------------------->");
       HistoriaUsuario.find({"proyecto": mongoose.Types.ObjectId(req.params.idProyecto),
       "terminada": true,
       "revisada": true})
@@ -797,7 +797,6 @@ module.exports = function (app, passport, roles, mongoose, io) {
         });
 
         socket.on('validarHistoria', function (data) {
-          console.log("Entre a validar historia");
             HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(data)},
               {$set:{"revisada": true}},
               function (err) {
@@ -818,6 +817,104 @@ module.exports = function (app, passport, roles, mongoose, io) {
               io.emit('updateHistorias');
           });
         });
+
+
+        socket.on('agregarOwner', function (id, idProyecto) {
+            var rol = new Rol({
+                rol: "product-owner",
+                usuario: mongoose.Types.ObjectId(id)
+            });
+            Proyecto.update({_id: idProyecto}, {$push: {participantes: {$each: [rol]}}}, {upsert: true}, function (err) {
+                if (err) {
+                    throw err;
+                } else {
+                    io.emit("updateProyecto");
+                }
+            });
+        });
+
+        socket.on('agregarDesarrollador', function (id, idProyecto) {
+            var rol = new Rol({
+                rol: "developer",
+                usuario: mongoose.Types.ObjectId(id)
+            });
+            Proyecto.update({"_id": idProyecto}, {$push: {participantes: {$each: [rol]}}}, {upsert: true}, function (err) {
+                if (err) {
+                    err();
+                } else {
+                  io.emit("updateProyecto")
+                }
+            });
+        });
+
+        socket.on('newRelease', function (historias, release) {
+          if(historias.length<1){
+            socket.emit("falloFatal");
+          }
+          if(!release.nombreRelease){
+            socket.emit("falloFatal");
+          }
+          if(!release.descripcionRelease){
+            socket.emit("falloFatal");
+          }
+          var newRelease = new LiberacionBacklog({
+            proyecto: mongoose.Types.ObjectId(release.proyecto),
+            finalizo:false,
+            fechaFinalizacion: Date(),
+            descripcionRelease: release.descripcionRelease,
+            nombreRelease: release.nombreRelease
+          });
+          newRelease.save(function(err, obj){
+            if(err){
+              io.emit("falloFatal");
+            }
+            historias.forEach(function(historia){
+              HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(historia._id)},
+                {$set: {"liberacionBacklog": mongoose.Types.ObjectId(obj._id)}},
+                function (err) {
+                if (err) {
+                  err();
+                }
+            });
+          });
+            io.emit("updateRelease");
+        });
+      });
+
+    socket.on('newSprint', function (historias, sprint) {
+        if(historias.length<1){
+          socket.emit("falloFatal");
+        }
+        if(!sprint.nombreSprint){
+          socket.emit("falloFatal");
+        }
+        if(!sprint.descripcionSprint){
+          socket.emit("falloFatal");
+        }
+
+        var newSprint = new Sprint({
+          liberacionBacklog: mongoose.Types.ObjectId(sprint.liberacionBacklog),
+          finalizo:false,
+          fechaFinal: Date(),
+          descripcionSprint: sprint.descripcionSprint,
+          nombreSprint: sprint.nombreSprint
+        });
+        newSprint.save(function(err, obj){
+          if(err){
+            socket.emit("falloFatal");
+          }
+          historias.forEach(function(historia){
+            HistoriaUsuario.update({"_id": mongoose.Types.ObjectId(historia._id)},
+              {$set: {"sprint": mongoose.Types.ObjectId(obj._id)}},
+              function (err) {
+              if (err) {
+                err();
+              }
+          });
+        });
+          io.emit("updateSprints");
+      });
+    });
 
     });
 };

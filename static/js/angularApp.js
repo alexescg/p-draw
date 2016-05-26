@@ -18,7 +18,7 @@ app.config(['$routeProvider',
 
 app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http){
     $scope.scrumMaster ={};
-    $scope.productOwner={};
+    $scope.productOwner = '';
     $scope.idProyecto={};
     $scope.desarrolladores = [];
     $scope.liberaciones = [];
@@ -26,12 +26,13 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     $scope.isOpen='';
     $scope.rolActual='';
 
-    $scope.init = function(scrumMaster, owner, idProyecto, isOpen, rolActual){
+    $scope.init = function(scrumMaster, idProyecto, isOpen, rolActual){
       $scope.scrumMaster =scrumMaster;
-      $scope.productOwner=owner;
       $scope.idProyecto = idProyecto;
       $scope.getDesarrolladores();
       $scope.findReleaseByProyecto();
+      $scope.getOwner();
+      console.log($scope.productOwner)
       $scope.isOpen = isOpen;
       $scope.historiaSeleccionada="";
       $scope.rolActual = rolActual;
@@ -50,6 +51,11 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     socket.on('sendHistorias', function (data) {
         $scope.findHistoriasByProyecto();
         $scope.getTotalDiasProyecto();
+        $scope.$apply();
+    });
+
+    socket.on('updateRelease', function (data) {
+        $scope.findReleaseByProyecto();
         $scope.$apply();
     });
 
@@ -77,6 +83,12 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     socket.on('updateHistorias', function (data) {
         $scope.findHistoriasByProyecto();
         $scope.getTotalDiasProyecto();
+        $scope.$apply();
+    });
+
+    socket.on('updateProyecto', function (data) {
+        $scope.getOwner();
+        $scope.getDesarrolladores();
         $scope.$apply();
     });
 
@@ -129,33 +141,24 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
           });
     };
 
-
-    $scope.asignarOwner = function(id){
-      console.log(id);
-      $http({
-        url:'/agregarOwner',
-        method:'POST',
-        data: {usuarioOwner:id,
-        idProyecto:$scope.idProyecto}
-      }).then(function(data){
-        //TODO:GetOwner
-      }, function(data){
-        //TODO:Error
-      });
+    $scope.getOwner = function(){
+      $http.get('/detalleProyecto/findOwner/'+$scope.idProyecto).success(function(data) {
+            $scope.productOwner = data;
+            console.log(data);
+        }).error(function(data){
+          //TODO:Error
+          });
     };
 
-    $scope.asignarDesarrollador = function(id){
-    $http({
-      url:'/agregarDesarrollador',
-      method:'POST',
-      data: {usuarioOwner:id,
-      idProyecto:$scope.idProyecto}
-    }).then(function(data){
-      $scope.getDesarrolladores();
-    }, function(data){
-      //TODO:Error
-    });
+
+    $scope.asignarOwner = function (id) {
+        socket.emit('agregarOwner', id, $scope.idProyecto);
+    };
+
+  $scope.asignarDesarrollador = function (id) {
+      socket.emit('agregarDesarrollador', id, $scope.idProyecto);
   };
+
 }]);
 
 app.controller('productBacklogCtrl',['$scope', function($scope){
@@ -201,6 +204,22 @@ app.controller('releaseBacklogCtrl',['$scope','$http', '$window', function($scop
     }, function(data){
       $window.location.href = "/addReleaseBacklog";
     });
+  };
+  var socket = io.connect({'forceNew': true});
+  $scope.crearRelease = function(){
+    $scope.release.proyecto = $scope.idProyecto
+    socket.emit("newRelease", $scope.historiasSprint, $scope.release);
+    $window.location.href = "/detalleProyecto";
+    //$http({
+    //  url:'/crearRelease',
+    //  method:'POST',
+    //  data: {historias:$scope.historiasSprint,
+    //  release:$scope.release}
+    //}).then(function(data){
+    //  $window.location.href = "/detalleProyecto";
+    //}, function(data){
+    //  $window.location.href = "/addReleaseBacklog";
+    //});
   };
 
   $scope.verDetalleHistoria = function(idHistoria){
@@ -253,10 +272,10 @@ app.controller("resumenHistoriasDesarrollador", ['$scope','$http', function($sco
 
   $scope.finalizarTarjeta = function (idDesarrollador) {
       socket.emit('finalizarHistoria', $scope.historiaSeleccionada._id);
+      $scope.historiaSeleccionada="";
   };
 
   var socket = io.connect({'forceNew': true});
-  $scope.historias = $scope.historias || [];
 
   socket.on('updateHistorias', function (data) {
       $scope.findHistoriasByDesarrollador();
@@ -345,6 +364,7 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
     $scope.getTotalDiasRelease();
     $scope.isOpen = isOpen;
     $scope.rolActual = rolActual;
+    $scope.historiasSprint = [];
     console.log($scope.isOpen)
   };
 
@@ -360,6 +380,12 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
   };
 
   socket.on('updateHistorias', function (data) {
+      $scope.findHistoriasByRelease();
+      $scope.getTotalDiasRelease();
+      $scope.$apply();
+  });
+
+  socket.on('updateSprints', function (data) {
       $scope.findHistoriasByRelease();
       $scope.findSprintsByRelease();
       $scope.getTotalDiasRelease();
@@ -386,16 +412,18 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
 
   $scope.crearSprint = function(){
     $scope.sprint.liberacionBacklog = $scope.idRelease;
-    $http({
-      url:'/crearSprint',
-      method:'POST',
-      data: {historias:$scope.historiasSprint,
-      sprint:$scope.sprint}
-    }).then(function(data){
-      $window.location.href = "/showReleaseBacklog";
-    }, function(data){
-      $window.location.href = "/showReleaseBacklog";
-    });
+    socket.emit("newSprint", $scope.historiasSprint, $scope.sprint);
+    $scope.historiasSprint = [];
+    //$http({
+    //  url:'/crearSprint',
+    //  method:'POST',
+    //  data: {historias:$scope.historiasSprint,
+    //  sprint:$scope.sprint}
+    //}).then(function(data){
+  //    $window.location.href = "/showReleaseBacklog";
+    //}, function(data){
+    //  $window.location.href = "/showReleaseBacklog";
+    //});
   };
 
   $scope.verDetalleHistoria = function(idHistoria){
