@@ -44,6 +44,7 @@ block content
               td.mdl-data-table__cell--non-numeric
                 form(action="/detalleproyecto" method="GET" class="form")
                   input(value="{{proyecto._id}}" type="hidden" id="proyectoElegido" name="proyectoElegido")
+                  input(value="{{rolActual}}" type="hidden" id="rolActual" name="rolActual")
                   button.mdl-button(type="submit") Ver Detalle del proyecto
       button.mdl-button(id="show-newProyect" type="button") Nuevo Proyecto
 

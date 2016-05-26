@@ -1,7 +1,7 @@
 extends ./index.jade
 block content
-  .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="showReleaseBacklogCtrl", ng-init="init('#{proyecto._id}','#{release._id}', '#{proyecto.abierto}')")
-    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone(ng-show="isOpen==='true'")
+  .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top(ng-controller="showReleaseBacklogCtrl", ng-init="init('#{proyecto._id}','#{release._id}', '#{proyecto.abierto}', '#{rolActual}')")
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone(ng-show="isOpen==='true' && (rolActual==='scrum-master' || rolActual==='product-owner')")
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text #{proyecto.nombreProyecto}
@@ -19,7 +19,8 @@ block content
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Días para Finalizar: {{totalDias}}
-    .mdl-cell.mdl-cell--12-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone(ng-show="isOpen==='false' ")
+
+    .mdl-cell.mdl-cell--12-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone(ng-show="isOpen==='false' || rolActual ==='developer'")
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text #{proyecto.nombreProyecto}
@@ -39,13 +40,13 @@ block content
           h2.mdl-card__title-text Días para Finalizar: {{totalDias}}
 
 
-    .mdl-cell.mdl-cell--9-col-desktop.mdl-cell--6-col-tablet.mdl-cell--5-col-phone(ng-show="isOpen==='true'")
+    .mdl-cell.mdl-cell--9-col-desktop.mdl-cell--6-col-tablet.mdl-cell--5-col-phone(ng-show="isOpen==='true' && (rolActual==='scrum-master' || rolActual==='product-owner')")
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Historias sin Asignar
       .mdl-card-2.mdl-shadow--6dp-2
         .mdl-grid.mdl-cell.mdl-cell--9-col-desktop.mdl-cell--12-col-tablet.mdl-cell--4-col-phone.mdl-cell--top
-          .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--6-col-tablet.mdl-cell--2-col-phone(ng-repeat="historia in historias")
+          .mdl-cell.mdl-cell--4-col-desktop.mdl-cell--12-col-tablet.mdl-cell--2-col-phone(ng-repeat="historia in historias")
               .mdl-card.mdl-shadow--2dp
                   .mdl-card__title
                       h2.mdl-card__title-text {{historia.nombre}}
@@ -68,9 +69,9 @@ block content
                   .mdl-card__supporting-text
                       p.letras-negras.
                        {{historia.descripcion}}
-                 div(class="mdl-card__actions mdl-card--border")
-                    button(class="mdl-button blank-sprint-button" type="button" ng-click="verDetalleHistoria(historia._id)") Agregar historia
-    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone(ng-show="isOpen==='true'")
+                   div(class="mdl-card__actions mdl-card--border")
+                      button(class="mdl-button blank-sprint-button" type="button" ng-click="verDetalleHistoria(historia._id)") Agregar historia
+    .mdl-cell.mdl-cell--3-col-desktop.mdl-cell--3-col-tablet.mdl-cell--2-col-phone(ng-show="isOpen==='true' && (rolActual==='scrum-master' || rolActual==='product-owner')")
       .mdl-card.mdl-shadow--2dp
         .mdl-card__title
           h2.mdl-card__title-text Crear Sprint

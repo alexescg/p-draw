@@ -169,6 +169,14 @@ module.exports = function (app, passport, roles, mongoose, io) {
         if (req.query.proyectoElegido === undefined) {
             req.query.proyectoElegido = sass.proyecto;
         }
+        console.log("ROLACTUAL:");
+
+        if(req.query.rolActual){
+            req.session.rolActual = req.query.rolActual;
+        } else {
+          req.session.rolActual = sass.rolActual
+        }
+        console.log(req.query.rolActual);
         Proyecto.findById({"_id": req.query.proyectoElegido}).populate({
             path: 'participantes.usuario',
             model: 'Usuario'
@@ -202,6 +210,7 @@ module.exports = function (app, passport, roles, mongoose, io) {
                         proyecto: obj,
                         scrumMaster: scrumMaster,
                         owner: productOwner,
+                        rolActual:req.session.rolActual
                     });
             });
     });
@@ -468,18 +477,22 @@ module.exports = function (app, passport, roles, mongoose, io) {
         .exec(function (err, release){
           Proyecto.findById(release.proyecto)
           .exec(function(err, proyecto){
-            res.render('showReleaseBackLog', {usuario: req.user, proyecto: proyecto, release: release});
+            console.log(req.session.rolActual);
+            res.render('showReleaseBackLog', {usuario: req.user, proyecto: proyecto, release: release, rolActual:req.session.rolActual});
           });
         });
       } else {
         req.session = sass;
         req.session.releaseElegido = req.query.releaseElegido;
+        console.log(req.session.rolActual);
         sass = req.session;
         LiberacionBacklog.findById(req.query.releaseElegido)
         .exec(function (err, release){
           Proyecto.findById(release.proyecto)
           .exec(function(err, proyecto){
-            res.render('showReleaseBackLog', {usuario: req.user, proyecto: proyecto, release: release});
+            console.log("USUARIO:");
+            console.log(req.user);
+            res.render('showReleaseBackLog', {usuario: req.user, proyecto: proyecto, release: release, rolActual:req.session.rolActual});
           });
         });
       }
@@ -488,22 +501,26 @@ module.exports = function (app, passport, roles, mongoose, io) {
 
     app.get('/showSprintBacklog',isLoggedIn, function (req, res) {
       if(!req.query.sprintElegido){
+        console.log("ROL-ACTUAL-SPRINT:")
+        console.log(req.session.rolActual);
         Sprint.findById(req.session.sprintElegido).populate("liberacionBacklog")
         .exec(function (err, sprint){
           Proyecto.findById(sprint.liberacionBacklog.proyecto)
           .exec(function(err, proyecto){
-            res.render('showSprintBackLog', {usuario: req.user, proyecto: proyecto, sprint: sprint});
+            res.render('showSprintBackLog', {usuario: req.user, proyecto: proyecto, sprint: sprint, rolActual:req.session.rolActual});
           });
         });
       } else {
         req.session = sass;
         req.session.sprintElegido = req.query.sprintElegido;
+        console.log("ROL-ACTUAL-SPRINT2:")
+        console.log(req.session.rolActual);
         sass = req.session;
         Sprint.findById(req.query.sprintElegido).populate("liberacionBacklog")
         .exec(function (err, sprint){
           Proyecto.findById(sprint.liberacionBacklog.proyecto)
           .exec(function(err, proyecto){
-            res.render('showSprintBackLog', {usuario: req.user, proyecto: proyecto, sprint: sprint});
+            res.render('showSprintBackLog', {usuario: req.user, proyecto: proyecto, sprint: sprint, rolActual:req.session.rolActual});
           });
         });
       }
@@ -632,19 +649,29 @@ module.exports = function (app, passport, roles, mongoose, io) {
       });
 
     app.get("/resumenHistoriasDesarrollador", isLoggedIn, function(req, response){
-      console.log(req.session.proyecto);
       if(!req.session.proyecto){
-        req.session = sass;
+        if(sass && sass.proyecto){
+            req.session = sass;
+        } else {
+          response.redirect("/home");
+        }
+
       }
       Proyecto.findById(req.session.proyecto)
           .exec(function (err, obj) {
               if (err) response.redirect("/home");
-              else
-                response.render("resumenHistoriasDesarrollador",
-                    {
-                        usuario: req.user,
-                        proyecto: obj
-                    });
+              else{
+                if(req.session.rolActual =='developer'){
+                  response.render("resumenHistoriasDesarrollador",
+                      {
+                          usuario: req.user,
+                          proyecto: obj,
+                          rolActual: req.session.rolActual
+                      });
+                } else {
+                  response.redirect("/home");
+                }
+              }
           });
     });
 
@@ -673,17 +700,27 @@ module.exports = function (app, passport, roles, mongoose, io) {
     app.get("/resumenHistoriasProductOwner", isLoggedIn, function(req, response){
       console.log(req.session.proyecto);
       if(!req.session.proyecto){
-        req.session = sass;
+        if(sass && sass.proyecto){
+            req.session = sass;
+        } else {
+          response.redirect("/home");
+        }
       }
       Proyecto.findById(req.session.proyecto)
           .exec(function (err, obj) {
               if (err) response.redirect("/home");
-              else
-                response.render("resumenHistoriasProductOwner",
-                    {
-                        usuario: req.user,
-                        proyecto: obj
-                    });
+              else {
+                if(req.session.rolActual == 'product-owner'){
+                  response.render("resumenHistoriasProductOwner",
+                      {
+                          usuario: req.user,
+                          proyecto: obj,
+                          rolActual: req.session.rolActual
+                      });
+                } else {
+                  response.redirect("/home");
+                }
+              }
           });
     });
 

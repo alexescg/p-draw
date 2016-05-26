@@ -28,8 +28,9 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
     $scope.liberaciones = [];
     $scope.totalDias = 0;
     $scope.isOpen='';
+    $scope.rolActual='';
 
-    $scope.init = function(scrumMaster, owner, idProyecto, isOpen){
+    $scope.init = function(scrumMaster, owner, idProyecto, isOpen, rolActual){
       $scope.scrumMaster =scrumMaster;
       $scope.productOwner=owner;
       $scope.idProyecto = idProyecto;
@@ -37,6 +38,8 @@ app.controller('detalleProyectoCtrl', ['$scope', '$http', function($scope, $http
       $scope.findReleaseByProyecto();
       $scope.isOpen = isOpen;
       $scope.historiaSeleccionada="";
+      $scope.rolActual = rolActual;
+      console.log($scope.rolActual);
     }
 
     $scope.historia = new Object();
@@ -335,15 +338,17 @@ app.controller('showReleaseBacklogCtrl',['$scope','$http', '$window', function($
   $scope.historiaSeleccionada="";
   $scope.totalDias=0;
   $scope.isOpen='';
+  $scope.rolActual = "";
   var socket = io.connect({'forceNew': true});
 
-  $scope.init = function(idProy, idRelease, isOpen){
+  $scope.init = function(idProy, idRelease, isOpen, rolActual){
     $scope.idProyecto = idProy;
     $scope.idRelease = idRelease;
     $scope.findHistoriasByRelease();
     $scope.findSprintsByRelease();
     $scope.getTotalDiasRelease();
     $scope.isOpen = isOpen;
+    $scope.rolActual = rolActual;
     console.log($scope.isOpen)
   };
 
@@ -418,13 +423,14 @@ app.controller('showSprintBacklogCtrl',['$scope','$http', '$window', function($s
   $scope.historiaSeleccionada="";
   $scope.isOpen = "";
 
-  $scope.init = function(idProy, idSprint, isOpen){
+  $scope.init = function(idProy, idSprint, isOpen, rolActual){
     $scope.idProyecto = idProy;
     $scope.idSprint = idSprint;
     $scope.findHistoriasBySprint();
     $scope.findHistoriasBySprintDesarrollador();
     $scope.getTotalDiasSprint();
     $scope.isOpen = isOpen;
+    $scope.rolActual = rolActual;
   };
 
   $scope.asignarTarjeta = function (idDesarrollador) {
@@ -529,11 +535,13 @@ app.controller("dashBoardController", ['$scope', '$http', function($scope, $http
   $scope.totalScrum = 0;
   $scope.totalOwner = 0;
   $scope.totalDeveloper = 0;
+  $scope.rolActual="";
   $scope.init = function(usuario){
     $scope.idUsuario = usuario;
   }
 
   $scope.getProyectosScrum = function(){
+    $scope.rolActual = "scrum-master";
     $http.get('/getProyectos/dashboard/'+$scope.idUsuario+"/"+"scrum-master").success(function(data) {
           if(data != "{}"){
             $scope.proyectos = data;
@@ -546,6 +554,7 @@ app.controller("dashBoardController", ['$scope', '$http', function($scope, $http
   }
 
   $scope.getProyectosOwner = function(){
+    $scope.rolActual = "product-owner";
     $http.get('/getProyectos/dashboard/'+$scope.idUsuario+"/"+"product-owner").success(function(data) {
           if(data != "{}"){
             $scope.proyectos = data;
@@ -558,6 +567,7 @@ app.controller("dashBoardController", ['$scope', '$http', function($scope, $http
   }
 
   $scope.getProyectosDeveloper = function(){
+    $scope.rolActual = "developer";
     $http.get('/getProyectos/dashboard/'+$scope.idUsuario+"/"+"developer").success(function(data) {
           if(data != "{}"){
             $scope.proyectos = data;

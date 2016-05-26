@@ -109,15 +109,19 @@ html(lang='en', xmlns='http://www.w3.org/1999/html' ng-app="app")
                     a.mdl-navigation__link.mdl-navigation__link--current(href='/home')
                         i.material-icons(role='presentation') dashboard
                         |                 Dashboard
-                    a.mdl-navigation__link(href='/crearProyecto')
-                        i.material-icons(role='presentation') person
-                        |                 Crear Proyecto
-                    a.mdl-navigation__link(href='/resumenHistoriasDesarrollador')
-                        i.material-icons(role='presentation') person
-                        |                 Historias Desarrollador
-                    a.mdl-navigation__link(href='/resumenHistoriasProductOwner')
-                        i.material-icons(role='presentation') person
-                        |                 Historias Product Owner
+                    if rolActual
+                      if proyecto
+                        a.mdl-navigation__link(href='/detalleProyecto')
+                            i.material-icons(role='presentation') description
+                            |                 Detalle del Proyecto
+                        if rolActual == 'developer'
+                          a.mdl-navigation__link(href='/resumenHistoriasDesarrollador')
+                              i.material-icons(role='presentation') archive
+                              |                 Historias Desarrollador
+                        if rolActual == 'product-owner'
+                          a.mdl-navigation__link(href='/resumenHistoriasProductOwner')
+                              i.material-icons(role='presentation') check circle
+                              |                 Historias Product Owner
                     .mdl-layout-spacer
                     a.mdl-navigation__link(href='https://github.com/alexescg/p-draw')
                         i.material-icons(role='presentation') link
